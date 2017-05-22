@@ -5,44 +5,15 @@
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)]
 (https://jitpack.io/#xgouchet/Elmyr)
 
-Before, I used to write my tests like this
+Being an adept of testing code, I write a lot of tests. The problem is that in my tests, my fake / test data always look the same. My user names are always `Bob` and `Alice`, aged `42` or `69`, with userId `4816152342` or `24601`, and eating `spam`, `eggs` and `bacon`. 
 
-```java
-    public void shouldDoSomething(){
-        Foo foo = mock(Foo.class);
-        when(foo.getId()).thenReturn(42);
-    
-        int result = testedBar.getFooId(foo);
-    
-        assertThat(result).isEqualTo(42);
-    }
-```
+The problem is, the more test I write, the less I'm confident in my fake values, because they're always the same. 
 
-The problem is, when all your fake ints are `42`, `666`, `1337`, `4815162342` or `24601`, and all your fake Strings are
-`“foo”`, `“bar”`, `“baz”`, or `“kamoulox”`, how can you be sure that your tests really work ?
-
-This is where `Elmyr` comes into play. It provides a [JUnit Rule](https://github.com/junit-team/junit4/wiki/rules), as
-well as independant Forger classes that allows you to generate various data.
-
-Now, the above test can be rewritten as :
-
-```java
-    public void shouldDoSomething(){
-        int fakeId = forger.anInt();
-        Foo foo = mock(Foo.class);
-        when(foo.getId()).thenReturn(fakeId);
-    
-        int result = testedBar.getFooId(foo);
-    
-        assertThat(result).isEqualTo(fakeId);
-    }
-```
+This is where Elmyr kicks in, allowing you to create fake data based on a few constraints, making your test data random, and yet reproducible. 
 
 ## Usage
 
 ### Gradle
-
-To add this library to your build, add the following lines to your app's build.gradle :
 
 ```groovy
     repositories {
@@ -52,8 +23,6 @@ To add this library to your build, add the following lines to your app's build.g
         testCompile 'com.github.xgouchet.Elmyr:library:0.1'
     }
 ```
-
-If you need **Elmyr** in your production code (and not just in your tests), replace `testCompile` with `compile`
 
 ### JUnit
 
@@ -72,25 +41,10 @@ public class FooTest {
     }
 }
 
-```
-
-If a test using the `JUnitForger` rule fails, the log displays the following line : 
-
-> ‘shouldDoSomething’ failed with fake seed = 0x4815162342
-
-With that information, you can override the forger's seed to reproduce the exact same test steps by using the following 
-`@Before` method : 
-
-```java
-    @Before
-    public void resetForger() {
-        forger.reset(0x4815162342);
-    }
-```
 
 ## Documentation
 
-I've yet to add an online documentation, but all public classes and methods are fully documented.
+The full documentation can be read on [ReadTheDocs](http://elmyr.readthedocs.io/en/latest/).
 
 ## Contributing
 
