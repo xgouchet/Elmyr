@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Elmyr.iml" filepath="$PROJECT_DIR$/Elmyr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/apt/apt.iml" filepath="$PROJECT_DIR$/.idea/modules/apt/apt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/sample.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/sample.iml" />
+    </modules>
+  </component>
+</project>
