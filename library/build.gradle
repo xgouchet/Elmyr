@@ -1,14 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'maven'
 
 dependencies {
     // KOTLIN
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    // compile 'com.github.salomonbrys.kodein:kodein:3.2.0'
-    // Kovenant ? Anko ?
 
     compileOnly 'junit:junit:4.12'
-    compile 'net.bytebuddy:byte-buddy:1.7.0'
 
     // TESTS
     testCompile 'org.assertj:assertj-core:3.6.2'
