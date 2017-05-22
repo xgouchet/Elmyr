@@ -119,7 +119,7 @@ class ForgerStringSpecs : io.kotlintest.specs.FeatureSpec() {
                     val word = forger.aSentence(Case.CAPITALIZE, size)
                     assertThat(word)
                             .hasSize(size)
-                            .matches("([A-Z][a-z]+ )*[A-Z][a-z]+\\.")
+                            .matches("[A-Z][a-z]*( [A-Z][a-z]+)*\\.")
                 })
             }
 
@@ -129,6 +129,14 @@ class ForgerStringSpecs : io.kotlintest.specs.FeatureSpec() {
                     val word = forger.aSentence(Case.CAPITALIZED_SENTENCE, size)
                     assertThat(word)
                             .hasSize(size)
+                            .matches("[A-Z][a-z]+( [a-z]+)*\\.")
+                })
+            }
+
+            scenario("Produce a sentence capitalized lipsum sentence of any size") {
+                repeat(16, {
+                    val word = forger.aSentence(Case.CAPITALIZED_SENTENCE)
+                    assertThat(word)
                             .matches("[A-Z][a-z]+( [a-z]+)*\\.")
                 })
             }

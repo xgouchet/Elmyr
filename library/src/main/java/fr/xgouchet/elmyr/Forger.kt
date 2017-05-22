@@ -266,13 +266,18 @@ open class Forger {
 
     /**
      * @param case the case to use (supports Case.UPPER, Case.LOWER, Case.CAPITALIZE, Case.CAPITALIZED_SENTENCE or Case.ANY)
-     * @param size the size of the string (or -1 for a random sized String)
+     * @param size the size of the string (or -1 for a random sized String). Note that to construct a good sentence, the
+     * size should be at least 3 characters long
+     *
      * @return a String that kind of look like a sentence (think Lorem Ipsum)
      */
     fun aSentence(case: Case = Case.ANY, size: Int = -1): String {
         val resultSize: Int = if (size > 0) size else (aSmallInt() + 4)
-        val builder = StringBuilder()
 
+        // The only way to have a punctuated sentende. Kind of
+        if (resultSize == 1) return "‽"
+
+        val builder = StringBuilder()
 
         while (builder.length < resultSize) {
             val actualCase: Case
@@ -281,11 +286,11 @@ open class Forger {
             } else {
                 actualCase = case
             }
-            val remainingSize = size - builder.length
+            val remainingSize = resultSize - builder.length
 
             if (remainingSize < 7) {
                 builder.append(aWord(actualCase, remainingSize - 1))
-                builder.append(".")
+                builder.append(".") // TODO maybe randomize the punctuation ?
             } else {
                 val wordSize = min(anInt(2, 10), remainingSize - 5)
                 builder.append(aWord(actualCase, wordSize))
