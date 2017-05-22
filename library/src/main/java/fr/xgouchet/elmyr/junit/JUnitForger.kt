@@ -10,7 +10,7 @@ import java.util.*
 /**
  * @author Xavier F. Gouchet
  */
-class JunitForger :
+class JUnitForger :
         Forger(),
         TestRule {
 
@@ -18,7 +18,7 @@ class JunitForger :
         return InternalWatcher(this).apply(base, description)
     }
 
-    private class InternalWatcher(private val forger: JunitForger) : TestWatcher() {
+    private class InternalWatcher(private val forger: JUnitForger) : TestWatcher() {
 
         override fun starting(description: Description) {
             forger.reset()
