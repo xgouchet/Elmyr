@@ -35,6 +35,24 @@ open class Forger {
     // region Int
 
     /**
+     * @param constraint a constraint on the int to forge
+     * @return an int between constraint and max
+     */
+    fun anInt(constraint: IntConstraint = IntConstraint.ANY): Int {
+        when (constraint) {
+            IntConstraint.ANY -> return anInt(Int.MIN_VALUE, Int.MAX_VALUE)
+            IntConstraint.TINY -> return aTinyInt()
+            IntConstraint.SMALL -> return aSmallInt()
+            IntConstraint.BIG -> return aBigInt()
+            IntConstraint.HUGE -> return aHugeInt()
+            IntConstraint.POSITIVE -> return aPositiveInt()
+            IntConstraint.POSITIVE_STRICT -> return aPositiveInt(strict = true)
+            IntConstraint.NEGATIVE -> return aNegativeInt()
+            IntConstraint.NEGATIVE_STRICT -> return aNegativeInt(strict = true)
+        }
+    }
+
+    /**
      * @param min the minimum value (inclusive), default = Int#MIN_VALUE
      * @param max the maximum value (exclusive), default = Int#MAX_VALUE
      * @return an int between min and max
@@ -100,6 +118,31 @@ open class Forger {
     // region Char
 
     /**
+     * @param constraint a constraint on the char to forge
+     * @param case the case to use (depending on the constraint, it might be ignored)
+     * @return a Char within the given range
+     */
+    fun aChar(constraint: CharConstraint = CharConstraint.ANY,
+              case: Case = Case.ANY): Char {
+        when (constraint) {
+
+            CharConstraint.ANY -> return aChar(20.toChar(), Char.MAX_SURROGATE)
+            CharConstraint.HEXADECIMAL -> return anHexadecimalChar(case)
+            CharConstraint.ALPHA -> return anAlphabeticalChar(case)
+            CharConstraint.ALPHA_NUM -> return anAlphaNumericalChar(case)
+            CharConstraint.NUMERICAL -> return aNumericalChar()
+            CharConstraint.WHITESPACE -> return aWhitespaceChar()
+            CharConstraint.NOT_HEXADECIMAL -> return aNonHexadecimalChar()
+            CharConstraint.NOT_ALPHA -> return aNonAlphabeticalChar()
+            CharConstraint.NOT_ALPHA_NUM -> return aNonAlphaNumericalChar()
+            CharConstraint.NOT_NUMERICAL -> return aNonNumericalChar()
+            CharConstraint.NOT_WHITESPACE -> return aNonWhitespaceChar()
+
+            else -> TODO("Unknown constraint !")
+        }
+    }
+
+    /**
      * @param min the min char code to use (default = 20 == space)
      * @param max the max char code to use (default = Int.MAX_VALUE)
      * @return a Char within the given range
@@ -119,13 +162,25 @@ open class Forger {
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
      * @return an alpha character (from the roman alphabet), in the given case
      */
-    fun anAlphaChar(case: Case = Case.ANY): Char {
+    fun anAlphabeticalChar(case: Case = Case.ANY): Char {
         when (case) {
             Case.UPPER -> return anElementFrom(ALPHA_UPPER)
             Case.LOWER -> return anElementFrom(ALPHA_LOWER)
             else -> return anElementFrom(ALPHA)
         }
     }
+
+    /**
+     * @return a character which is not alphabetical
+     */
+    fun aNonAlphabeticalChar(): Char {
+        var res: Char
+        do {
+            res = aChar(CharConstraint.ANY, Case.ANY)
+        } while (ALPHA.contains(res))
+        return res
+    }
+
 
     /**
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
@@ -156,7 +211,7 @@ open class Forger {
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
      * @return an alphabetical or digit character, in the given case
      */
-    fun anAlphaNumChar(case: Case = Case.ANY): Char {
+    fun anAlphaNumericalChar(case: Case = Case.ANY): Char {
         when (case) {
             Case.UPPER -> return anElementFrom(ALPHA_NUM_UPPER)
             Case.LOWER -> return anElementFrom(ALPHA_NUM_LOWER)
@@ -167,10 +222,10 @@ open class Forger {
     /**
      * @return a character neither alphabetical nor numeric
      */
-    fun aNonAlphaNumChar(): Char {
+    fun aNonAlphaNumericalChar(): Char {
         var res: Char
         do {
-            res = aChar()
+            res = aChar(CharConstraint.ANY, Case.ANY)
         } while (ALPHA_NUM.contains(res))
         return res
     }
@@ -187,19 +242,30 @@ open class Forger {
     }
 
     /**
+     * @return a character that is not an hexadecimal digit
+     */
+    fun aNonHexadecimalChar(): Char {
+        var res: Char
+        do {
+            res = aChar(CharConstraint.ANY, Case.ANY)
+        } while (HEXA_LOWER.contains(res) or HEXA_UPPER.contains(res))
+        return res
+    }
+
+    /**
      * @return a digit (0 to 9)
      */
-    fun aDigitChar(): Char {
+    fun aNumericalChar(): Char {
         return anElementFrom(DIGIT)
     }
 
     /**
      * a non digit character
      */
-    fun aNonDigitChar(): Char {
+    fun aNonNumericalChar(): Char {
         var res: Char
         do {
-            res = aChar()
+            res = aChar(CharConstraint.ANY, Case.ANY)
         } while (DIGIT.contains(res))
         return res
     }
@@ -217,7 +283,7 @@ open class Forger {
     fun aNonWhitespaceChar(): Char {
         var res: Char
         do {
-            res = aChar()
+            res = aChar(CharConstraint.ANY, Case.ANY)
         } while (WHITESPACE.contains(res))
         return res
     }
@@ -235,7 +301,7 @@ open class Forger {
                 case: Case = Case.ANY,
                 size: Int = -1): String {
         when (constraint) {
-            StringConstraint.ANY -> return String(CharArray(getWordSize(size), { aChar() }))
+            StringConstraint.ANY -> return String(CharArray(getWordSize(size), { aChar(CharConstraint.ANY, Case.ANY) }))
             StringConstraint.WORD -> return aWord(case, size)
             StringConstraint.LIPSUM -> return aSentence(case, size)
             StringConstraint.HEXADECIMAL -> return anHexadecimalString(case, size)

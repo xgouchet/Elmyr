@@ -4,7 +4,7 @@ package fr.xgouchet.elmyr
  * @author Xavier F. Gouchet
  */
 enum class CharConstraint {
-    ALL,
+    ANY,
     HEXADECIMAL,
     ALPHA,
     ALPHA_NUM,
@@ -14,5 +14,5 @@ enum class CharConstraint {
     NOT_ALPHA,
     NOT_ALPHA_NUM,
     NOT_NUMERICAL,
-    NOT_sWHITESPACE
+    NOT_WHITESPACE,
 }

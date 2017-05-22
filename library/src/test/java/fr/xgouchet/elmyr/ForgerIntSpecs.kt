@@ -1,30 +1,25 @@
 package fr.xgouchet.elmyr
 
 import fr.xgouchet.elmyr.Forger
-import fr.xgouchet.elmyr.Forger.Companion.BIG_THRESHOLD
-import fr.xgouchet.elmyr.Forger.Companion.HUGE_THRESHOLD
-import fr.xgouchet.elmyr.Forger.Companion.SMALL_THRESHOLD
-import fr.xgouchet.elmyr.Forger.Companion.TINY_THRESHOLD
-import io.kotlintest.matchers.shouldThrow
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Java6Assertions.assertThat
 
 /**
  * @author Xavier F. Gouchet
  */
-class ForgerIntSpecs : io.kotlintest.specs.FeatureSpec() {
+class ForgerIntSpecs : FeatureSpec() {
 
     init {
 
         feature("An Number Forger uses a seed") {
 
-            val forger = fr.xgouchet.elmyr.Forger()
+            val forger = Forger()
             val seed = System.nanoTime()
             forger.reset(seed)
             val data = IntArray(16) { forger.anInt(min = it) }
 
             scenario("Reproduce data with another forger using the same seed") {
-                val otherForger = fr.xgouchet.elmyr.Forger()
+                val otherForger = Forger()
                 otherForger.reset(seed)
                 val otherData = IntArray(16) { otherForger.anInt(min = it) }
 
@@ -52,7 +47,7 @@ class ForgerIntSpecs : io.kotlintest.specs.FeatureSpec() {
         }
 
         feature("An Number Forger ensure coherent input") {
-            val forger = fr.xgouchet.elmyr.Forger()
+            val forger = Forger()
             forger.reset(System.nanoTime())
 
             scenario("Fail if min > max") {
@@ -73,7 +68,7 @@ class ForgerIntSpecs : io.kotlintest.specs.FeatureSpec() {
 
         feature("An Number Forger produces meaningful ints") {
 
-            val forger = fr.xgouchet.elmyr.Forger()
+            val forger = Forger()
             forger.reset(System.nanoTime())
 
             scenario("Produce an int in a specified range") {
@@ -139,7 +134,7 @@ class ForgerIntSpecs : io.kotlintest.specs.FeatureSpec() {
                     val int = forger.aTinyInt()
                     assertThat(int)
                             .isGreaterThan(0)
-                            .isLessThan(fr.xgouchet.elmyr.Forger.Companion.TINY_THRESHOLD)
+                            .isLessThan(Forger.Companion.TINY_THRESHOLD)
                 })
             }
 
@@ -148,7 +143,7 @@ class ForgerIntSpecs : io.kotlintest.specs.FeatureSpec() {
                     val int = forger.aSmallInt()
                     assertThat(int)
                             .isGreaterThan(0)
-                            .isLessThan(fr.xgouchet.elmyr.Forger.Companion.SMALL_THRESHOLD)
+                            .isLessThan(Forger.Companion.SMALL_THRESHOLD)
                 })
             }
 
@@ -156,7 +151,7 @@ class ForgerIntSpecs : io.kotlintest.specs.FeatureSpec() {
                 repeat(16, {
                     val int = forger.aBigInt()
                     assertThat(int)
-                            .isGreaterThanOrEqualTo(fr.xgouchet.elmyr.Forger.Companion.BIG_THRESHOLD)
+                            .isGreaterThanOrEqualTo(Forger.Companion.BIG_THRESHOLD)
                 })
             }
 
@@ -164,7 +159,7 @@ class ForgerIntSpecs : io.kotlintest.specs.FeatureSpec() {
                 repeat(16, {
                     val int = forger.aHugeInt()
                     assertThat(int)
-                            .isGreaterThanOrEqualTo(fr.xgouchet.elmyr.Forger.Companion.HUGE_THRESHOLD)
+                            .isGreaterThanOrEqualTo(Forger.Companion.HUGE_THRESHOLD)
                 })
             }
         }

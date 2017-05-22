@@ -11,7 +11,7 @@ class RegexNonDigitCharNode(parent: RegexParentNode)
     : RegexNode(parent) {
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
-        builder.append(forger.aNonDigitChar())
+        builder.append(forger.aNonNumericalChar())
     }
 
     override fun describe(builder: StringBuilder) {

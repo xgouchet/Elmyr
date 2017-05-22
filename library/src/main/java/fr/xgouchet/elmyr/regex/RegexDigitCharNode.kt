@@ -10,7 +10,7 @@ import fr.xgouchet.elmyr.Forger
 class RegexDigitCharNode(parent: RegexParentNode) : RegexNode(parent) {
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
-        builder.append(forger.aDigitChar())
+        builder.append(forger.aNumericalChar())
     }
 
     override fun describe(builder: StringBuilder) {

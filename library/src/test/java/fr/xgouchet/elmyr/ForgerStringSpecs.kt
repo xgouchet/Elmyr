@@ -4,18 +4,19 @@ import io.kotlintest.matchers.match
 import io.kotlintest.matchers.should
 import io.kotlintest.properties.headers
 import io.kotlintest.properties.row
+import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Assertions.assertThat
 
 /**
  * @author Xavier F. Gouchet
  */
-class ForgerStringSpecs : io.kotlintest.specs.FeatureSpec() {
+class ForgerStringSpecs : FeatureSpec() {
 
     init {
 
         feature("A String Forger uses a seed") {
 
-            val forger = fr.xgouchet.elmyr.Forger()
+            val forger = Forger()
             val seed = System.nanoTime()
             forger.reset(seed)
             val data = Array(16) { forger.aString(size = it) }

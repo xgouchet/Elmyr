@@ -11,7 +11,7 @@ class RegexWordCharNode(parent: RegexParentNode)
     : RegexNode(parent) {
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
-        builder.append(forger.anAlphaNumChar())
+        builder.append(forger.anAlphaNumericalChar())
     }
 
     override fun describe(builder: StringBuilder) {

@@ -1,19 +1,18 @@
 package fr.xgouchet.elmyr
 
-import fr.xgouchet.elmyr.Forger
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Assertions.assertThat
 
 /**
  * @author Xavier F. Gouchet
  */
-class ForgerArraySpecs : io.kotlintest.specs.FeatureSpec() {
+class ForgerArraySpecs : FeatureSpec() {
 
     init {
 
         feature("An Array Forger uses a seed") {
 
-            val forger = fr.xgouchet.elmyr.Forger()
+            val forger = Forger()
             val seed = System.nanoTime()
             forger.reset(seed)
             val data = IntArray(64) { (it * it * 13) + (it * 37) + 41 }
@@ -22,7 +21,7 @@ class ForgerArraySpecs : io.kotlintest.specs.FeatureSpec() {
             assertThat(data).contains(selected)
 
             scenario("Reproduce data with another forger using the same seed") {
-                val otherForger = fr.xgouchet.elmyr.Forger()
+                val otherForger = Forger()
                 otherForger.reset(seed)
                 val otherSelected = otherForger.anElementFrom(data)
 
@@ -53,7 +52,7 @@ class ForgerArraySpecs : io.kotlintest.specs.FeatureSpec() {
         }
 
         feature("An Array Forger select from an array") {
-            val forger = fr.xgouchet.elmyr.Forger()
+            val forger = Forger()
             val seed = System.nanoTime()
             forger.reset(seed)
 
