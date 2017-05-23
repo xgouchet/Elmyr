@@ -101,7 +101,7 @@ With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, �
 
     Returns a random float, based on a constraint. 
 
-    - _constraint_ : the constraint to build the float. For more information, read the [Constraints](constraints.html) page
+    - _constraint_ : the constraint to build the float. For more information, read the [Constraints](constraints.html) page.
 
 
  - **fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float**
@@ -135,10 +135,151 @@ With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, �
 
 ---
 
+### Generating Chars
+
+With Elmyr, you can forge character values (eg: `‘m’`, `‘π’`, `‘✓’`, …).
+
+ - **fun aChar(constraint: CharConstraint = CharConstraint.ANY, case: Case = Case.ANY): Char**
+
+    Returns a random char, based on constraints.
+
+    - _constraint_ : the constraint to build the char. For more information, read the [Constraints](constraints.html) page.
+    - _case_ : the case to use (depending on the constraint, it might be ignored)
+
+
+ - **fun aChar(min: Char = 0x20, max: Char = 0xD800): Char**
+
+    Returns a random char, in the given range.
+
+    - _min_ : the minimum value (inclusive).
+    - _max_ : the maximum value (exclusive).
+
+
+ - **fun anAsciiChar(): Char**
+
+    Returns a random char, from the standard ASCII range.
+
+
+ - **fun anExtendedAsciiChar(): Char**
+
+    Returns a random char, from the standard ASCII range.
+    
+
+ - **fun anAlphabeticalChar(case: Case = Case.ANY): Char**
+
+    Returns a random char, within the roman alphabet (‘a’ to ‘z’).
+
+    - _case_ : the case to use 
+
+
+ - **fun aNonAlphabeticalChar(): Char**
+
+    Returns a random char, anything but alphabetical.
+
+
+ - **fun aVowelChar(case: Case = Case.ANY): Char**
+
+    Returns a random char, within the roman vowels.
+
+    - _case_ : the case to use 
+
+
+ - **fun aConsonantChar(case: Case = Case.ANY): Char**
+
+    Returns a random char, within the roman consonants.
+
+    - _case_ : the case to use 
+
+
+ - **fun anAlphaNumericalChar(case: Case = Case.ANY): Char**
+
+    Returns a random char, within the roman alphabet (‘a’ to ‘z’) or the arabic numerals (‘0’ to ‘9’).
+
+    - _case_ : the case to use 
+
+
+ - **fun aNonAlphabeticalChar(): Char**
+
+    Returns a random char, anything but alphabetical or numerical.
+
+
+ - **fun anHexadecimalChar(case: Case = Case.ANY): Char**
+
+    Returns a random char, within the hexadecimal characters (‘a’ to ‘f’ and ‘0’ to ‘9’).
+
+    - _case_ : the case to use 
+
+
+ - **fun aNonHexadecimalChar(): Char**
+
+    Returns a random char, anything but hexadecimal.
+
+
+ - **fun aNumericalChar(): Char**
+
+    Returns a random char, within the the arabic numerals (‘0’ to ‘9’).
+
+
+ - **fun aNonNumericalChar(): Char**
+
+    Returns a random char, anything but numerical.
+
+
+ - **fun aWhitespaceChar(): Char**
+
+    Returns a random char representing a whitespace : a space, a tab or a new line.
+
+
+ - **fun aNonNumericalChar(): Char**
+
+    Returns a random char, anything but a whitespace.
+
+
+---
+
 ### Generating Strings
 
 With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoulox”`, …).
 
+ - **fun aString(constraint: StringConstraint = StringConstraint.ANY, case: Case = Case.ANY, size: Int = -1): String**
+
+    Returns a random string, based on constraints.
+
+    - _constraint_ : the constraint to build the char. For more information, read the [Constraints](constraints.html) page.
+    - _case_ : the case to use (depending on the constraint, it might be ignored).
+    - _size_ : the desired size of the string, or -1 for a random sized string.
+
+
+ - **fun aWord(case: Case = Case.ANY, size: Int = -1): String**
+
+    Returns a random string, mimicking a word (usually just some _gobbledygook_).
+
+    - _case_ : the case to use (depending on the constraint, it might be ignored).
+    - _size_ : the desired size of the string, or -1 for a random sized string.
+
+
+ - **fun aSentence(case: Case = Case.ANY, size: Int = -1): String**
+
+    Returns a random string, mimicking a sentence structure (usually just some kind of _Lorem Ipsum_).
+
+    - _case_ : the case to use (depending on the constraint, it might be ignored).
+    - _size_ : the desired size of the string, or -1 for a random sized string.
+
+
+ - **fun anHexadecimalString(case: Case = Case.ANY, size: Int = -1): String**
+
+    Returns a random string, using only hexadecimal characters.
+
+    - _case_ : the case to use (depending on the constraint, it might be ignored).
+    - _size_ : the desired size of the string, or -1 for a random sized string.
+
+
+ - **fun aStringMatching(regex: String): String**
+ - **fun aStringMatching(regex: Regex): String**
+
+    Returns a random string, matching the given regular-expression pattern. Note that parsing the regex can take some time depending on the regex complexity. Also not all regex feature are supported.
+
+    - _regex_ : the regular expression to match.
 
 ---
 

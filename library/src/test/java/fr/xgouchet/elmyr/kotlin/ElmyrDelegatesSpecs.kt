@@ -18,6 +18,7 @@ class ElmyrDelegatesSpecs : FeatureSpec() {
 
     internal val forgedStringReadOnly: String by forgeryWithConstraint(StringConstraint.ANY, forger = baseForger)
     internal val forgedStringRegex: String by forgeryWithRegex(Regex("""Hello \w+ !"""), forger = baseForger)
+    internal val forgedStringRegex2: String by forgeryWithRegex("Bye \\w+ !", forger = baseForger)
     internal val forgedStringConstraint: String by forgeryWithConstraint(StringConstraint.HEXADECIMAL, Case.LOWER, SIZE, forger = baseForger)
 
     internal val forgedCharReadOnly: Char by forgeryWithConstraint(CharConstraint.ALPHA_NUM, Case.UPPER, forger = baseForger)
@@ -68,6 +69,15 @@ class ElmyrDelegatesSpecs : FeatureSpec() {
                 assertThat(s1).isEqualTo(s2)
 
                 assertThat(s1).matches("Hello \\w+ !")
+            }
+
+            scenario("With regex pattern") {
+                val s1 = forgedStringRegex2
+                val s2 = forgedStringRegex2
+
+                assertThat(s1).isEqualTo(s2)
+
+                assertThat(s1).matches("Bye \\w+ !")
             }
 
             scenario("With constraint") {

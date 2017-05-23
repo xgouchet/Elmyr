@@ -53,8 +53,18 @@ class ForgerCharSpecs : FeatureSpec() {
             scenario("Produce an Ascii printable character") {
                 repeat(16, {
                     val char = forger.anAsciiChar()
-                    assertThat(Forger.Companion.PRINTABLE_ASCII)
-                            .contains(char)
+                    assertThat(char)
+                            .isGreaterThanOrEqualTo(Forger.MIN_PRINTABLE)
+                            .isLessThanOrEqualTo(Forger.MAX_ASCII)
+                })
+            }
+
+            scenario("Produce an Extended Ascii printable character") {
+                repeat(16, {
+                    val char = forger.anExtendedAsciiChar()
+                    assertThat(char)
+                            .isGreaterThanOrEqualTo(Forger.MIN_PRINTABLE)
+                            .isLessThanOrEqualTo(Forger.MAX_ASCII_EXTENDED)
                 })
             }
 

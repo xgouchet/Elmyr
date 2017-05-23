@@ -190,10 +190,8 @@ class ForgerIntSpecs : FeatureSpec() {
                 assertThat(computedMean)
                         .isCloseTo(mean.toFloat(), within(stdev / 10.0f))
                 assertThat(computedStDev)
-                        .isCloseTo(stdev.toFloat(), withinPercentage(15))
+                        .isCloseTo(stdev.toFloat(), within(stdev / 2.0f))
             }
         }
-
-
     }
 }

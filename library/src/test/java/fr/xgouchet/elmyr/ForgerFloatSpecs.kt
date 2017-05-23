@@ -74,8 +74,8 @@ class ForgerFloatSpecs : FeatureSpec() {
             forger.reset(System.nanoTime())
 
             scenario("Produce an float in a specified range") {
-                val min = forger.aFloat()
-                val max = forger.aFloat(min + 1f)
+                val min = forger.aFloat(-100000f,100000f)
+                val max = forger.aFloat(-100000f,100000f)
 
                 assertThat(max).isGreaterThan(min)
 
@@ -88,8 +88,8 @@ class ForgerFloatSpecs : FeatureSpec() {
             }
 
             scenario("Produce an float in a small range") {
-                val min = forger.aFloat()
-                val max = min + 3
+                val min = forger.aFloat(-100000f,100000f)
+                val max = min + 10
 
                 repeat(16, {
                     val float = forger.aFloat(min, max)

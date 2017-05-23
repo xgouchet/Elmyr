@@ -206,7 +206,7 @@ open class Forger {
     /**
      * @param constraint a constraint on the char to forge
      * @param case the case to use (depending on the constraint, it might be ignored)
-     * @return a Char within the given range
+     * @return a Char with the given constraints
      */
     fun aChar(constraint: CharConstraint = CharConstraint.ANY,
               case: Case = Case.ANY): Char {
@@ -229,19 +229,26 @@ open class Forger {
     }
 
     /**
-     * @param min the min char code to use (default = 20 == space)
-     * @param max the max char code to use (default = Int.MAX_VALUE)
+     * @param min the min char code to use (inclusive, default = 0x20 == space)
+     * @param max the max char code to use (exclusive, default = 0xD800)
      * @return a Char within the given range
      */
-    fun aChar(min: Char = 20.toChar(), max: Char = Char.MAX_SURROGATE): Char {
+    fun aChar(min: Char = MIN_PRINTABLE, max: Char = MAX_UTF8): Char {
         return anInt(min.toInt(), max.toInt()).toChar()
     }
 
     /**
-     * @return a Char within the ASCII printable characters
+     * @return a Char within the standard ASCII printable characters
      */
     fun anAsciiChar(): Char {
-        return anElementFrom(PRINTABLE_ASCII)
+        return aChar(MIN_PRINTABLE, MAX_ASCII)
+    }
+
+    /**
+     * @return a Char within the extended ASCII printable characters
+     */
+    fun anExtendedAsciiChar(): Char {
+        return aChar(MIN_PRINTABLE, MAX_ASCII_EXTENDED)
     }
 
     /**
@@ -339,14 +346,14 @@ open class Forger {
     }
 
     /**
-     * @return a digit (0 to 9)
+     * @return a numerical (0 to 9)
      */
     fun aNumericalChar(): Char {
         return anElementFrom(DIGIT)
     }
 
     /**
-     * a non digit character
+     * a non numerical character
      */
     fun aNonNumericalChar(): Char {
         var res: Char
@@ -550,7 +557,10 @@ open class Forger {
         val HUGE_THRESHOLD = 0x1000000
 
         // Char
-        internal val PRINTABLE_ASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~".toCharArray()
+        internal val MIN_PRINTABLE = 0x20.toChar()
+        internal val MAX_ASCII = 0x7F.toChar()
+        internal val MAX_ASCII_EXTENDED = 0xFF.toChar()
+        internal val MAX_UTF8 = 0xD800.toChar()
 
         internal val ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray()
         internal val ALPHA_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
