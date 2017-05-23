@@ -24,10 +24,12 @@ open class Forger {
     // region Bool
 
     /**
+     * @param probability the probability the boolean will be true (default 0.5f)
      * @return a boolean
      */
-    fun aBool(): Boolean {
-        return rng.nextBoolean()
+    @JvmOverloads
+    fun aBool(probability: Float = 0.5f): Boolean {
+        return rng.nextFloat() < probability
     }
 
     // endregion
@@ -60,7 +62,7 @@ open class Forger {
     fun anInt(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): Int {
 
         if (min >= max) {
-            throw IllegalArgumentException("The ‘min’ boundary of the range should be less than the ‘max’ boundary")
+            throw IllegalArgumentException("The ‘min’ boundary ($min) of the range should be less than the ‘max’ boundary ($max)")
         }
 
         val range = max.toLong() - min.toLong()
@@ -132,19 +134,22 @@ open class Forger {
     }
 
     /**
-     * @param min the minimum value (inclusive), default = Float#NEGATIVE_INFINITY
-     * @param max the maximum value (exclusive), default = Float#POSITIVE_INFINITY
+     * @param min the minimum value (inclusive), default = -Float#MAX_VALUE
+     * @param max the maximum value (exclusive), default = Float#MAX_VALUE
      * @return an int between min and max
      */
     fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float {
 
-        if (min >= max) {
-            throw IllegalArgumentException("The ‘min’ boundary of the range should be less than the ‘max’ boundary")
+        if (min > max) {
+            throw IllegalArgumentException("The ‘min’ boundary ($min) of the range should be less than (or equal to) the ‘max’ boundary ($max)")
         }
 
         val range = max - min
-
-        return (rng.nextFloat() * range) + min
+        if (range == Float.POSITIVE_INFINITY) {
+            return (rng.nextFloat() - 0.5f) * Float.MAX_VALUE * 2
+        } else {
+            return (rng.nextFloat() * range) + min
+        }
     }
 
     /**
@@ -170,7 +175,7 @@ open class Forger {
      */
     fun aProbalisticFloat(mean: Float = 0f, standardDeviation: Float = 1f): Float {
         if (standardDeviation < 0) {
-            throw IllegalArgumentException("Standard deviation must be a positive (or null) value")
+            throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
         } else if (standardDeviation == 0f) {
             return mean
         } else {

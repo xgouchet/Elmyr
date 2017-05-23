@@ -76,7 +76,7 @@ If a test using the `JUnitForger` rule fails, the log displays the following lin
 
 > ‘shouldDoSomething’ failed with fake seed = 0x4815162342
 
-With that information, you can override the FORGER's seed to reproduce the exact same test steps by using the following 
+With that information, you can override the forger's seed to reproduce the exact same test steps by using the following 
 `@Before` method : 
 
 ```java
@@ -96,23 +96,23 @@ Of course you can use Elmyr's `Forger` class in other situations. You can simply
     forger reset(seed);
 ```
 
-The FORGER's results for the same seed are guaranteed to be always the same (as long as the calls are done in the same order). Note that FORGER is not concurrent-safe.
+The FORGER's results for the same seed are guaranteed to be always the same (as long as the calls are done in the same order). Note that forger is not concurrent-safe.
 
 #### Kotlin
 
 Because Kotlin is Fun™, Elmyr provides some delegates for read-only properties, to forge data in an easy way : 
 
 ```kotlin
-    val lipsum : String by forgery(StringConstraint.SENTENCE)
-    val id : String by forgery(Regex("""[A-Z]+-[\d]+""")
-    val number : Int by forgery(IntConstraint.NEGATIVE_STRICT)
-    val character : Char by forgery(CharConstraint.HEXADECIMAL)
+    val lipsum : String by forgeryWithConstraint(StringConstraint.SENTENCE)
+    val id : String by forgeryWithRegex(Regex("""[A-Z]+-[\d]+""")
+    val number : Int by forgeryWithRange(0, 42)
+    val rate : Float by forgeryWithDistribution(1.0f, 0.5f)
 ```
 
-Each of those method accept additional parameters for furter configuration, and also a parameter named FORGER to provide a seeded Forger. 
+Each of those method accept additional parameters for furter configuration, and also a parameter named forger to provide a seeded Forger. 
 
 ```kotlin
-    val number : Int by forgery(IntConstraint.NEGATIVE_STRICT, FORGER = myForger)
+    val number : Int by forgeryWithConstraint(IntConstraint.TINY, forger = myForger)
 ```
 
 

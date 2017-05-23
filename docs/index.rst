@@ -24,4 +24,4 @@ This is where Elmyr kicks in, allowing you to create fake data based on a few co
    :glob:
 
    getting_started
-
+   forger

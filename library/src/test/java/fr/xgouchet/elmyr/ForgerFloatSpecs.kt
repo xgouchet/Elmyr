@@ -59,13 +59,6 @@ class ForgerFloatSpecs : FeatureSpec() {
                 }
             }
 
-            scenario("Fail if min == max") {
-                val min = forger.aFloat()
-                shouldThrow<IllegalArgumentException> {
-                    forger.aFloat(min, min)
-                }
-            }
-
             scenario("Fail if standard dev < 0") {
                 val mean = forger.aFloat()
                 val stDev = forger.aNegativeFloat(true)
@@ -82,7 +75,7 @@ class ForgerFloatSpecs : FeatureSpec() {
 
             scenario("Produce an float in a specified range") {
                 val min = forger.aFloat()
-                val max = forger.aFloat(min + 1)
+                val max = forger.aFloat(min + 1f)
 
                 assertThat(max).isGreaterThan(min)
 
@@ -102,7 +95,7 @@ class ForgerFloatSpecs : FeatureSpec() {
                     val float = forger.aFloat(min, max)
                     assertThat(float)
                             .isGreaterThanOrEqualTo(min)
-                            .isLessThan(max)
+                            .isLessThanOrEqualTo(max)
                 })
             }
 
