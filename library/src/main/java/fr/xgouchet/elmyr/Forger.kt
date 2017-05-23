@@ -12,7 +12,7 @@ open class Forger {
     internal val rng = java.util.Random()
 
     /**
-     * Resets this FORGER with the given seed. Knowing the seed allow the FORGER to reproduce
+     * Resets this forger with the given seed. Knowing the seed allow the forger to reproduce
      * previous data.
      *
      * @param seed the seed to use (try and remember to be able to reproduce a forgery
@@ -111,6 +111,71 @@ open class Forger {
      */
     fun aHugeInt(): Int {
         return anInt(HUGE_THRESHOLD)
+    }
+
+    // endregion
+
+    // region Float
+
+    /**
+     * @param constraint a constraint on the int to forge
+     * @return an int between constraint and max
+     */
+    fun aFloat(constraint: FloatConstraint = FloatConstraint.ANY): Float {
+        when (constraint) {
+            FloatConstraint.ANY -> return aFloat(-Float.MAX_VALUE, Float.MAX_VALUE)
+            FloatConstraint.POSITIVE -> return aPositiveFloat()
+            FloatConstraint.POSITIVE_STRICT -> return aPositiveFloat(strict = true)
+            FloatConstraint.NEGATIVE -> return aNegativeFloat()
+            FloatConstraint.NEGATIVE_STRICT -> return aNegativeFloat(strict = true)
+        }
+    }
+
+    /**
+     * @param min the minimum value (inclusive), default = Float#NEGATIVE_INFINITY
+     * @param max the maximum value (exclusive), default = Float#POSITIVE_INFINITY
+     * @return an int between min and max
+     */
+    fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float {
+
+        if (min >= max) {
+            throw IllegalArgumentException("The ‘min’ boundary of the range should be less than the ‘max’ boundary")
+        }
+
+        val range = max - min
+
+        return (rng.nextFloat() * range) + min
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 int (default : false)
+     * @return a positive int
+     */
+    fun aPositiveFloat(strict: Boolean = false): Float {
+        return aFloat(min = if (strict) Float.MIN_VALUE else 0.0f)
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 int (default : true)
+     * @return a negative int
+     */
+    fun aNegativeFloat(strict: Boolean = true): Float {
+        return -aPositiveFloat(strict)
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0.0f)
+     * @param standardDeviation the standard deviation value of the distribution (default : 1.0f)
+     * @return a float picked from a gaussian distribution (aka bell curve)
+     */
+    fun aProbalisticFloat(mean: Float = 0f, standardDeviation: Float = 1f): Float {
+        if (standardDeviation < 0) {
+            throw IllegalArgumentException("Standard deviation must be a positive (or null) value")
+        } else if (standardDeviation == 0f) {
+            return mean
+        } else {
+            return (rng.nextGaussian().toFloat() * standardDeviation) + mean
+        }
     }
 
     // endregion

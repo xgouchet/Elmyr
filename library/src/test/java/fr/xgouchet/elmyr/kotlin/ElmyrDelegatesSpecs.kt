@@ -1,9 +1,13 @@
 package fr.xgouchet.elmyr.kotlin
 
 import fr.xgouchet.elmyr.*
-import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgery
+import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgeryWithConstraint
+import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgeryWithDistribution
+import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgeryWithRange
+import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgeryWithRegex
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.within
 
 /**
  * @author Xavier F. Gouchet
@@ -12,15 +16,19 @@ class ElmyrDelegatesSpecs : FeatureSpec() {
 
     internal val baseForger: Forger = Forger()
 
-    internal val forgedStringReadOnly: String by forgery(StringConstraint.ANY, forger = baseForger)
-    internal val forgedStringRegex: String by forgery(Regex("""Hello \w+ !"""), forger = baseForger)
-    internal val forgedStringConstraint: String by forgery(StringConstraint.HEXADECIMAL, Case.LOWER, SIZE, forger = baseForger)
+    internal val forgedStringReadOnly: String by forgeryWithConstraint(StringConstraint.ANY, forger = baseForger)
+    internal val forgedStringRegex: String by forgeryWithRegex(Regex("""Hello \w+ !"""), forger = baseForger)
+    internal val forgedStringConstraint: String by forgeryWithConstraint(StringConstraint.HEXADECIMAL, Case.LOWER, SIZE, forger = baseForger)
 
-    internal val forgedCharReadOnly: Char by forgery(CharConstraint.ALPHA_NUM, Case.UPPER, forger = baseForger)
-    internal val forgedCharNumerical: Char by forgery(CharConstraint.NUMERICAL, forger = baseForger)
+    internal val forgedCharReadOnly: Char by forgeryWithConstraint(CharConstraint.ALPHA_NUM, Case.UPPER, forger = baseForger)
+    internal val forgedCharNumerical: Char by forgeryWithConstraint(CharConstraint.NUMERICAL, forger = baseForger)
 
-    internal val forgedIntReadOnly: Int by forgery(IntConstraint.TINY, forger = baseForger)
-    internal val forgedIntWithRange: Int by forgery(SIZE, LIMIT, forger = baseForger)
+    internal val forgedIntReadOnly: Int by forgeryWithConstraint(IntConstraint.TINY, forger = baseForger)
+    internal val forgedIntWithRange: Int by forgeryWithRange(MIN, MAX, forger = baseForger)
+
+    internal val forgedFloatReadOnly: Float by forgeryWithConstraint(FloatConstraint.ANY, forger = baseForger)
+    internal val forgedFloatWithRange: Float by forgeryWithRange(MIN.toFloat(), MAX.toFloat(), forger = baseForger)
+    internal val forgedFloatWithDistribution: Float by forgeryWithDistribution(MEAN, ST_DEV, forger = baseForger)
 
     init {
 
@@ -104,14 +112,47 @@ class ElmyrDelegatesSpecs : FeatureSpec() {
                 val s2 = forgedIntWithRange
 
                 assertThat(s1).isEqualTo(s2)
-                        .isGreaterThanOrEqualTo(SIZE)
-                        .isLessThan(LIMIT)
+                        .isGreaterThanOrEqualTo(MIN)
+                        .isLessThan(MAX)
+            }
+        }
+
+        feature("Float delegates") {
+
+            scenario("Read Only property") {
+                val s1 = forgedFloatReadOnly
+                val s2 = forgedFloatReadOnly
+
+                assertThat(s1).isEqualTo(s2)
+            }
+
+            scenario("Within range") {
+                val s1 = forgedFloatWithRange
+                val s2 = forgedFloatWithRange
+
+                assertThat(s1).isEqualTo(s2)
+                        .isGreaterThanOrEqualTo(MIN.toFloat())
+                        .isLessThan(MAX.toFloat())
+            }
+
+            scenario("Gaussian probability") {
+                val s1 = forgedFloatWithDistribution
+                val s2 = forgedFloatWithDistribution
+
+                assertThat(s1).isEqualTo(s2)
+                        .isCloseTo(MEAN, within(ST_DEV * 10))
             }
         }
     }
 
     companion object {
         val SIZE: Int = 42
-        val LIMIT: Int = 24601
+
+        val MIN: Int = 4815
+        val MAX: Int = 24601
+
+
+        val MEAN: Float = 69f
+        val ST_DEV: Float = 3.141592f
     }
 }

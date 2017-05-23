@@ -25,7 +25,7 @@ class ForgerEnumSpecs : FeatureSpec() {
             val selectedMonth = forger.aValueFrom(ForgerEnumSpecs.Month::class.java)
             val selectedDay = forger.aValueFrom(ForgerEnumSpecs.Day::class.java)
 
-            scenario("Reproduce data with another FORGER using the same seed") {
+            scenario("Reproduce data with another forger using the same seed") {
                 val otherProvider = Forger()
                 otherProvider.reset(seed)
 
@@ -38,7 +38,7 @@ class ForgerEnumSpecs : FeatureSpec() {
                         .isEqualTo(selectedDay)
             }
 
-            scenario("Reproduce data with same FORGER reset with the same seed") {
+            scenario("Reproduce data with same forger reset with the same seed") {
                 forger.reset(seed)
                 val otherSelectedMonth = forger.aValueFrom(ForgerEnumSpecs.Month::class.java)
                 val otherSelectedDay = forger.aValueFrom(ForgerEnumSpecs.Day::class.java)

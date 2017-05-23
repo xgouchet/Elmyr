@@ -17,10 +17,10 @@ object ElmyrDelegates {
      * object construction time but at a later time. Trying to read the property before the initial value has been
      * assigned results in an exception.
      */
-    fun forgery(constraint: StringConstraint,
-                case: Case = Case.ANY,
-                size: Int = -1,
-                forger: Forger = FORGER)
+    fun forgeryWithConstraint(constraint: StringConstraint,
+                              case: Case = Case.ANY,
+                              size: Int = -1,
+                              forger: Forger = FORGER)
             : ReadOnlyProperty<Any?, String>
             = ForgedString(constraint, case, size, forger = forger)
 
@@ -28,7 +28,7 @@ object ElmyrDelegates {
      * @param regex the regex to use to generate a String
      * @return a property delegate for a read-only property with a forged String based on the given Regex
      */
-    fun forgery(
+    fun forgeryWithRegex(
             regex: Regex,
             forger: Forger = FORGER)
             : ReadOnlyProperty<Any?, String>
@@ -38,7 +38,7 @@ object ElmyrDelegates {
      * @param regex the regex to use to generate a String
      * @return a property delegate for a read-only property with a forged String based on the given Regex
      */
-    fun forgery(
+    fun forgeryWithRegex(
             regex: String,
             forger: Forger = FORGER)
             : ReadOnlyProperty<Any?, String>
@@ -49,7 +49,7 @@ object ElmyrDelegates {
      * @param case the case for the Char to generate
      * @return a property delegate for a read-only property with a forged Char based on the given constraints
      */
-    fun forgery(
+    fun forgeryWithConstraint(
             constraint: CharConstraint,
             case: Case = Case.ANY,
             forger: Forger = FORGER)
@@ -60,7 +60,7 @@ object ElmyrDelegates {
      * @param constraint the constraint for the Int to generate
      * @return a property delegate for a read-only property with a forged Int based on the given constraint
      */
-    fun forgery(
+    fun forgeryWithConstraint(
             constraint: IntConstraint,
             forger: Forger = FORGER)
             : ReadOnlyProperty<Any?, Int>
@@ -71,11 +71,46 @@ object ElmyrDelegates {
      * @param max the max value (exclusive)
      * @return a property delegate for a read-only property with a forged Int within the given range
      */
-    fun forgery(
+    fun forgeryWithRange(
             min: Int,
             max: Int,
             forger: Forger = FORGER)
             : ReadOnlyProperty<Any?, Int>
             = ForgedInt(min = min, max = max, forger = forger)
+
+    /**
+     * @param constraint the constraint for the Float to generate
+     * @return a property delegate for a read-only property with a forged Int based on the given constraint
+     */
+    fun forgeryWithConstraint(
+            constraint: FloatConstraint,
+            forger: Forger = FORGER)
+            : ReadOnlyProperty<Any?, Float>
+            = ForgedFloat(constraint = constraint, forger = forger)
+
+    /**
+     * @param min the min value (inclusive)
+     * @param max the max value (exclusive)
+     * @return a property delegate for a read-only property with a forged Int within the given range
+     */
+    fun forgeryWithRange(
+            min: Float = -Float.MAX_VALUE,
+            max: Float = Float.MAX_VALUE,
+            forger: Forger = FORGER)
+            : ReadOnlyProperty<Any?, Float>
+            = ForgedFloat(min = min, max = max, forger = forger)
+
+    /**
+     * @param mean the mean value of the distribution (default 0.0f)
+     * @param standardDeviation the standard deviation value of the distribution (default 1.0f)
+     * @return a property delegate for a read-only property with a forged Float in a gaussian distribution based on the
+     * given mean and standard deviation
+     */
+    fun forgeryWithDistribution(
+            mean: Float = 0f,
+            standardDeviation: Float = 1f,
+            forger: Forger = FORGER)
+            : ReadOnlyProperty<Any?, Float>
+            = ForgedFloat(mean = mean, standardDeviation = standardDeviation, forger = forger)
 }
 

@@ -20,7 +20,7 @@ class ForgerArraySpecs : FeatureSpec() {
             val selected = forger.anElementFrom(data)
             assertThat(data).contains(selected)
 
-            scenario("Reproduce data with another FORGER using the same seed") {
+            scenario("Reproduce data with another forger using the same seed") {
                 val otherForger = Forger()
                 otherForger.reset(seed)
                 val otherSelected = otherForger.anElementFrom(data)
@@ -29,7 +29,7 @@ class ForgerArraySpecs : FeatureSpec() {
                         .isEqualTo(selected)
             }
 
-            scenario("Reproduce data with same FORGER reset with the same seed") {
+            scenario("Reproduce data with same forger reset with the same seed") {
                 forger.reset(seed)
                 val otherSelected = forger.anElementFrom(data)
 
