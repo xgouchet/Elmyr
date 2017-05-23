@@ -12,7 +12,7 @@ open class Forger {
     internal val rng = java.util.Random()
 
     /**
-     * Resets this forger with the given seed. Knowing the seed allow the forger to reproduce
+     * Resets this FORGER with the given seed. Knowing the seed allow the FORGER to reproduce
      * previous data.
      *
      * @param seed the seed to use (try and remember to be able to reproduce a forgery

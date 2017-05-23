@@ -1,9 +1,8 @@
 package fr.xgouchet.elmyr.kotlin
 
 import fr.xgouchet.elmyr.Case
+import fr.xgouchet.elmyr.Forger
 import fr.xgouchet.elmyr.StringConstraint
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 /**
  * A read-only String property
@@ -11,24 +10,20 @@ import kotlin.reflect.KProperty
  * @author Xavier F. Gouchet
  */
 class ForgedString(
-        constraint: StringConstraint = StringConstraint.ANY,
-        case: Case = Case.ANY,
-        size: Int = -1,
-        regex: Regex? = null)
-    : ReadOnlyProperty<Any?, String> {
+        val constraint: StringConstraint = StringConstraint.ANY,
+        val case: Case = Case.ANY,
+        val size: Int = -1,
+        val regex: Regex? = null,
+        forger: Forger)
+    : ForgedProperty<String>(forger) {
 
-    internal val value: String
-
-    init {
+    override fun generate(forger: Forger): String {
         if (regex != null) {
-            value = ElmyrDelegates.forger.aStringMatching(regex)
+            return forger.aStringMatching(regex)
         } else {
-            value = ElmyrDelegates.forger.aString(constraint, case, size)
+            return forger.aString(constraint, case, size)
         }
     }
 
-    override fun getValue(thisRef: Any?, property: KProperty<*>): String {
-        return value
-    }
 
 }

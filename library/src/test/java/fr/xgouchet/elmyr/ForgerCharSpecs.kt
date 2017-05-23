@@ -17,7 +17,7 @@ class ForgerCharSpecs : FeatureSpec() {
             forger.reset(seed)
             val data = CharArray(16) { forger.aChar(CharConstraint.ANY) }
 
-            scenario("Reproduce data with another forger using the same seed") {
+            scenario("Reproduce data with another FORGER using the same seed") {
                 val otherForger = Forger()
                 otherForger.reset(seed)
                 val otherData = CharArray(16) { otherForger.aChar(CharConstraint.ANY) }
@@ -26,7 +26,7 @@ class ForgerCharSpecs : FeatureSpec() {
                         .containsExactly(*data)
             }
 
-            scenario("Reproduce data with same forger reset with the same seed") {
+            scenario("Reproduce data with same FORGER reset with the same seed") {
                 forger.reset(seed)
                 val otherData = CharArray(16) { forger.aChar(CharConstraint.ANY) }
 

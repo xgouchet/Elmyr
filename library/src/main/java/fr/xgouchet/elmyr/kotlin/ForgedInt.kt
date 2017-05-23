@@ -1,7 +1,6 @@
 package fr.xgouchet.elmyr.kotlin
 
-import fr.xgouchet.elmyr.Case
-import fr.xgouchet.elmyr.CharConstraint
+import fr.xgouchet.elmyr.Forger
 import fr.xgouchet.elmyr.IntConstraint
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -12,24 +11,18 @@ import kotlin.reflect.KProperty
  * @author Xavier F. Gouchet
  */
 class ForgedInt(
-        constraint: IntConstraint = IntConstraint.ANY,
-        min: Int = -1,
-        max: Int = -1)
-    : ReadOnlyProperty<Any?, Int> {
+        val constraint: IntConstraint = IntConstraint.ANY,
+        val min: Int = -1,
+        val max: Int = -1,
+        forger: Forger)
+    : ForgedProperty<Int>(forger) {
 
-    internal val value: Int
-
-    init {
+    override fun generate(forger: Forger): Int {
         if ((min < 0) and (max < 0)) {
-            value = ElmyrDelegates.forger.anInt(constraint)
+            return forger.anInt(constraint)
         } else {
-            value = ElmyrDelegates.forger.anInt(min, max)
+            return forger.anInt(min, max)
         }
-    }
-
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
-        return value
     }
 
 }

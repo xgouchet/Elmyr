@@ -18,7 +18,7 @@ class ForgerIntSpecs : FeatureSpec() {
             forger.reset(seed)
             val data = IntArray(16) { forger.anInt(min = it) }
 
-            scenario("Reproduce data with another forger using the same seed") {
+            scenario("Reproduce data with another FORGER using the same seed") {
                 val otherForger = Forger()
                 otherForger.reset(seed)
                 val otherData = IntArray(16) { otherForger.anInt(min = it) }
@@ -27,7 +27,7 @@ class ForgerIntSpecs : FeatureSpec() {
                         .containsExactly(*data)
             }
 
-            scenario("Reproduce data with same forger reset with the same seed") {
+            scenario("Reproduce data with same FORGER reset with the same seed") {
                 forger.reset(seed)
                 val otherData = IntArray(16) { forger.anInt(min = it) }
 

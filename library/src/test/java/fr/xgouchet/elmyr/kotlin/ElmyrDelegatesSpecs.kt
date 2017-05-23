@@ -1,9 +1,6 @@
 package fr.xgouchet.elmyr.kotlin
 
-import fr.xgouchet.elmyr.Case
-import fr.xgouchet.elmyr.CharConstraint
-import fr.xgouchet.elmyr.IntConstraint
-import fr.xgouchet.elmyr.StringConstraint
+import fr.xgouchet.elmyr.*
 import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgery
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Assertions.assertThat
@@ -13,15 +10,17 @@ import org.assertj.core.api.Assertions.assertThat
  */
 class ElmyrDelegatesSpecs : FeatureSpec() {
 
-    internal val forgedStringReadOnly: String by forgery(StringConstraint.ANY)
-    internal val forgedStringRegex: String by forgery(Regex("""Hello \w+ !"""))
-    internal val forgedStringConstraint: String by forgery(StringConstraint.HEXADECIMAL, Case.LOWER, SIZE)
+    internal val baseForger: Forger = Forger()
 
-    internal val forgedCharReadOnly: Char by forgery(CharConstraint.ALPHA_NUM, Case.UPPER)
-    internal val forgedCharNumerical: Char by forgery(CharConstraint.NUMERICAL)
+    internal val forgedStringReadOnly: String by forgery(StringConstraint.ANY, forger = baseForger)
+    internal val forgedStringRegex: String by forgery(Regex("""Hello \w+ !"""), forger = baseForger)
+    internal val forgedStringConstraint: String by forgery(StringConstraint.HEXADECIMAL, Case.LOWER, SIZE, forger = baseForger)
 
-    internal val forgedIntReadOnly: Int by forgery(IntConstraint.TINY)
-    internal val forgedIntWithRange: Int by forgery(SIZE, LIMIT)
+    internal val forgedCharReadOnly: Char by forgery(CharConstraint.ALPHA_NUM, Case.UPPER, forger = baseForger)
+    internal val forgedCharNumerical: Char by forgery(CharConstraint.NUMERICAL, forger = baseForger)
+
+    internal val forgedIntReadOnly: Int by forgery(IntConstraint.TINY, forger = baseForger)
+    internal val forgedIntWithRange: Int by forgery(SIZE, LIMIT, forger = baseForger)
 
     init {
 
@@ -29,6 +28,26 @@ class ElmyrDelegatesSpecs : FeatureSpec() {
 
             scenario("Read Only property") {
                 val s1 = forgedStringReadOnly
+                val s2 = forgedStringReadOnly
+
+                assertThat(s1).isEqualTo(s2)
+            }
+
+            scenario("Only use seed once") {
+                val s1 = forgedStringReadOnly
+                baseForger.reset(System.nanoTime())
+                val s2 = forgedStringReadOnly
+
+                assertThat(s1).isEqualTo(s2)
+            }
+
+
+            scenario("Use forger lazily") {
+                val seed = System.nanoTime()
+                baseForger.reset(seed)
+                val s1 = baseForger.aString(StringConstraint.ANY, Case.ANY, -1)
+
+                baseForger.reset(seed)
                 val s2 = forgedStringReadOnly
 
                 assertThat(s1).isEqualTo(s2)

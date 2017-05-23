@@ -56,9 +56,15 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
- - 0.1
-     - Initial version with basic feature
-     - JUnit rule 
+### 0.2 (2017/05/23)
+
+ - Kotlin delegates
+
+
+### 0.1 (2017/05/20)
+
+ - Initial version with basic feature
+ - JUnit rule 
 
 
 ## Meta

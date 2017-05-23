@@ -21,7 +21,7 @@ class ForgerStringSpecs : FeatureSpec() {
             forger.reset(seed)
             val data = Array(16) { forger.aString(size = it) }
 
-            scenario("Reproduce data with another forger using the same seed") {
+            scenario("Reproduce data with another FORGER using the same seed") {
                 val otherForger = Forger()
                 otherForger.reset(seed)
                 val otherData = Array(16) { otherForger.aString(size = it) }
@@ -30,7 +30,7 @@ class ForgerStringSpecs : FeatureSpec() {
                         .containsExactly(*data)
             }
 
-            scenario("Reproduce data with same forger reset with the same seed") {
+            scenario("Reproduce data with same FORGER reset with the same seed") {
                 forger.reset(seed)
                 val otherData = Array(16) { forger.aString(size = it) }
 
@@ -98,9 +98,10 @@ class ForgerStringSpecs : FeatureSpec() {
                 repeat(16, {
                     val size = forger.aSmallInt()
                     val word = forger.aSentence(Case.LOWER, size)
+
                     assertThat(word)
                             .hasSize(size)
-                            .matches("([a-z]+ )*[a-z]+\\.")
+                            .matches("(([a-z]+ )*[a-z]+\\.)|‽")
                 })
             }
 

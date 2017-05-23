@@ -2,6 +2,7 @@ package fr.xgouchet.elmyr.kotlin
 
 import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.CharConstraint
+import fr.xgouchet.elmyr.Forger
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -11,14 +12,12 @@ import kotlin.reflect.KProperty
  * @author Xavier F. Gouchet
  */
 class ForgedChar(
-        constraint: CharConstraint = CharConstraint.ANY,
-        case: Case = Case.ANY)
-    : ReadOnlyProperty<Any?, Char> {
+        val constraint: CharConstraint = CharConstraint.ANY,
+        val case: Case = Case.ANY,
+        forger: Forger)
+    : ForgedProperty<Char>(forger) {
 
-    internal val value: Char = ElmyrDelegates.forger.aChar(constraint, case)
-
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Char {
-        return value
+    override fun generate(forger: Forger): Char {
+        return forger.aChar(constraint, case)
     }
-
 }
