@@ -63,7 +63,7 @@ class ForgerFloatSpecs : FeatureSpec() {
                 val mean = forger.aFloat()
                 val stDev = forger.aNegativeFloat(true)
                 shouldThrow<IllegalArgumentException> {
-                    forger.aProbalisticFloat(mean, stDev)
+                    forger.aGaussianFloat(mean, stDev)
                 }
             }
         }
@@ -140,7 +140,7 @@ class ForgerFloatSpecs : FeatureSpec() {
                 var squareSum = 0f
 
                 repeat(count, {
-                    val float = forger.aProbalisticFloat(mean, stdev)
+                    val float = forger.aGaussianFloat(mean, stdev)
                     sum += float
                     squareSum += float * float
                 })

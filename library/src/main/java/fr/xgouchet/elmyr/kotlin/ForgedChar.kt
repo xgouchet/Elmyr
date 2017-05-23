@@ -3,8 +3,6 @@ package fr.xgouchet.elmyr.kotlin
 import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.CharConstraint
 import fr.xgouchet.elmyr.Forger
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 /**
  * A read-only Char property

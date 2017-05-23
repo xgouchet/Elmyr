@@ -1,9 +1,9 @@
 package fr.xgouchet.elmyr
 
-import fr.xgouchet.elmyr.Forger
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Java6Assertions
-import org.assertj.core.api.Java6Assertions.*
+import org.assertj.core.api.Java6Assertions.assertThat
+import org.assertj.core.api.Java6Assertions.within
 
 /**
  * @author Xavier F. Gouchet

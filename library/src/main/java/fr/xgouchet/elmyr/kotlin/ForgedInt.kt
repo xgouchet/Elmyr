@@ -2,8 +2,6 @@ package fr.xgouchet.elmyr.kotlin
 
 import fr.xgouchet.elmyr.Forger
 import fr.xgouchet.elmyr.IntConstraint
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 /**
  * A read-only Int property

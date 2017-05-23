@@ -2,7 +2,7 @@ package fr.xgouchet.elmyr
 
 import fr.xgouchet.elmyr.Forger
 import io.kotlintest.specs.FeatureSpec
-import org.assertj.core.api.Java6Assertions.assertThat
+import org.assertj.core.api.Java6Assertions.*
 
 /**
  * @author Xavier F. Gouchet
@@ -62,6 +62,14 @@ class ForgerIntSpecs : FeatureSpec() {
                 val min = forger.anInt()
                 io.kotlintest.matchers.shouldThrow<IllegalArgumentException> {
                     forger.anInt(min, min)
+                }
+            }
+
+            scenario("Fail if standard deviation < 0") {
+                val mean = forger.aSmallInt()
+                val stDev = forger.aNegativeInt(true)
+                io.kotlintest.matchers.shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianInt(mean, stDev)
                 }
             }
         }
@@ -161,6 +169,28 @@ class ForgerIntSpecs : FeatureSpec() {
                     assertThat(int)
                             .isGreaterThanOrEqualTo(Forger.Companion.HUGE_THRESHOLD)
                 })
+            }
+
+            scenario("Produces a gaussian distributed float") {
+                val mean = forger.aSmallInt()
+                val stdev = forger.aTinyInt()
+
+                val count = 1024
+                var sum = 0f
+                var squareSum = 0f
+
+                repeat(count, {
+                    val int = forger.aGaussianInt(mean, stdev)
+                    sum += int
+                    squareSum += int * int
+                })
+
+                val computedMean = sum / count
+                val computedStDev = Math.sqrt((squareSum - (count * mean * mean)) / (count - 1.0)).toFloat()
+                assertThat(computedMean)
+                        .isCloseTo(mean.toFloat(), within(stdev / 10.0f))
+                assertThat(computedStDev)
+                        .isCloseTo(stdev.toFloat(), withinPercentage(15))
             }
         }
 

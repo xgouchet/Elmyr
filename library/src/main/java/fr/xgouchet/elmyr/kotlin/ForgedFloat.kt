@@ -2,9 +2,6 @@ package fr.xgouchet.elmyr.kotlin
 
 import fr.xgouchet.elmyr.FloatConstraint
 import fr.xgouchet.elmyr.Forger
-import fr.xgouchet.elmyr.IntConstraint
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 /**
  * A read-only Float property
@@ -22,7 +19,7 @@ class ForgedFloat(
 
     override fun generate(forger: Forger): Float {
         if (standardDeviation >= 0) {
-            return forger.aProbalisticFloat(mean, standardDeviation)
+            return forger.aGaussianFloat(mean, standardDeviation)
         } else if ((min != Float.NEGATIVE_INFINITY) and (max != Float.POSITIVE_INFINITY)) {
             return forger.aFloat(min, max)
         } else {

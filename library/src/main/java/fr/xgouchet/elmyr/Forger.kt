@@ -2,6 +2,7 @@ package fr.xgouchet.elmyr
 
 import fr.xgouchet.elmyr.regex.RegexBuilder
 import java.lang.Integer.min
+import java.lang.Math.round
 
 
 /**
@@ -15,7 +16,7 @@ open class Forger {
      * Resets this forger with the given seed. Knowing the seed allow the forger to reproduce
      * previous data.
      *
-     * @param seed the seed to use (try and remember to be able to reproduce a forgery
+     * @param seed the seed to use (try and remember to be able to reproduce a forgery)
      */
     fun reset(seed: Long) {
         rng.setSeed(seed)
@@ -115,6 +116,21 @@ open class Forger {
         return anInt(HUGE_THRESHOLD)
     }
 
+    /**
+     * @param mean the mean value of the distribution (default : 0)
+     * @param standardDeviation the standard deviation value of the distribution (default : 100)
+     * @return an int picked from a gaussian distribution (aka bell curve)
+     */
+    fun aGaussianInt(mean: Int = 0, standardDeviation: Int = 100): Int {
+        if (standardDeviation < 0) {
+            throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
+        } else if (standardDeviation == 0) {
+            return mean
+        } else {
+            return round((rng.nextGaussian() * standardDeviation)).toInt() + mean
+        }
+    }
+
     // endregion
 
     // region Float
@@ -173,7 +189,7 @@ open class Forger {
      * @param standardDeviation the standard deviation value of the distribution (default : 1.0f)
      * @return a float picked from a gaussian distribution (aka bell curve)
      */
-    fun aProbalisticFloat(mean: Float = 0f, standardDeviation: Float = 1f): Float {
+    fun aGaussianFloat(mean: Float = 0f, standardDeviation: Float = 1f): Float {
         if (standardDeviation < 0) {
             throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
         } else if (standardDeviation == 0f) {
