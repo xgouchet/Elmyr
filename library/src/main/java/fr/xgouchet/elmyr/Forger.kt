@@ -218,11 +218,11 @@ open class Forger {
             CharConstraint.ALPHA_NUM -> return anAlphaNumericalChar(case)
             CharConstraint.NUMERICAL -> return aNumericalChar()
             CharConstraint.WHITESPACE -> return aWhitespaceChar()
-            CharConstraint.NOT_HEXADECIMAL -> return aNonHexadecimalChar()
-            CharConstraint.NOT_ALPHA -> return aNonAlphabeticalChar()
-            CharConstraint.NOT_ALPHA_NUM -> return aNonAlphaNumericalChar()
-            CharConstraint.NOT_NUMERICAL -> return aNonNumericalChar()
-            CharConstraint.NOT_WHITESPACE -> return aNonWhitespaceChar()
+            CharConstraint.NON_HEXADECIMAL -> return aNonHexadecimalChar()
+            CharConstraint.NON_ALPHA -> return aNonAlphabeticalChar()
+            CharConstraint.NON_ALPHA_NUM -> return aNonAlphaNumericalChar()
+            CharConstraint.NON_NUMERICAL -> return aNonNumericalChar()
+            CharConstraint.NON_WHITESPACE -> return aNonWhitespaceChar()
 
             else -> TODO("Unknown constraint !")
         }
@@ -327,7 +327,7 @@ open class Forger {
      * @param case the case to use (supports Case.UPPER, Case.LOWER , anything else falls back to Case.LOWER)
      * @return a digit (0 to F)
      */
-    fun anHexadecimalChar(case: Case = Case.ANY): Char {
+    fun anHexadecimalChar(case: Case = Case.LOWER): Char {
         when (case) {
             Case.UPPER -> return anElementFrom(HEXA_UPPER)
             else -> return anElementFrom(HEXA_LOWER)
@@ -398,6 +398,8 @@ open class Forger {
             StringConstraint.WORD -> return aWord(case, size)
             StringConstraint.LIPSUM -> return aSentence(case, size)
             StringConstraint.HEXADECIMAL -> return anHexadecimalString(case, size)
+            StringConstraint.URL -> return aUrl()
+            StringConstraint.EMAIL -> return anEmail()
         }
     }
 
@@ -465,7 +467,7 @@ open class Forger {
      * @param size the size of the string (or -1 for a random sized String)
      * @return an hexadecimal string
      */
-    fun anHexadecimalString(case: Case, size: Int = -1): String {
+    fun anHexadecimalString(case: Case = Case.LOWER, size: Int = -1): String {
         val resultSize = getWordSize(size)
         return String(CharArray(resultSize, { anHexadecimalChar(case) }))
     }
@@ -490,6 +492,92 @@ open class Forger {
         return aStringMatching(regex.pattern)
     }
 
+    /**
+     * @return a String matching a standard URL format
+     */
+    fun aUrl(): String {
+        val builder = StringBuilder()
+
+        // scheme
+        builder.append(aWord(Case.LOWER, anInt(2, 7)))
+                .append("://")
+
+        // host (subdomain.domain.tld)
+        builder.append(aWord(Case.LOWER, anInt(3, 7)))
+                .append('.')
+                .append(aWord(Case.LOWER, anInt(5, 11)))
+                .append('.')
+                .append(aWord(Case.LOWER, 3))
+                .append('/')
+
+        // path segments
+        if (aBool()) {
+            val pathSegmentCount = aTinyInt()
+            for (i in 0 until pathSegmentCount) {
+                builder.append(aWord(Case.ANY, anInt(2, 13)))
+                        .append('/')
+            }
+        } else {
+            // an article blurb
+            builder.append(aWord(Case.CAPITALIZE, anInt(2, 13)))
+            val wordsCount = aTinyInt()
+            for (i in 0 until wordsCount) {
+                builder.append('-')
+                        .append(aWord(Case.LOWER, anInt(2, 7)))
+            }
+        }
+
+        // anchor ?
+        if (aBool()) {
+            builder.append('#')
+                    .append(aWord())
+        }
+
+        // query params
+        if (aBool()) {
+            val queryParamsCount = aTinyInt()
+            for (i in 0 until queryParamsCount) {
+                builder.append(if (i == 0) '?' else '&')
+                        .append(aWord(Case.ANY, anInt(2, 7)))
+                        .append('=')
+                        .append(aWord(Case.ANY, anInt(3, 13)))
+            }
+        }
+
+
+        return builder.toString()
+    }
+
+    /**
+     * @return a String matching a standard URL format
+     */
+    fun anEmail(): String {
+        val builder = StringBuilder()
+
+        // username
+        builder.append(aWord(Case.CAPITALIZE, anInt(3, 11)))
+                .append(anElementFrom('_', '.', '-'))
+                .append(aWord(Case.CAPITALIZE, anInt(3, 11)))
+                .append(aTinyInt())
+
+        // category ?
+        if (aBool()) {
+            builder.append('+')
+                    .append(aWord(Case.LOWER))
+        }
+
+        builder.append('@')
+
+        // host (subdomain.domain.tld)
+        builder.append(aWord(Case.LOWER, anInt(3, 7)))
+                .append('.')
+                .append(aWord(Case.LOWER, anInt(5, 11)))
+                .append('.')
+                .append(aWord(Case.LOWER, 3))
+
+        return builder.toString()
+    }
+
     private fun getWordSize(size: Int): Int {
         return if (size > 0) size else aTinyInt()
     }
@@ -497,6 +585,24 @@ open class Forger {
     // endregion
 
     // region Collections
+
+    /**
+     * @param set a Set
+     * @return an element “randomly” picked in the set
+     */
+    fun <K, V> anElementFrom(map: Map<K,V>): Map.Entry<K,V> {
+        val index = anInt(0, map.size)
+        return map.entries.elementAt(index)
+    }
+
+    /**
+     * @param set a Set
+     * @return an element “randomly” picked in the set
+     */
+    fun <T> anElementFrom(set: Set<T>): T {
+        val index = anInt(0, set.size)
+        return set.elementAt(index)
+    }
 
     /**
      * @param list a List
@@ -511,7 +617,16 @@ open class Forger {
      * @param array an Array
      * @return an element “randomly” picked in the array
      */
-    fun <T> anElementFrom(array: Array<T>): T {
+    fun <T> anElementFrom(vararg elements: T): T {
+        val index = anInt(0, elements.size)
+        return elements[index]
+    }
+
+    /**
+     * @param array an Array
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: BooleanArray): Boolean {
         val index = anInt(0, array.size)
         return array[index]
     }
@@ -534,6 +649,15 @@ open class Forger {
         return array[index]
     }
 
+    /**
+     * @param array an Array
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: FloatArray): Float {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
     // endregion
 
     // region Enum
@@ -543,7 +667,7 @@ open class Forger {
      * @return an element “randomly” picked in the enum values
      */
     fun <E : Enum<E>> aValueFrom(enumClass: Class<E>): E {
-        return anElementFrom(enumClass.enumConstants)
+        return anElementFrom(*enumClass.enumConstants)
     }
 
     // endregion

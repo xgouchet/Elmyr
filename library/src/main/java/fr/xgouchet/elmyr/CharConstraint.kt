@@ -5,14 +5,16 @@ package fr.xgouchet.elmyr
  */
 enum class CharConstraint {
     ANY,
+    ASCII,
+    ASCII_EXTENDED,
     HEXADECIMAL,
     ALPHA,
     ALPHA_NUM,
     NUMERICAL,
     WHITESPACE,
-    NOT_HEXADECIMAL,
-    NOT_ALPHA,
-    NOT_ALPHA_NUM,
-    NOT_NUMERICAL,
-    NOT_WHITESPACE,
+    NON_HEXADECIMAL,
+    NON_ALPHA,
+    NON_ALPHA_NUM,
+    NON_NUMERICAL,
+    NON_WHITESPACE,
 }

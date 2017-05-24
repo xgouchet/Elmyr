@@ -111,7 +111,7 @@ class ForgerStringSpecs : FeatureSpec() {
                     val word = forger.aSentence(Case.UPPER, size)
                     assertThat(word)
                             .hasSize(size)
-                            .matches("([A-Z]+ )*[A-Z]+\\.")
+                            .matches("(([A-Z]+ )*[A-Z]+\\.)|‽")
                 })
             }
 
@@ -160,6 +160,22 @@ class ForgerStringSpecs : FeatureSpec() {
                     assertThat(word)
                             .hasSize(size)
                             .matches("[a-f0-9]+")
+                })
+            }
+
+            scenario("Produce a url string") {
+                repeat(16, {
+                    val url = forger.aUrl()
+                    assertThat(url)
+                            .matches(Regex("""[a-z]+://[a-z]+\.[a-z]+\.[a-z]+/(([\w]+/)*|([\w-]+))(#\w+)?(\?\w+=\w+(&\w+=\w+)*)?""").pattern)
+                })
+            }
+
+            scenario("Produce an email string") {
+                repeat(16, {
+                    val url = forger.anEmail()
+                    assertThat(url)
+                            .matches(Regex("""[\w._\-+]+@([a-z]+\.)*[a-z]+""").pattern)
                 })
             }
 

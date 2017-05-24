@@ -172,8 +172,8 @@ class ForgerIntSpecs : FeatureSpec() {
             }
 
             scenario("Produces a gaussian distributed float") {
-                val mean = forger.aSmallInt()
-                val stdev = forger.aTinyInt()
+                val mean = forger.anInt(-1000,1000)
+                val stdev = forger.anInt(10, 500)
 
                 val count = 1024
                 var sum = 0f

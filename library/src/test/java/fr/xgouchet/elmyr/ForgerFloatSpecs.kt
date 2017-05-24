@@ -74,8 +74,8 @@ class ForgerFloatSpecs : FeatureSpec() {
             forger.reset(System.nanoTime())
 
             scenario("Produce an float in a specified range") {
-                val min = forger.aFloat(-100000f,100000f)
-                val max = forger.aFloat(-100000f,100000f)
+                val min = forger.aFloat(-100000f, 100000f)
+                val max = forger.aFloat(min + 1, 150000f)
 
                 assertThat(max).isGreaterThan(min)
 
@@ -88,7 +88,7 @@ class ForgerFloatSpecs : FeatureSpec() {
             }
 
             scenario("Produce an float in a small range") {
-                val min = forger.aFloat(-100000f,100000f)
+                val min = forger.aFloat(-100000f, 100000f)
                 val max = min + 10
 
                 repeat(16, {
@@ -133,7 +133,7 @@ class ForgerFloatSpecs : FeatureSpec() {
 
             scenario("Produces a gaussian distributed float") {
                 val mean = forger.aFloat(-1000f, 1000f)
-                val stdev = forger.aFloat(10f, 1000f)
+                val stdev = forger.aFloat(10f, 500f)
 
                 val count = 1024
                 var sum = 0f
@@ -150,7 +150,7 @@ class ForgerFloatSpecs : FeatureSpec() {
                 assertThat(computedMean)
                         .isCloseTo(mean, within(stdev / 10.0f))
                 assertThat(computedStDev)
-                        .isCloseTo(stdev, withinPercentage(15))
+                        .isCloseTo(stdev, within(stdev / 2.0f))
             }
 
         }

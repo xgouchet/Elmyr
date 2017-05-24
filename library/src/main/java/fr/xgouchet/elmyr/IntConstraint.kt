@@ -13,5 +13,4 @@ enum class IntConstraint {
     POSITIVE_STRICT,
     NEGATIVE,
     NEGATIVE_STRICT,
-
 }

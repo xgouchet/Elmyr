@@ -40,6 +40,7 @@ public class FooTest {
         assertThat(result).isEqualTo(base * base);
     }
 }
+```
 
 
 ## Documentation
@@ -56,9 +57,10 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### 0.2 (2017/05/23)
+### 0.2 (2017/05/24)
 
  - Kotlin delegates
+ - Email and Url generation
 
 
 ### 0.1 (2017/05/20)
