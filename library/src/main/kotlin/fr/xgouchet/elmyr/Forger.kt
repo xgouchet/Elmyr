@@ -137,6 +137,83 @@ open class Forger {
 
     // endregion
 
+    // region Long
+
+    /**
+     * @param constraint a constraint on the long to forge
+     * @return an long between constraint and max
+     */
+    fun aLong(constraint: LongConstraint): Long {
+        when (constraint) {
+            LongConstraint.ANY -> return aLong()
+            LongConstraint.POSITIVE -> return aPositiveLong()
+            LongConstraint.POSITIVE_STRICT -> return aPositiveLong(strict = true)
+            LongConstraint.NEGATIVE -> return aNegativeLong()
+            LongConstraint.NEGATIVE_STRICT -> return aNegativeLong(strict = true)
+        }
+    }
+
+    /**
+     * @param min the minimum value (inclusive), default = Long#MIN_VALUE
+     * @param max the maximum value (exclusive), default = Long#MAX_VALUE
+     * @return an long between min and max
+     */
+    @JvmOverloads
+    fun aLong(min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE): Long {
+
+        if (min >= max) {
+            throw IllegalArgumentException("The ‘min’ boundary ($min) of the range should be less than the ‘max’ boundary ($max)")
+        }
+
+        val range = max - min
+
+        return (Math.abs(rng.nextLong()) % range) + min
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 long (default : false)
+     * @return a positive long
+     */
+    @JvmOverloads
+    fun aPositiveLong(strict: Boolean = false): Long {
+        return aLong(min = if (strict) 1 else 0)
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 long (default : true)
+     * @return a negative long
+     */
+    @JvmOverloads
+    fun aNegativeLong(strict: Boolean = true): Long {
+        return aLong(min = Long.MIN_VALUE, max = if (strict) -1 else 0)
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0)
+     * @param standardDeviation the standard deviation value of the distribution (default : 100)
+     * @return an long picked from a gaussian distribution (aka bell curve)
+     */
+    @JvmOverloads
+    fun aGaussianLong(mean: Long = 0L, standardDeviation: Long = 100L): Long {
+        if (standardDeviation < 0L) {
+            throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
+        } else if (standardDeviation == 0L) {
+            return mean
+        } else {
+            return round((rng.nextGaussian() * standardDeviation)) + mean
+        }
+    }
+
+    /**
+     * @return a long to be used as a timestamp, picked in a milliseconds range around today
+     */
+    fun aTimestamp(range: Long = ONE_YEAR): Long {
+        val now = System.currentTimeMillis()
+        return aLong(now - range, now + range)
+    }
+
+    // endregion
+
     // region Float
 
     /**
@@ -797,6 +874,9 @@ open class Forger {
         val SMALL_THRESHOLD = 0x100
         val BIG_THRESHOLD = 0x10000
         val HUGE_THRESHOLD = 0x1000000
+
+        // LONG
+        val ONE_YEAR = 31536000000L
 
         // Char
         internal val MIN_PRINTABLE = 0x20.toChar()

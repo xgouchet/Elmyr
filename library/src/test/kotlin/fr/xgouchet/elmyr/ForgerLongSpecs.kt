@@ -8,7 +8,7 @@ import org.assertj.core.api.Java6Assertions.within
 /**
  * @author Xavier F. Gouchet
  */
-class ForgerIntSpecs : FeatureSpec() {
+class ForgerLongSpecs : FeatureSpec() {
 
     init {
 
@@ -17,12 +17,12 @@ class ForgerIntSpecs : FeatureSpec() {
             val forger = Forger()
             val seed = System.nanoTime()
             forger.reset(seed)
-            val data = IntArray(16) { forger.anInt(min = it) }
+            val data = LongArray(16) { forger.aLong(min = it.toLong()) }
 
             scenario("Reproduce data with another forger using the same seed") {
                 val otherForger = Forger()
                 otherForger.reset(seed)
-                val otherData = IntArray(16) { otherForger.anInt(min = it) }
+                val otherData = LongArray(16) { otherForger.aLong(min = it.toLong()) }
 
                 assertThat(otherData)
                         .containsExactly(*data)
@@ -30,7 +30,7 @@ class ForgerIntSpecs : FeatureSpec() {
 
             scenario("Reproduce data with same forger reset with the same seed") {
                 forger.reset(seed)
-                val otherData = IntArray(16) { forger.anInt(min = it) }
+                val otherData = LongArray(16) { forger.aLong(min = it.toLong()) }
 
                 assertThat(otherData)
                         .containsExactly(*data)
@@ -40,7 +40,7 @@ class ForgerIntSpecs : FeatureSpec() {
             scenario("Produce different data with different seed") {
                 val otherSeed = System.nanoTime()
                 forger.reset(otherSeed)
-                val otherData = IntArray(16) { forger.anInt(min = it) }
+                val otherData = LongArray(16) { forger.aLong(min = it.toLong()) }
 
                 assertThat(otherData)
                         .isNotEqualTo(data)
@@ -52,138 +52,104 @@ class ForgerIntSpecs : FeatureSpec() {
             forger.reset(System.nanoTime())
 
             scenario("Fail if min > max") {
-                val min = forger.aPositiveInt(strict = true)
-                val max = forger.aNegativeInt(strict = true)
+                val min = forger.aPositiveLong(strict = true)
+                val max = forger.aNegativeLong(strict = true)
                 shouldThrow<IllegalArgumentException> {
-                    forger.anInt(min, max)
+                    forger.aLong(min, max)
                 }
             }
 
             scenario("Fail if min == max") {
-                val min = forger.anInt()
+                val min = forger.aLong()
                 shouldThrow<IllegalArgumentException> {
-                    forger.anInt(min, min)
+                    forger.aLong(min, min)
                 }
             }
 
             scenario("Fail if standard deviation < 0") {
-                val mean = forger.aSmallInt()
-                val stDev = forger.aNegativeInt(true)
+                val mean = forger.aLong(1, Forger.SMALL_THRESHOLD.toLong())
+                val stDev = forger.aNegativeLong(true)
                 shouldThrow<IllegalArgumentException> {
-                    forger.aGaussianInt(mean, stDev)
+                    forger.aGaussianLong(mean, stDev)
                 }
             }
         }
 
-        feature("An Number Forger produces meaningful ints") {
+        feature("An Number Forger produces meaningful longs") {
 
             val forger = Forger()
             forger.reset(System.nanoTime())
 
-            scenario("Produce an int in a specified range") {
-                val min = forger.anInt()
-                val max = forger.anInt(min + 1)
+            scenario("Produce an long in a specified range") {
+                val min = forger.aLong()
+                val max = forger.aLong(min + 1)
 
                 assertThat(max).isGreaterThan(min)
 
                 repeat(16, {
-                    val int = forger.anInt(min, max)
-                    assertThat(int)
+                    val long = forger.aLong(min, max)
+                    assertThat(long)
                             .isGreaterThanOrEqualTo(min)
                             .isLessThan(max)
                 })
             }
 
-            scenario("Produce an int in a small range") {
-                val min = forger.anInt()
+            scenario("Produce an long in a small range") {
+                val min = forger.aLong()
                 val max = min + 3
 
                 repeat(16, {
-                    val int = forger.anInt(min, max)
-                    assertThat(int)
+                    val long = forger.aLong(min, max)
+                    assertThat(long)
                             .isGreaterThanOrEqualTo(min)
                             .isLessThan(max)
                 })
             }
 
-            scenario("Produces a positive int") {
+            scenario("Produces a positive long") {
                 repeat(16, {
-                    val int = forger.aPositiveInt()
-                    assertThat(int)
+                    val long = forger.aPositiveLong()
+                    assertThat(long)
                             .isGreaterThanOrEqualTo(0)
                 })
             }
 
-            scenario("Produces a strictly positive int") {
+            scenario("Produces a strictly positive long") {
                 repeat(16, {
-                    val int = forger.aPositiveInt(strict = true)
-                    assertThat(int)
+                    val long = forger.aPositiveLong(strict = true)
+                    assertThat(long)
                             .isGreaterThan(0)
                 })
             }
 
-            scenario("Produces a negative int") {
+            scenario("Produces a negative long") {
                 repeat(16, {
-                    val int = forger.aNegativeInt()
-                    assertThat(int)
+                    val long = forger.aNegativeLong()
+                    assertThat(long)
                             .isLessThanOrEqualTo(0)
                 })
             }
 
-            scenario("Produces a strictly negative int") {
+            scenario("Produces a strictly negative long") {
                 repeat(16, {
-                    val int = forger.aNegativeInt(strict = true)
-                    assertThat(int)
+                    val long = forger.aNegativeLong(strict = true)
+                    assertThat(long)
                             .isLessThan(0)
                 })
             }
 
-            scenario("Produces a tiny int") {
-                repeat(16, {
-                    val int = forger.aTinyInt()
-                    assertThat(int)
-                            .isGreaterThan(0)
-                            .isLessThan(Forger.Companion.TINY_THRESHOLD)
-                })
-            }
-
-            scenario("Produces a small int") {
-                repeat(16, {
-                    val int = forger.aSmallInt()
-                    assertThat(int)
-                            .isGreaterThan(0)
-                            .isLessThan(Forger.Companion.SMALL_THRESHOLD)
-                })
-            }
-
-            scenario("Produces a big int") {
-                repeat(16, {
-                    val int = forger.aBigInt()
-                    assertThat(int)
-                            .isGreaterThanOrEqualTo(Forger.Companion.BIG_THRESHOLD)
-                })
-            }
-
-            scenario("Produces a huge int") {
-                repeat(16, {
-                    val int = forger.aHugeInt()
-                    assertThat(int)
-                            .isGreaterThanOrEqualTo(Forger.Companion.HUGE_THRESHOLD)
-                })
-            }
-
             scenario("Produces a gaussian distributed float") {
-                val mean = forger.anInt(-1000,1000)
-                val stdev = forger.anInt(10, 500)
+                val mean = forger.aLong(-1000, 1000)
+                val stdev = forger.aLong(10, 500)
 
                 val count = 1024
                 var sum = 0f
                 var squareSum = 0f
 
                 repeat(count, {
-                    val int = forger.aGaussianInt(mean, stdev)
-                    sum += int
-                    squareSum += int * int
+                    val long = forger.aGaussianLong(mean, stdev)
+                    sum += long
+                    squareSum += long * long
                 })
 
                 val computedMean = sum / count

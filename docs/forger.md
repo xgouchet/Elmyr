@@ -30,35 +30,39 @@ With Elmyr, you can forge Boolean values (ie : `true` or `false`).
 
 ---
 
-### Forging Ints
+### Forging Ints / Longs
 
 With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
- - **fun anInt(constraint: IntConstraint = IntConstraint.ANY): Int**
+ - **fun anInt(constraint: IntConstraint): Int**
+ - **fun aLong(constraint: LongConstraint): Long**
 
-    Returns a random int, based on a constraint. 
+    Returns a random int/long, based on a constraint. 
 
     - _constraint_ : the constraint to build the int. For more information, read the [Constraints](constraints.html) page
 
 
  - **fun anInt(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): Int**
+ - **fun aLong(min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE): Long**
 
-    Returns a random int, within the given range. 
+    Returns a random int/long, within the given range. 
     
     - _min_ : the minimum value (inclusive).
     - _max_ : the maximum value (exclusive).
 
 
  - **fun aPositiveInt(strict: Boolean = false): Int**
+ - **fun aPositiveLong(strict: Boolean = false): Long**
 
-    Returns a random int greater than 0. 
+    Returns a random int/long greater than 0. 
     
     - _script_ : if `true`, then then it will return a non 0 int.
 
 
  - **fun aNegativeInt(strict: Boolean = false): Int**
+ - **fun aNegativeLong(strict: Boolean = false): Long**
 
-    Returns a random int less than 0. 
+    Returns a random int/long less than 0. 
     
     - _script_ : if `true`, then then it will return a non 0 int.
 
@@ -84,6 +88,7 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
 
  - **fun aGaussianInt(mean: Int = 0, standardDeviation: Int = 100): Int**
+ - **fun aGaussianLong(mean: Long = 0, standardDeviation: Long = 100): Long**
 
     Returns an int picked from a gaussian distribution (aka bell curve)
 
@@ -91,9 +96,16 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
     - _script_ : the standard deviation value of the distribution
 
 
+ - **fun aTimestamp(range: Long = ONE_YEAR): Long **
+ 
+    Returns a long that can be used as a timestamp, picked in a range around the current time.
+    
+    - _range_ : the range around the current time, in milliseconds
+
+
 ---
 
-### Forging Floats
+### Forging Floats / Doubles
 
 With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, …).
 
