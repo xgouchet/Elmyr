@@ -603,6 +603,24 @@ open class Forger {
 
     // endregion
 
+    // region Nullable
+
+    /**
+     * @param value the value to use if not null
+     * @param probability the probability the result will be null (default 0.5f)
+     * @return either the given value, or null (with the given probability)
+     */
+    @JvmOverloads
+    fun <T> aNullableFrom(value: T, nullProbability: Float = 0.5f): T? {
+        if (aBool(nullProbability)) {
+            return null
+        } else {
+            return value
+        }
+    }
+
+    // endregion
+
     // region Collections
 
     /**

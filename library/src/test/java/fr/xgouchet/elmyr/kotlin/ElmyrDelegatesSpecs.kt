@@ -5,9 +5,12 @@ import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgeryWithConstraint
 import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgeryWithDistribution
 import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgeryWithRange
 import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.forgeryWithRegex
+import fr.xgouchet.elmyr.kotlin.ElmyrDelegates.nullable
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.within
+import org.assertj.core.api.Java6Assertions
+import kotlin.reflect.KProperty
 
 /**
  * @author Xavier F. Gouchet
@@ -153,6 +156,29 @@ class ElmyrDelegatesSpecs : FeatureSpec() {
                         .isCloseTo(MEAN, within(ST_DEV * 10))
             }
         }
+
+        feature("Nullable properties") {
+            val probability = baseForger.aFloat(0f, 1f)
+            var countNull = 0f
+            val count = 1024
+
+            repeat(count, {
+                val obj = ObjectWithNullableProperty(baseForger, probability)
+                val p1 = obj.forgedNullableString
+                val p2 = obj.forgedNullableString
+
+                assertThat(p1).isEqualTo(p2)
+
+                if (p1 == null) {
+                    countNull++
+                }
+
+            })
+
+
+            assertThat(countNull / count)
+                    .isCloseTo(probability, within(0.1f))
+        }
     }
 
     companion object {
@@ -165,4 +191,9 @@ class ElmyrDelegatesSpecs : FeatureSpec() {
         val MEAN: Float = 69f
         val ST_DEV: Float = 3.141592f
     }
+}
+
+class ObjectWithNullableProperty(forger: Forger, probability: Float) {
+
+    internal val forgedNullableString: String? by nullable(forgeryWithConstraint(StringConstraint.ANY, forger = forger), probability, forger)
 }

@@ -322,6 +322,22 @@ With Elmyr, you can pick random data within a vararg / arrays / list / set / map
     Returns an element picked from the input collection.
 
 
+### Forging a nullable value
+
+All the values forged by Elmyr are guaranteed to be non null. If you want to have the odd `null` value, you can call the `nullable` method.
+ 
+ - **fun <T> aNullableFrom(value: T, nullProbability: Float = 0.5f): T?**
+ 
+    Returns either the input value, or null. 
+    
+    - _value_ the value to use
+    - _nullProbability_ the probability used to return `null` instead of `value`
+
+    You can use another method from Forger, eg : 
+    
+    ```kotlin
+    val s = forger.aNullableFrom(forger.aString())
+    ```
 
 
 

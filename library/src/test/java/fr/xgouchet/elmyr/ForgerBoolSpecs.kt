@@ -42,6 +42,28 @@ class ForgerBoolSpecs : FeatureSpec() {
                 assertThat(countTrue/count)
                         .isCloseTo(probability, within(0.1f))
             }
+
+            scenario("Produce nullable value"){
+                val count = 1024
+                val probability = forger.aFloat(0f, 1f)
+
+                var countNull = 0f
+
+                repeat(count, {
+                    val str = forger.aString()
+                    val res = forger.aNullableFrom(str, probability)
+
+                    if (res == null) {
+                        countNull++
+                    } else {
+                        assertThat(res).isEqualTo(str)
+                    }
+                })
+
+                assertThat(countNull/count)
+                        .isCloseTo(probability, within(0.1f))
+
+            }
         }
     }
 }

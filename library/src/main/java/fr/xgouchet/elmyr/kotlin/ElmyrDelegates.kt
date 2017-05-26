@@ -112,5 +112,18 @@ object ElmyrDelegates {
             forger: Forger = FORGER)
             : ReadOnlyProperty<Any?, Float>
             = ForgedFloat(mean = mean, standardDeviation = standardDeviation, forger = forger)
+
+
+    /**
+     * Makes a delegate from another one, potentially returning null instead of the delegate value.
+     *
+     * Although this is to be used with other delegates from this class, it can work with any read-only delegate
+     */
+    fun <T> nullable(
+            delegate: ReadOnlyProperty<Any?, T>,
+            probability : Float = 0.5f,
+            forger: Forger = FORGER)
+            : ReadOnlyProperty<Any?, T?>
+            = ForgedNullableProperty(delegate, probability, forger)
 }
 
