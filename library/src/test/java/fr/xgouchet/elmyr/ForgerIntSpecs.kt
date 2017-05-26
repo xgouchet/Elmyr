@@ -1,6 +1,5 @@
 package fr.xgouchet.elmyr
 
-import fr.xgouchet.elmyr.Forger
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Java6Assertions.*
 

@@ -41,9 +41,9 @@ open class Forger {
      * @param constraint a constraint on the int to forge
      * @return an int between constraint and max
      */
-    fun anInt(constraint: IntConstraint = IntConstraint.ANY): Int {
+    fun anInt(constraint: IntConstraint): Int {
         when (constraint) {
-            IntConstraint.ANY -> return anInt(Int.MIN_VALUE, Int.MAX_VALUE)
+            IntConstraint.ANY -> return anInt()
             IntConstraint.TINY -> return aTinyInt()
             IntConstraint.SMALL -> return aSmallInt()
             IntConstraint.BIG -> return aBigInt()
@@ -60,6 +60,7 @@ open class Forger {
      * @param max the maximum value (exclusive), default = Int#MAX_VALUE
      * @return an int between min and max
      */
+    @JvmOverloads
     fun anInt(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): Int {
 
         if (min >= max) {
@@ -76,6 +77,7 @@ open class Forger {
      * @param strict if true, then it will return a non 0 int (default : false)
      * @return a positive int
      */
+    @JvmOverloads
     fun aPositiveInt(strict: Boolean = false): Int {
         return anInt(min = if (strict) 1 else 0)
     }
@@ -84,6 +86,7 @@ open class Forger {
      * @param strict if true, then it will return a non 0 int (default : true)
      * @return a negative int
      */
+    @JvmOverloads
     fun aNegativeInt(strict: Boolean = true): Int {
         return anInt(min = Int.MIN_VALUE, max = if (strict) -1 else 0)
     }
@@ -121,6 +124,7 @@ open class Forger {
      * @param standardDeviation the standard deviation value of the distribution (default : 100)
      * @return an int picked from a gaussian distribution (aka bell curve)
      */
+    @JvmOverloads
     fun aGaussianInt(mean: Int = 0, standardDeviation: Int = 100): Int {
         if (standardDeviation < 0) {
             throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
@@ -139,9 +143,9 @@ open class Forger {
      * @param constraint a constraint on the int to forge
      * @return an int between constraint and max
      */
-    fun aFloat(constraint: FloatConstraint = FloatConstraint.ANY): Float {
+    fun aFloat(constraint: FloatConstraint): Float {
         when (constraint) {
-            FloatConstraint.ANY -> return aFloat(-Float.MAX_VALUE, Float.MAX_VALUE)
+            FloatConstraint.ANY -> return aFloat()
             FloatConstraint.POSITIVE -> return aPositiveFloat()
             FloatConstraint.POSITIVE_STRICT -> return aPositiveFloat(strict = true)
             FloatConstraint.NEGATIVE -> return aNegativeFloat()
@@ -154,6 +158,7 @@ open class Forger {
      * @param max the maximum value (exclusive), default = Float#MAX_VALUE
      * @return an int between min and max
      */
+    @JvmOverloads
     fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float {
 
         if (min > max) {
@@ -172,6 +177,7 @@ open class Forger {
      * @param strict if true, then it will return a non 0 int (default : false)
      * @return a positive int
      */
+    @JvmOverloads
     fun aPositiveFloat(strict: Boolean = false): Float {
         return aFloat(min = if (strict) Float.MIN_VALUE else 0.0f)
     }
@@ -180,6 +186,7 @@ open class Forger {
      * @param strict if true, then it will return a non 0 int (default : true)
      * @return a negative int
      */
+    @JvmOverloads
     fun aNegativeFloat(strict: Boolean = true): Float {
         return -aPositiveFloat(strict)
     }
@@ -189,6 +196,7 @@ open class Forger {
      * @param standardDeviation the standard deviation value of the distribution (default : 1.0f)
      * @return a float picked from a gaussian distribution (aka bell curve)
      */
+    @JvmOverloads
     fun aGaussianFloat(mean: Float = 0f, standardDeviation: Float = 1f): Float {
         if (standardDeviation < 0) {
             throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
@@ -208,11 +216,12 @@ open class Forger {
      * @param case the case to use (depending on the constraint, it might be ignored)
      * @return a Char with the given constraints
      */
-    fun aChar(constraint: CharConstraint = CharConstraint.ANY,
+    @JvmOverloads
+    fun aChar(constraint: CharConstraint,
               case: Case = Case.ANY): Char {
         when (constraint) {
 
-            CharConstraint.ANY -> return aChar(20.toChar(), Char.MAX_SURROGATE)
+            CharConstraint.ANY -> return aChar()
             CharConstraint.HEXADECIMAL -> return anHexadecimalChar(case)
             CharConstraint.ALPHA -> return anAlphabeticalChar(case)
             CharConstraint.ALPHA_NUM -> return anAlphaNumericalChar(case)
@@ -233,6 +242,7 @@ open class Forger {
      * @param max the max char code to use (exclusive, default = 0xD800)
      * @return a Char within the given range
      */
+    @JvmOverloads
     fun aChar(min: Char = MIN_PRINTABLE, max: Char = MAX_UTF8): Char {
         return anInt(min.toInt(), max.toInt()).toChar()
     }
@@ -255,6 +265,7 @@ open class Forger {
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
      * @return an alpha character (from the roman alphabet), in the given case
      */
+    @JvmOverloads
     fun anAlphabeticalChar(case: Case = Case.ANY): Char {
         when (case) {
             Case.UPPER -> return anElementFrom(ALPHA_UPPER)
@@ -279,6 +290,7 @@ open class Forger {
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
      * @return a standard vowel character (‘a’, ‘e’, ‘i’, ‘o’, ‘u’, ‘y’), in the given case
      */
+    @JvmOverloads
     fun aVowelChar(case: Case = Case.ANY): Char {
         when (case) {
             Case.UPPER -> return anElementFrom(VOWEL_UPPER)
@@ -292,6 +304,7 @@ open class Forger {
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
      * @return a standard consonant character (any roman alphabet except ‘a’, ‘e’, ‘i’, ‘o’, ‘u’, ‘y’), in the given case
      */
+    @JvmOverloads
     fun aConsonantChar(case: Case = Case.ANY): Char {
         when (case) {
             Case.UPPER -> return anElementFrom(CONSONANT_UPPER)
@@ -304,6 +317,7 @@ open class Forger {
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
      * @return an alphabetical or digit character, in the given case
      */
+    @JvmOverloads
     fun anAlphaNumericalChar(case: Case = Case.ANY): Char {
         when (case) {
             Case.UPPER -> return anElementFrom(ALPHA_NUM_UPPER)
@@ -327,6 +341,7 @@ open class Forger {
      * @param case the case to use (supports Case.UPPER, Case.LOWER , anything else falls back to Case.LOWER)
      * @return a digit (0 to F)
      */
+    @JvmOverloads
     fun anHexadecimalChar(case: Case = Case.LOWER): Char {
         when (case) {
             Case.UPPER -> return anElementFrom(HEXA_UPPER)
@@ -390,6 +405,7 @@ open class Forger {
      * @param size the size of the string (or -1 for a random sized String)
      * @return a truly random string (with chars in the whole UTF-8 spectrum)
      */
+    @JvmOverloads
     fun aString(constraint: StringConstraint = StringConstraint.ANY,
                 case: Case = Case.ANY,
                 size: Int = -1): String {
@@ -408,6 +424,7 @@ open class Forger {
      * @param size the size of the string (or -1 for a random sized String)
      * @return a String that kind of look like a word
      */
+    @JvmOverloads
     fun aWord(case: Case = Case.ANY, size: Int = -1): String {
         var consonant: Boolean = aBool()
         val resultSize = getWordSize(size)
@@ -432,6 +449,7 @@ open class Forger {
      *
      * @return a String that kind of look like a sentence (think Lorem Ipsum)
      */
+    @JvmOverloads
     fun aSentence(case: Case = Case.ANY, size: Int = -1): String {
         val resultSize: Int = if (size > 0) size else (aSmallInt() + 4)
 
@@ -467,6 +485,7 @@ open class Forger {
      * @param size the size of the string (or -1 for a random sized String)
      * @return an hexadecimal string
      */
+    @JvmOverloads
     fun anHexadecimalString(case: Case = Case.LOWER, size: Int = -1): String {
         val resultSize = getWordSize(size)
         return String(CharArray(resultSize, { anHexadecimalChar(case) }))
@@ -590,7 +609,7 @@ open class Forger {
      * @param set a Set
      * @return an element “randomly” picked in the set
      */
-    fun <K, V> anElementFrom(map: Map<K,V>): Map.Entry<K,V> {
+    fun <K, V> anElementFrom(map: Map<K, V>): Map.Entry<K, V> {
         val index = anInt(0, map.size)
         return map.entries.elementAt(index)
     }

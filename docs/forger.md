@@ -17,7 +17,7 @@ Like many random generators, the Forger class is based on a seed, which is a Lon
 
 ---
 
-### Generating Booleans
+### Forging Booleans
 
 With Elmyr, you can forge Boolean values (ie : `true` or `false`). 
 
@@ -30,7 +30,7 @@ With Elmyr, you can forge Boolean values (ie : `true` or `false`).
 
 ---
 
-### Generating Ints
+### Forging Ints
 
 With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
@@ -93,7 +93,7 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
 ---
 
-### Generating Floats
+### Forging Floats
 
 With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, …).
 
@@ -135,7 +135,7 @@ With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, �
 
 ---
 
-### Generating Chars
+### Forging Chars
 
 With Elmyr, you can forge character values (eg: `‘m’`, `‘π’`, `‘✓’`, …).
 
@@ -237,7 +237,7 @@ With Elmyr, you can forge character values (eg: `‘m’`, `‘π’`, `‘✓�
 
 ---
 
-### Generating Strings
+### Forging Strings
 
 With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoulox”`, …).
 
@@ -294,7 +294,7 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
 
 ---
 
-### Generating Enums
+### Forging Enums
 
 With Elmyr, you can forge enum values. 
 
@@ -306,7 +306,7 @@ With Elmyr, you can forge enum values.
 
 ---
 
-### Generating data from a Collection
+### Forging data from a Collection
 
 With Elmyr, you can pick random data within a vararg / arrays / list / set / map. 
 
