@@ -58,8 +58,18 @@ class ForgerCollectionsSpecs : FeatureSpec() {
             val seed = System.nanoTime()
             forger.reset(seed)
 
-            scenario("Select a Float from an Int array") {
+            scenario("Select a Float from a float array") {
                 val data = FloatArray(32) { (it * it * 3.14f) + (it * 1.618f) + 2.718f }
+
+                repeat(64, {
+                    val result = forger.anElementFrom(data)
+                    assertThat(data)
+                            .contains(result)
+                })
+            }
+
+            scenario("Select a Double from a double array") {
+                val data = DoubleArray(32) { (it * it * 3.14) + (it * 1.618) + 2.718 }
 
                 repeat(64, {
                     val result = forger.anElementFrom(data)

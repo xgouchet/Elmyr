@@ -140,8 +140,8 @@ open class Forger {
     // region Float
 
     /**
-     * @param constraint a constraint on the int to forge
-     * @return an int between constraint and max
+     * @param constraint a constraint on the float to forge
+     * @return a float between constraint and max
      */
     fun aFloat(constraint: FloatConstraint): Float {
         when (constraint) {
@@ -156,7 +156,7 @@ open class Forger {
     /**
      * @param min the minimum value (inclusive), default = -Float#MAX_VALUE
      * @param max the maximum value (exclusive), default = Float#MAX_VALUE
-     * @return an int between min and max
+     * @return a float between min and max
      */
     @JvmOverloads
     fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float {
@@ -175,7 +175,7 @@ open class Forger {
 
     /**
      * @param strict if true, then it will return a non 0 int (default : false)
-     * @return a positive int
+     * @return a positive float
      */
     @JvmOverloads
     fun aPositiveFloat(strict: Boolean = false): Float {
@@ -184,7 +184,7 @@ open class Forger {
 
     /**
      * @param strict if true, then it will return a non 0 int (default : true)
-     * @return a negative int
+     * @return a negative float
      */
     @JvmOverloads
     fun aNegativeFloat(strict: Boolean = true): Float {
@@ -204,6 +204,78 @@ open class Forger {
             return mean
         } else {
             return (rng.nextGaussian().toFloat() * standardDeviation) + mean
+        }
+    }
+
+    // endregion
+
+    // region Double
+
+    /**
+     * @param constraint a constraint on the double to forge
+     * @return a double between constraint and max
+     */
+    fun aDouble(constraint: DoubleConstraint): Double {
+        when (constraint) {
+            DoubleConstraint.ANY -> return aDouble()
+            DoubleConstraint.POSITIVE -> return aPositiveDouble()
+            DoubleConstraint.POSITIVE_STRICT -> return aPositiveDouble(strict = true)
+            DoubleConstraint.NEGATIVE -> return aNegativeDouble()
+            DoubleConstraint.NEGATIVE_STRICT -> return aNegativeDouble(strict = true)
+        }
+    }
+
+    /**
+     * @param min the minimum value (inclusive), default = -Double#MAX_VALUE
+     * @param max the maximum value (exclusive), default = Double#MAX_VALUE
+     * @return a double between min and max
+     */
+    @JvmOverloads
+    fun aDouble(min: Double = -Double.MAX_VALUE, max: Double = Double.MAX_VALUE): Double {
+
+        if (min > max) {
+            throw IllegalArgumentException("The ‘min’ boundary ($min) of the range should be less than (or equal to) the ‘max’ boundary ($max)")
+        }
+
+        val range = max - min
+        if (range == Double.POSITIVE_INFINITY) {
+            return (rng.nextDouble() - 0.5f) * Double.MAX_VALUE * 2
+        } else {
+            return (rng.nextDouble() * range) + min
+        }
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 int (default : false)
+     * @return a positive double
+     */
+    @JvmOverloads
+    fun aPositiveDouble(strict: Boolean = false): Double {
+        return aDouble(min = if (strict) Double.MIN_VALUE else 0.0)
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 int (default : true)
+     * @return a negative double
+     */
+    @JvmOverloads
+    fun aNegativeDouble(strict: Boolean = true): Double {
+        return -aPositiveDouble(strict)
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0.0f)
+     * @param standardDeviation the standard deviation value of the distribution (default : 1.0f)
+     * @return a double picked from a gaussian distribution (aka bell curve)
+     */
+    @JvmOverloads
+    fun aGaussianDouble(mean: Double = 0.0, standardDeviation: Double = 1.0): Double {
+        if (standardDeviation < 0) {
+            throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
+        } else if (standardDeviation == 0.0) {
+            return mean
+        } else {
+            return (rng.nextGaussian() * standardDeviation) + mean
         }
     }
 
@@ -691,6 +763,15 @@ open class Forger {
      * @return an element “randomly” picked in the array
      */
     fun anElementFrom(array: FloatArray): Float {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param array an Array
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: DoubleArray): Double {
         val index = anInt(0, array.size)
         return array[index]
     }

@@ -97,42 +97,48 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
 With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, …).
 
- - **fun aFloat(constraint: FloatConstraint = FloatConstraint.ANY): Float**
+ - **fun aFloat(constraint: FloatConstraint): Float**
+ - **fun aDouble(constraint: DoubleConstraint): Double**
 
-    Returns a random float, based on a constraint. 
+    Returns a random float/double, based on a constraint. 
 
     - _constraint_ : the constraint to build the float. For more information, read the [Constraints](constraints.html) page.
 
 
  - **fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float**
+ - **fun aDouble(min: Double = -Double.MAX_VALUE, max: Double = Double.MAX_VALUE): Double**
 
-    Returns a random float, within the given range. 
+    Returns a random float/double, within the given range. 
     
     - _min_ : the minimum value (inclusive).
     - _max_ : the maximum value (exclusive).
 
 
  - **fun aPositiveFloat(strict: Boolean = false): Float**
+ - **fun aPositiveDouble(strict: Boolean = false): Double**
 
-    Returns a random float greater than 0. 
+    Returns a random float/double greater than 0. 
     
     - _script_ : if `true`, then then it will return a non 0 float.
 
 
  - **fun aNegativeFloat(strict: Boolean = false): Float**
+ - **fun aNegativeDouble(strict: Boolean = false): Double**
 
-    Returns a random float less than 0. 
+    Returns a random float/double less than 0. 
     
     - _script_ : if `true`, then then it will return a non 0 float.
 
 
  - **fun aGaussianFloat(mean: Float = 0, standardDeviation: Float = 100): Float**
+  - **fun aGaussianDouble(mean: Double = 0, standardDeviation: Double = 100): Double**
 
-    Returns an float picked from a gaussian distribution (aka bell curve)
+    Returns a float/double picked from a gaussian distribution (aka bell curve)
 
     - _mean_ : the mean value of the distribution
     - _script_ : the standard deviation value of the distribution
-
+    
+    
 ---
 
 ### Forging Chars
@@ -315,6 +321,7 @@ With Elmyr, you can pick random data within a vararg / arrays / list / set / map
  - **fun anElementFrom(array: CharArray): Char**
  - **fun anElementFrom(array: IntArray): Int**
  - **fun anElementFrom(array: FloatArray): Float**
+ - **fun anElementFrom(array: DoubleArray): Double**
  - **fun <T> anElementFrom(list: List<T>): T**
  - **fun <T> anElementFrom(set: Set<T>): T**
  - **fun <K,V> anElementFrom(map: Map<K,V>): Map.Entry<K,V>**

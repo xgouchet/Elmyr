@@ -115,13 +115,49 @@ object ElmyrDelegates {
 
 
     /**
+     * @param constraint the constraint for the Double to generate
+     * @return a property delegate for a read-only property with a forged Int based on the given constraint
+     */
+    fun forgeryWithConstraint(
+            constraint: DoubleConstraint,
+            forger: Forger = FORGER)
+            : ReadOnlyProperty<Any?, Double>
+            = ForgedDouble(constraint = constraint, forger = forger)
+
+    /**
+     * @param min the min value (inclusive)
+     * @param max the max value (exclusive)
+     * @return a property delegate for a read-only property with a forged Int within the given range
+     */
+    fun forgeryWithRange(
+            min: Double = -Double.MAX_VALUE,
+            max: Double = Double.MAX_VALUE,
+            forger: Forger = FORGER)
+            : ReadOnlyProperty<Any?, Double>
+            = ForgedDouble(min = min, max = max, forger = forger)
+
+    /**
+     * @param mean the mean value of the distribution (default 0.0f)
+     * @param standardDeviation the standard deviation value of the distribution (default 1.0f)
+     * @return a property delegate for a read-only property with a forged Double in a gaussian distribution based on the
+     * given mean and standard deviation
+     */
+    fun forgeryWithDistribution(
+            mean: Double = 0.0,
+            standardDeviation: Double = 1.0,
+            forger: Forger = FORGER)
+            : ReadOnlyProperty<Any?, Double>
+            = ForgedDouble(mean = mean, standardDeviation = standardDeviation, forger = forger)
+
+
+    /**
      * Makes a delegate from another one, potentially returning null instead of the delegate value.
      *
      * Although this is to be used with other delegates from this class, it can work with any read-only delegate
      */
     fun <T> nullable(
             delegate: ReadOnlyProperty<Any?, T>,
-            probability : Float = 0.5f,
+            probability: Float = 0.5f,
             forger: Forger = FORGER)
             : ReadOnlyProperty<Any?, T?>
             = ForgedNullableProperty(delegate, probability, forger)
