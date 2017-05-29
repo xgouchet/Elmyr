@@ -7,7 +7,7 @@ import fr.xgouchet.elmyr.Forger
  */
 class RegexBuilder(regex: String) {
 
-    internal val rootNode: RegexParentNode = RegexParentNode()
+    internal var rootNode: RegexParentNode = RegexParentNode()
     internal var ongoingNode: RegexParentNode = rootNode
     internal var escapeNext = false
 
@@ -24,10 +24,6 @@ class RegexBuilder(regex: String) {
             } else {
                 handleCharacter(c)
             }
-        }
-
-        if (rootNode != ongoingNode) {
-            throw IllegalStateException()
         }
     }
 
@@ -86,6 +82,36 @@ class RegexBuilder(regex: String) {
                 val rangeQuantifier = rangeNode.toQuantifier()
                 ongoingNode = ongoingNode.parent ?: throw IllegalStateException()
                 ongoingNode.updateLastElementQuantfier(rangeQuantifier)
+            }
+            '|' -> {
+                if (ongoingNode.parent is RegexOrNode) {
+                    val next = RegexParentNode(ongoingNode.parent)
+                    ongoingNode.parent?.add(next)
+                    ongoingNode = next
+                } else {
+                    // create or node
+                    val orNode = RegexOrNode(ongoingNode.parent)
+
+                    // link with parent
+                    orNode.add(ongoingNode)
+                    ongoingNode.parent?.let { it.add(orNode) }
+
+                    // update root node
+                    if (ongoingNode == rootNode) {
+                        rootNode = orNode
+                    } else if (ongoingNode.parent == rootNode) {
+                        rootNode = orNode
+                    }
+
+                    // create new sequence
+                    val next = RegexParentNode(orNode)
+                    orNode.add(next)
+
+                    // update ongoing node
+                    ongoingNode.parent?.let { it.remove(ongoingNode) }
+                    ongoingNode.parent = orNode
+                    ongoingNode = next
+                }
             }
             '\\' -> escapeNext = true
             else -> {

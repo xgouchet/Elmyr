@@ -2,13 +2,15 @@
 
 > Elmyr is a Kotlin library providing tools to generate “random” values, specifically usefull for tests
 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
+[![Documentation Status](https://readthedocs.org/projects/elmyr/badge/?version=0.3)](http://elmyr.readthedocs.io/en/stable/?badge=0.3)
 
-Being an adept of testing code, I write a lot of tests. The problem is that in my tests, my fake / test data always look the same. My user names are always `Bob` and `Alice`, aged `42` or `69`, with userId `4816152342` or `24601`, and eating `spam`, `eggs` and `bacon`. 
+Being an adept of testing code, I write a lot of tests. One thing I noticed is that in my tests, my fake / test data always look the same. My user names are always `“Bob”` and `“Alice”`, aged `42` or `69`, with userId `4816152342` or `24601`, and eating `“spam”`, `“eggs”` and `“bacon”`. 
 
 The problem is, the more test I write, the less I'm confident in my fake values, because they're always the same. 
 
-This is where Elmyr kicks in, allowing you to create fake data based on a few constraints, making your test data random, and yet reproducible. 
+This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a few constraints, making your test data random, and yet reproducible. 
 
 ## Usage
 
@@ -74,6 +76,7 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 
 ## Meta
+
 Xavier F. Gouchet – [@xgouchet](https://twitter.com/xgouchet)
 
 Distributed under the MIT license. See [LICENSE.md](LICENSE.md) for more information.

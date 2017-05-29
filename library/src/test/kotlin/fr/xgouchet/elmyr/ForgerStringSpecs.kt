@@ -210,57 +210,25 @@ class ForgerStringSpecs : FeatureSpec() {
                         row("\\<\\(\\[\\{\\\\\\^\\-\\=\\$\\!\\|\\]\\}\\)\\?\\*\\+\\.\\>"),
 
                         // quantifier range
-                        row("[abc]{3}-[xyz]{2,9}")
+                        row("[abc]{3}-[xyz]{2,9}"),
+
+                        // Or
+                        row("abc|xyz"),
+                        row("foo|ba[rz]|spam|bacon")
                 )
 
 
                 io.kotlintest.properties.forAll(regexTable) { regex ->
+                    repeat(16, {
+                        val res = forger.aStringMatching(regex)
+                        res should match(regex)
 
-                    val res = forger.aStringMatching(regex)
-                    res should match(regex)
+                        val res2 = forger.aStringMatching(Regex(regex))
+                        res2 should match(regex)
+                    })
                 }
             }
 
-            scenario("Produce kotlin regex based strings") {
-                val regexTable = io.kotlintest.properties.table(
-                        headers("regex"),
-
-                        // wildcard
-                        row(Regex(""".""")),
-                        row(Regex(""".?""")),
-                        row(Regex(""".*""")),
-                        row(Regex(""".+""")),
-
-                        // choice
-                        row(Regex("""[aeiou][tkfprs]""")),
-                        row(Regex("""[a-h][i-p][q-z]""")),
-                        row(Regex("""[a-h]+[i-p]*[q-z]?""")),
-                        row(Regex("""[a-h]-[q-z]""")),
-
-                        // groups
-                        row(Regex("""([a-h]-[q-z])+""")),
-                        row(Regex("""(([0-9]-)+[q-z]+\n)+""")),
-
-                        // character classes
-                        row(Regex("""[a-h]\s+[q-z]""")),
-                        row(Regex("""(\s\S)""")),
-                        row(Regex("""\w\w \d\d\d \w\w""")),
-                        row(Regex("""\w\W / \d\D""")),
-
-                        // escaped characters
-                        row(Regex("""\<\(\[\{\\\^\-\=\$\!\|\]\}\)\?\*\+\.\>""")),
-
-                        // quantifier range
-                        row(Regex("""[abc]{3}-[xyz]{2,9}"""))
-                )
-
-
-                io.kotlintest.properties.forAll(regexTable) { regex ->
-
-                    val res = forger.aStringMatching(regex)
-                    assertThat(regex.matchEntire(res)).isNotNull()
-                }
-            }
         }
     }
 }

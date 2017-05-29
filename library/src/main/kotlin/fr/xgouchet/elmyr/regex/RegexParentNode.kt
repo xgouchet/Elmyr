@@ -15,10 +15,14 @@ open class RegexParentNode(parent: RegexParentNode? = null) : RegexNode(parent) 
         children.add(b)
     }
 
+    fun remove(node: RegexNode) {
+        children.remove(node)
+    }
+
+
     fun updateLastElementQuantfier(quantifier: Quantifier) {
         children.last().quantifier = quantifier
     }
-
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
         for (sub in children) {
@@ -26,8 +30,8 @@ open class RegexParentNode(parent: RegexParentNode? = null) : RegexNode(parent) 
         }
     }
 
-    open fun handle(c: Char): Boolean = false
 
+    open fun handle(c: Char): Boolean = false
 
     override fun describe(builder: StringBuilder) {
         for (p in children) {

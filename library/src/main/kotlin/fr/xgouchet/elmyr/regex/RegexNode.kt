@@ -7,7 +7,7 @@ import fr.xgouchet.elmyr.Forger
  *
  * @author Xavier F. Gouchet
  */
-abstract class RegexNode(val parent: RegexParentNode? = null) {
+abstract class RegexNode(var parent: RegexParentNode? = null) {
 
 
     internal var quantifier: Quantifier = Quantifier.Companion.ONE
