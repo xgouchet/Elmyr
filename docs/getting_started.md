@@ -20,7 +20,7 @@ Then, add the dependency in your app's build.gradle :
 
 ```groovy
 dependencies {
-    testCompile 'com.github.xgouchet:Elmyr:0.1.1'
+    testCompile 'com.github.xgouchet:Elmyr:0.3'
 }
 ```
 
