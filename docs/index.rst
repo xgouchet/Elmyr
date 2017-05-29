@@ -33,4 +33,5 @@ The concept of this library is to be able to generate values that could pass for
    getting_started
    forger
    constraints
+   junit
    faq

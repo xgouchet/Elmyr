@@ -30,11 +30,9 @@ class JUnitForger :
         }
     }
 
-    private var seed: Long = 0
-
 
     private fun reset() {
-        seed = (System.nanoTime() and 0x7FFFFFFF)
+        val seed = (System.nanoTime() and 0x7FFFFFFF)
         reset(seed)
     }
 }

@@ -58,6 +58,11 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
+### 0.4 (2017/??/??)
+
+ - Add pipe support in regex
+ - Add Repeater JUnit rule
+
 ### 0.3 (2017/05/29)
 
  - Add support for Long and Double

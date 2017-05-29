@@ -11,6 +11,13 @@ import java.lang.Math.round
 open class Forger {
 
     internal val rng = java.util.Random()
+    internal var seed : Long
+
+    init {
+        seed = System.nanoTime()
+        reset(seed)
+    }
+
 
     /**
      * Resets this forger with the given seed. Knowing the seed allow the forger to reproduce
@@ -19,6 +26,7 @@ open class Forger {
      * @param seed the seed to use (try and remember to be able to reproduce a forgery)
      */
     fun reset(seed: Long) {
+        this.seed = seed
         rng.setSeed(seed)
     }
 
