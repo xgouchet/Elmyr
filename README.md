@@ -20,7 +20,7 @@ This is where Elmyr kicks in, allowing you to create fake data based on a few co
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        testCompile 'com.github.xgouchet.Elmyr:library:0.1'
+        testCompile 'com.github.xgouchet:Elmyr:0.3'
     }
 ```
 
@@ -56,6 +56,11 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
  - [x] All code should be useable with and without the Android SDK, from Java and Kotlin
 
 ## Release History
+
+### 0.3 (2017/05/29)
+
+ - Add support for Long and Double
+ - Add support for Nullable
 
 ### 0.2 (2017/05/24)
 
