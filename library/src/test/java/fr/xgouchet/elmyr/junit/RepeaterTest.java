@@ -3,37 +3,66 @@ package fr.xgouchet.elmyr.junit;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.model.MultipleFailureException;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assume.assumeThat;
 
 /**
  * @author Xavier F. Gouchet
  */
 public class RepeaterTest {
 
-    static int counter = 0;
+    static int counter_x42 = 0;
     static int counter_x5 = 0;
 
-    @Rule public Repeater repeater = new Repeater(); // Yeah, 42, I know
+    @Rule public Repeater repeater = new Repeater();
+    @Rule public JUnitForger forger = new JUnitForger();
+
 
     @Test
+    @Repeat(count = 42)
     public void baseTest_x42() {
-        counter++;
+        counter_x42++;
         assertThat("").isNullOrEmpty();
-        System.out.println("counter : " + counter);
     }
 
     @Test
+    @Repeat(count = 5)
     public void baseTest_x5() {
         counter_x5++;
         assertThat("").isNullOrEmpty();
-        System.out.println("counter : " + counter_x5);
+        System.out.println(forger.getSeed());
     }
 
+    @Test
+    @Repeat(count = 100, failureThreshold = 50)
+    public void test_failing_sometimes() {
+        assertThat(forger.aBool(0.75f)).isTrue();
+    }
+
+//    @Test
+//    @Repeat(count = 100, failureThreshold = 50)
+//    public void test_failing_often() {
+//        assertThat(forger.aBool(0.25f)).isTrue();
+//    }
+
+    @Test
+    @Repeat(count = 100, ignoreThreshold = 50)
+    public void test_ignored_sometimes() {
+        assumeThat(forger.aBool(0.75f), is(true));
+    }
+
+    @Test
+    @Repeat(count = 100, ignoreThreshold = 50)
+    public void test_ignroed_often() {
+        assumeThat(forger.aBool(0.25f), is(true));
+    }
 
     @AfterClass
     public static void studentsGoHome() {
-        assertThat(counter).isEqualTo(42);
+        assertThat(counter_x42).isEqualTo(42);
         assertThat(counter_x5).isEqualTo(5);
     }
 

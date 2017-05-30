@@ -85,40 +85,30 @@ public class BarTest {
 }
 ```
 
-Another option would be to use the `Repeater` class. This class takes an optional int as parameter (the default value is 0), which is the number of 
-times each test will be ran. Each test run is going to reset the `JUnitForger`'s seed (if any), meaning each run is going 
-to test different values. 
+Another option would be to use the `Repeater` class, associated with the `@Repeat` annotation. The `@Repeat` annotation 
+has one mandatory parameter, which is the number of times a test should be ran.
  
-```java
-public class FooTest {
-    
-    @Rule public JUnitForger forger = new JUnitForger();
-    @Rule public Repeater repeater = new Repeater(13);
-    
-    // …
-}
-```
-
-By default, the `Repeater` rule is global to your test class, meaning all tests will be repeated the same number of times.
-If needed, you can specify a custom repeat count for a method by adding a postfix `"_x42"` 
-(42 here is an unoriginal example, replace it with any int of your choice).
-
 ```java
 public class FooTest {
     
     @Rule public JUnitForger forger = new JUnitForger();
     @Rule public Repeater repeater = new Repeater();
     
-    // This test will be ran only once
+    // This test will be ran 42 times
     @Test
+    @Repeat(42)
     public void shouldDoSomething(){
-        // …
-    }
-    
-    // This test will be ran 666 times
-    @Test
-    public void shouldDoSomething_x666(){
         // …
     }
 }
 ```
+
+Each test run is going to reset the `JUnitForger`'s seed (if any), meaning each run is going to use different forged values. 
+
+In addition, the `@Repeat` annotation has a few optional parameters : 
+
+ - **failureThreshol** : this defines the maximum number of test failure below which the test is still considered successful.
+ - **ignoreThreshol** : this defines the maximum number of test ignored below which the test is still considered successful.
+ 
+ **Warning**: the rules in a test are ordered by the field's name, alphabetically. If you want to specifically order the 
+ `JUnitForger` and `Repeater` rules, then use a [RuleChain](https://github.com/junit-team/junit4/wiki/rules#rulechain). 

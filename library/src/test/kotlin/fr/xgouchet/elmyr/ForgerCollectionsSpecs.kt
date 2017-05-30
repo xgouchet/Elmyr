@@ -214,7 +214,7 @@ class ForgerCollectionsSpecs : FeatureSpec() {
                 assertThat(computedMean)
                         .isCloseTo(mean.toFloat(), within(stDev / 10.0f))
                 assertThat(computedStDev)
-                        .isCloseTo(stDev.toFloat(), within(stDev / 2.0f))
+                        .isCloseTo(stDev.toFloat(), within(stDev * 0.75f))
             }
 
             scenario("Forge an long array") {
@@ -262,7 +262,7 @@ class ForgerCollectionsSpecs : FeatureSpec() {
                 assertThat(computedMean)
                         .isCloseTo(mean.toFloat(), within(stDev / 10.0f))
                 assertThat(computedStDev)
-                        .isCloseTo(stDev.toFloat(), within(stDev / 2.0f))
+                        .isCloseTo(stDev.toFloat(), within(stDev * 0.75f))
             }
 
             scenario("Forge a float array") {
@@ -310,7 +310,7 @@ class ForgerCollectionsSpecs : FeatureSpec() {
                 assertThat(computedMean)
                         .isCloseTo(mean, within(stDev / 10.0f))
                 assertThat(computedStDev)
-                        .isCloseTo(stDev, within(stDev / 2.0f))
+                        .isCloseTo(stDev, within(stDev * 0.75f))
             }
 
             scenario("Forge a double array") {
@@ -358,7 +358,7 @@ class ForgerCollectionsSpecs : FeatureSpec() {
                 assertThat(computedMean)
                         .isCloseTo(mean, within(stDev / 10.0f))
                 assertThat(computedStDev)
-                        .isCloseTo(stDev, within(stDev / 2.0f))
+                        .isCloseTo(stDev, within(stDev * 0.75f))
             }
         }
     }

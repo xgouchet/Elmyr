@@ -7,16 +7,12 @@ import org.junit.runners.model.MultipleFailureException
 import org.junit.runners.model.Statement
 import java.util.*
 
+
 /**
  * @author Xavier F. Gouchet
  */
-class Repeater(val defaultCount: Int) : TestRule {
+class Repeater : TestRule {
 
-    constructor() : this(1)
-
-    companion object {
-        val PER_METHOD_COUNTER_REGEX = Regex(""".*_x(\d+)""")
-    }
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
@@ -26,15 +22,9 @@ class Repeater(val defaultCount: Int) : TestRule {
                 val errors = ArrayList<Throwable>()
                 val ignores = ArrayList<Throwable>()
 
-                val repeatCount: Int
-                val match = PER_METHOD_COUNTER_REGEX.matchEntire(description.methodName)
-                if (match == null) {
-                    repeatCount = defaultCount
-                } else {
-                    repeatCount = match.groupValues[1].toInt()
-                }
+                val repeat = description.getAnnotation(Repeat::class.java)
 
-                repeat(repeatCount, {
+                repeat(repeat.count, {
                     try {
                         base.evaluate()
                     } catch (e: AssumptionViolatedException) {
@@ -45,14 +35,10 @@ class Repeater(val defaultCount: Int) : TestRule {
                     }
                 })
 
-                if (errors.isNotEmpty()) {
+                if (errors.size > repeat.failureThreshold) {
                     throw MultipleFailureException(errors)
-                } else if (ignores.isNotEmpty()) {
-                    if (ignores.size == defaultCount) {
-                        throw AssumptionViolatedException("All iterations were ignored for ${description.displayName}")
-                    } else {
-                        throw AssumptionViolatedException("${ignores.size} iteration(s) were ignored for ${description.displayName}")
-                    }
+                } else if (ignores.size > repeat.ignoreThreshold) {
+                    throw AssumptionViolatedException("${ignores.size}(over ${repeat.count}) iteration(s) were ignored for ${description.displayName}")
                 }
             }
         }

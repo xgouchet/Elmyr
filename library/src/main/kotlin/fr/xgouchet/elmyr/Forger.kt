@@ -11,7 +11,9 @@ import java.lang.Math.round
 open class Forger {
 
     internal val rng = java.util.Random()
-    internal var seed: Long
+
+    var seed: Long
+        internal set
 
     init {
         seed = System.nanoTime()
