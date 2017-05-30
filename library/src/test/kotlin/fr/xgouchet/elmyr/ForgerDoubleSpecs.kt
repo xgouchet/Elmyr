@@ -4,6 +4,7 @@ import io.kotlintest.matchers.shouldThrow
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Java6Assertions
+import java.lang.Math.abs
 import java.lang.Math.sqrt
 
 /**
@@ -57,6 +58,22 @@ class ForgerDoubleSpecs : FeatureSpec() {
                 val max = forger.aNegativeDouble(strict = true)
                 shouldThrow<IllegalArgumentException> {
                     forger.aDouble(min, max)
+                }
+            }
+
+            scenario("Fail if mean > MAX_VALUE/2") {
+                val mean = forger.aDouble(min = Double.MAX_VALUE / 2)
+                val stDev = forger.aDouble(1.0, 4.0)
+                shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianDouble(mean, stDev)
+                }
+            }
+
+            scenario("Fail if mean < -MAX_VALUE/2") {
+                val mean = forger.aDouble(max = -Double.MAX_VALUE / 2)
+                val stDev = forger.aDouble(1.0, 4.0)
+                shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianDouble(mean, stDev)
                 }
             }
         }
@@ -139,7 +156,7 @@ class ForgerDoubleSpecs : FeatureSpec() {
                 })
 
                 val computedMean = sum / count
-                val computedStDev = sqrt((squareSum - (count * mean * mean)) / (count - 1.0))
+                val computedStDev = sqrt(abs(squareSum - (count * mean * mean)) / (count - 1.0))
                 Java6Assertions.assertThat(computedMean)
                         .isCloseTo(mean, Java6Assertions.within(stdev / 10.0))
                 Java6Assertions.assertThat(computedStDev)

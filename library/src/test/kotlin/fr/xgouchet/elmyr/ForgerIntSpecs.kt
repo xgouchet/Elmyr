@@ -4,6 +4,8 @@ import io.kotlintest.matchers.shouldThrow
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.assertj.core.api.Java6Assertions.within
+import java.lang.Math.abs
+import java.lang.Math.sqrt
 
 /**
  * @author Xavier F. Gouchet
@@ -69,6 +71,22 @@ class ForgerIntSpecs : FeatureSpec() {
             scenario("Fail if standard deviation < 0") {
                 val mean = forger.aSmallInt()
                 val stDev = forger.aNegativeInt(true)
+                shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianInt(mean, stDev)
+                }
+            }
+
+            scenario("Fail if mean > MAX_VALUE/2") {
+                val mean = forger.anInt(min = Int.MAX_VALUE / 2)
+                val stDev = forger.anInt(1, 10)
+                shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianInt(mean, stDev)
+                }
+            }
+
+            scenario("Fail if mean < -MAX_VALUE/2") {
+                val mean = forger.anInt(max = -Int.MAX_VALUE / 2)
+                val stDev = forger.anInt(1, 10)
                 shouldThrow<IllegalArgumentException> {
                     forger.aGaussianInt(mean, stDev)
                 }
@@ -173,7 +191,7 @@ class ForgerIntSpecs : FeatureSpec() {
             }
 
             scenario("Produces a gaussian distributed float") {
-                val mean = forger.anInt(-1000,1000)
+                val mean = forger.anInt(-1000, 1000)
                 val stdev = forger.anInt(10, 500)
 
                 val count = 1024
@@ -187,7 +205,7 @@ class ForgerIntSpecs : FeatureSpec() {
                 })
 
                 val computedMean = sum / count
-                val computedStDev = Math.sqrt((squareSum - (count * mean * mean)) / (count - 1.0)).toFloat()
+                val computedStDev = sqrt(abs(squareSum - (count * mean * mean)) / (count - 1.0)).toFloat()
                 assertThat(computedMean)
                         .isCloseTo(mean.toFloat(), within(stdev / 10.0f))
                 assertThat(computedStDev)

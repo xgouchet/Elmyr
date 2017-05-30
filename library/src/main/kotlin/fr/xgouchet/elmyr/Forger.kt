@@ -11,7 +11,7 @@ import java.lang.Math.round
 open class Forger {
 
     internal val rng = java.util.Random()
-    internal var seed : Long
+    internal var seed: Long
 
     init {
         seed = System.nanoTime()
@@ -134,9 +134,17 @@ open class Forger {
      */
     @JvmOverloads
     fun aGaussianInt(mean: Int = 0, standardDeviation: Int = 100): Int {
+        if (mean > MEAN_THRESHOLD_INT) {
+            throw IllegalArgumentException("Cannot use a mean greater than $MEAN_THRESHOLD_INT due to distribution imprecision")
+        }
+        if (mean < -MEAN_THRESHOLD_INT) {
+            throw IllegalArgumentException("Cannot use a mean less than -$MEAN_THRESHOLD_INT due to distribution imprecision")
+        }
         if (standardDeviation < 0) {
             throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
-        } else if (standardDeviation == 0) {
+        }
+
+        if (standardDeviation == 0) {
             return mean
         } else {
             return round((rng.nextGaussian() * standardDeviation)).toInt() + mean
@@ -203,9 +211,17 @@ open class Forger {
      */
     @JvmOverloads
     fun aGaussianLong(mean: Long = 0L, standardDeviation: Long = 100L): Long {
+        if (mean > MEAN_THRESHOLD_LONG) {
+            throw IllegalArgumentException("Cannot use a mean greater than $MEAN_THRESHOLD_LONG due to distribution imprecision")
+        }
+        if (mean < -MEAN_THRESHOLD_LONG) {
+            throw IllegalArgumentException("Cannot use a mean less than -$MEAN_THRESHOLD_LONG due to distribution imprecision")
+        }
         if (standardDeviation < 0L) {
             throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
-        } else if (standardDeviation == 0L) {
+        }
+
+        if (standardDeviation == 0L) {
             return mean
         } else {
             return round((rng.nextGaussian() * standardDeviation)) + mean
@@ -283,9 +299,17 @@ open class Forger {
      */
     @JvmOverloads
     fun aGaussianFloat(mean: Float = 0f, standardDeviation: Float = 1f): Float {
+        if (mean > MEAN_THRESHOLD_FLOAT) {
+            throw IllegalArgumentException("Cannot use a mean greater than $MEAN_THRESHOLD_FLOAT due to floating point precision error")
+        }
+        if (mean < -MEAN_THRESHOLD_FLOAT) {
+            throw IllegalArgumentException("Cannot use a mean less than -$MEAN_THRESHOLD_FLOAT due to floating point precision error")
+        }
         if (standardDeviation < 0) {
             throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
-        } else if (standardDeviation == 0f) {
+        }
+
+        if (standardDeviation == 0f) {
             return mean
         } else {
             return (rng.nextGaussian().toFloat() * standardDeviation) + mean
@@ -355,9 +379,17 @@ open class Forger {
      */
     @JvmOverloads
     fun aGaussianDouble(mean: Double = 0.0, standardDeviation: Double = 1.0): Double {
+        if (mean > MEAN_THRESHOLD_DOUBLE) {
+            throw IllegalArgumentException("Cannot use a mean greater than $MEAN_THRESHOLD_DOUBLE due to floating point precision error")
+        }
+        if (mean < -MEAN_THRESHOLD_DOUBLE) {
+            throw IllegalArgumentException("Cannot use a mean less than -$MEAN_THRESHOLD_DOUBLE due to floating point precision error")
+        }
         if (standardDeviation < 0) {
             throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
-        } else if (standardDeviation == 0.0) {
+        }
+
+        if (standardDeviation == 0.0) {
             return mean
         } else {
             return (rng.nextGaussian() * standardDeviation) + mean
@@ -883,8 +915,17 @@ open class Forger {
         val BIG_THRESHOLD = 0x10000
         val HUGE_THRESHOLD = 0x1000000
 
+        val MEAN_THRESHOLD_INT = Math.round(Math.sqrt(Int.MAX_VALUE.toDouble())).toInt()
+
         // LONG
         val ONE_YEAR = 31536000000L
+        val MEAN_THRESHOLD_LONG = Math.round(Math.sqrt(Long.MAX_VALUE.toDouble()))
+
+        // FLOAT
+        val MEAN_THRESHOLD_FLOAT = Math.sqrt(Float.MAX_VALUE.toDouble()).toFloat()
+
+        // DOUBLE
+        val MEAN_THRESHOLD_DOUBLE = Math.sqrt(Double.MAX_VALUE)
 
         // Char
         internal val MIN_PRINTABLE = 0x20.toChar()

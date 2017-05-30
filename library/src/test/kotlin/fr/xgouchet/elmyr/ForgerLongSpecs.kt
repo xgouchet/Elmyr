@@ -4,6 +4,8 @@ import io.kotlintest.matchers.shouldThrow
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.assertj.core.api.Java6Assertions.within
+import java.lang.Math.abs
+import java.lang.Math.sqrt
 
 /**
  * @author Xavier F. Gouchet
@@ -69,6 +71,22 @@ class ForgerLongSpecs : FeatureSpec() {
             scenario("Fail if standard deviation < 0") {
                 val mean = forger.aLong(1, Forger.SMALL_THRESHOLD.toLong())
                 val stDev = forger.aNegativeLong(true)
+                shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianLong(mean, stDev)
+                }
+            }
+
+            scenario("Fail if mean > MAX_VALUE/2") {
+                val mean = forger.aLong(min = Long.MAX_VALUE / 2)
+                val stDev = forger.aLong(1, 10)
+                shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianLong(mean, stDev)
+                }
+            }
+
+            scenario("Fail if mean < -MAX_VALUE/2") {
+                val mean = forger.aLong(max = -Long.MAX_VALUE / 2)
+                val stDev = forger.aLong(1, 10)
                 shouldThrow<IllegalArgumentException> {
                     forger.aGaussianLong(mean, stDev)
                 }
@@ -153,7 +171,7 @@ class ForgerLongSpecs : FeatureSpec() {
                 })
 
                 val computedMean = sum / count
-                val computedStDev = Math.sqrt((squareSum - (count * mean * mean)) / (count - 1.0)).toFloat()
+                val computedStDev = sqrt(abs(squareSum - (count * mean * mean)) / (count - 1.0)).toFloat()
                 assertThat(computedMean)
                         .isCloseTo(mean.toFloat(), within(stdev / 10.0f))
                 assertThat(computedStDev)

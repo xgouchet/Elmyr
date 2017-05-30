@@ -2,7 +2,9 @@ package fr.xgouchet.elmyr
 
 import io.kotlintest.matchers.shouldThrow
 import io.kotlintest.specs.FeatureSpec
-import org.assertj.core.api.Java6Assertions.*
+import org.assertj.core.api.Java6Assertions.assertThat
+import org.assertj.core.api.Java6Assertions.within
+import java.lang.Math.abs
 import java.lang.Math.sqrt
 
 /**
@@ -66,12 +68,29 @@ class ForgerFloatSpecs : FeatureSpec() {
                     forger.aGaussianFloat(mean, stDev)
                 }
             }
+
+            scenario("Fail if mean > MAX_VALUE/2") {
+                val mean = forger.aFloat(min = Float.MAX_VALUE / 2)
+                val stDev = forger.aFloat(1f, 4f)
+                shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianFloat(mean, stDev)
+                }
+            }
+
+            scenario("Fail if mean < -MAX_VALUE/2") {
+                val mean = forger.aFloat(max = -Float.MAX_VALUE / 2)
+                val stDev = forger.aFloat(1f, 4f)
+                shouldThrow<IllegalArgumentException> {
+                    forger.aGaussianFloat(mean, stDev)
+                }
+            }
         }
 
         feature("An Number Forger produces meaningful floats") {
 
             val forger = Forger()
-            forger.reset(System.nanoTime())
+            val seed = System.nanoTime()
+            forger.reset(seed)
 
             scenario("Produce an float in a specified range") {
                 val min = forger.aFloat(-100000f, 100000f)
@@ -132,6 +151,7 @@ class ForgerFloatSpecs : FeatureSpec() {
             }
 
             scenario("Produces a gaussian distributed float") {
+
                 val mean = forger.aFloat(-1000f, 1000f)
                 val stdev = forger.aFloat(10f, 500f)
 
@@ -146,7 +166,7 @@ class ForgerFloatSpecs : FeatureSpec() {
                 })
 
                 val computedMean = sum / count
-                val computedStDev = sqrt((squareSum - (count * mean * mean)) / (count - 1.0)).toFloat()
+                val computedStDev = sqrt(abs((squareSum - (count * mean * mean))) / (count - 1.0)).toFloat()
                 assertThat(computedMean)
                         .isCloseTo(mean, within(stdev / 10.0f))
                 assertThat(computedStDev)
