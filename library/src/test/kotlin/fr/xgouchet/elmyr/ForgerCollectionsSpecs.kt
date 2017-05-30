@@ -360,6 +360,26 @@ class ForgerCollectionsSpecs : FeatureSpec() {
                 assertThat(computedStDev)
                         .isCloseTo(stDev, within(stDev * 0.75f))
             }
+
+            scenario("Forge an char array") {
+                val size = forger.aTinyInt()
+                val data = forger.aCharArray(CharConstraint.HEXADECIMAL, Case.LOWER, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(Forger.HEXA_LOWER).contains(it) }
+            }
+
+            scenario("Forge an char array with min/max") {
+                val size = forger.aTinyInt()
+                val min = forger.aChar()
+                val max = forger.aChar(min = min + 1)
+                val data = forger.aCharArray(min, max, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
+            }
         }
     }
 }

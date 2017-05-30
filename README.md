@@ -62,6 +62,7 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
  - Add pipe support in regex
  - Add Repeater JUnit rule
+ - Add forgery for primitive / String arrays
 
 ### 0.3 (2017/05/29)
 

@@ -1035,6 +1035,31 @@ open class Forger {
         return DoubleArray(arraySize, { aGaussianDouble(mean, standardDeviation) })
     }
 
+
+    /**
+     * @param constraint a constraint on the chars to forge
+     * @param size the size of the array, or -1 for a random size
+     * * @return an array of char
+     */
+    @JvmOverloads
+    fun aCharArray(constraint: CharConstraint, case: Case = Case.ANY, size: Int = -1): CharArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return CharArray(arraySize, { aChar(constraint, case) })
+    }
+
+    /**
+     * @param min the minimum value for all chars in the array
+     * @param max the maximum value for all chars in the array
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of char
+     */
+    @JvmOverloads
+    fun aCharArray(min: Char, max: Char, size: Int = -1): CharArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return CharArray(arraySize, { aChar(min, max) })
+    }
+
+
     // endregion
 
     // region Enum
