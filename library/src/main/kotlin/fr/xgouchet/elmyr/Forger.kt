@@ -893,6 +893,146 @@ open class Forger {
         return array[index]
     }
 
+    /**
+     * @param constraint a constraint on the ints to forge
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of int
+     */
+    @JvmOverloads
+    fun anIntArray(constraint: IntConstraint, size: Int = -1): IntArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return IntArray(arraySize, { anInt(constraint) })
+    }
+
+    /**
+     * @param min the minimum value for all ints in the array
+     * @param max the maximum value for all ints in the array
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of int
+     */
+    @JvmOverloads
+    fun anIntArray(min: Int, max: Int, size: Int = -1): IntArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return IntArray(arraySize, { anInt(min, max) })
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0)
+     * @param standardDeviation the standard deviation value of the distribution (default : 100)
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of int with a gaussian distribution
+     */
+    @JvmOverloads
+    fun anIntArrayWithDistribution(mean: Int = 0, standardDeviation: Int = 100, size: Int = -1): IntArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return IntArray(arraySize, { aGaussianInt(mean, standardDeviation) })
+    }
+
+    /**
+     * @param constraint a constraint on the ints to forge
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of long
+     */
+    @JvmOverloads
+    fun aLongArray(constraint: LongConstraint, size: Int = -1): LongArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return LongArray(arraySize, { aLong(constraint) })
+    }
+
+    /**
+     * @param min the minimum value for all longs in the array
+     * @param max the maximum value for all longs in the array
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of long
+     */
+    @JvmOverloads
+    fun aLongArray(min: Long, max: Long, size: Int = -1): LongArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return LongArray(arraySize, { aLong(min, max) })
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0)
+     * @param standardDeviation the standard deviation value of the distribution (default : 100)
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of long with a gaussian distribution
+     */
+    @JvmOverloads
+    fun aLongArrayWithDistribution(mean: Long = 0, standardDeviation: Long = 100, size: Int = -1): LongArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return LongArray(arraySize, { aGaussianLong(mean, standardDeviation) })
+    }
+
+    /**
+     * @param constraint a constraint on the floats to forge
+     * @param size the size of the array, or -1 for a random size
+     * * @return an array of float
+     */
+    @JvmOverloads
+    fun aFloatArray(constraint: FloatConstraint, size: Int = -1): FloatArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return FloatArray(arraySize, { aFloat(constraint) })
+    }
+
+    /**
+     * @param min the minimum value for all floats in the array
+     * @param max the maximum value for all floats in the array
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of float
+     */
+    @JvmOverloads
+    fun aFloatArray(min: Float, max: Float, size: Int = -1): FloatArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return FloatArray(arraySize, { aFloat(min, max) })
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0f)
+     * @param standardDeviation the standard deviation value of the distribution (default : 1f)
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of int with a gaussian distribution
+     */
+    @JvmOverloads
+    fun aFloatArrayWithDistribution(mean: Float = 0f, standardDeviation: Float = 1f, size: Int = -1): FloatArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return FloatArray(arraySize, { aGaussianFloat(mean, standardDeviation) })
+    }
+
+    /**
+     * @param constraint a constraint on the doubles to forge
+     * @param size the size of the array, or -1 for a random size
+     * * @return an array of double
+     */
+    @JvmOverloads
+    fun aDoubleArray(constraint: DoubleConstraint, size: Int = -1): DoubleArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return DoubleArray(arraySize, { aDouble(constraint) })
+    }
+
+    /**
+     * @param min the minimum value for all doubles in the array
+     * @param max the maximum value for all doubles in the array
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of double
+     */
+    @JvmOverloads
+    fun aDoubleArray(min: Double, max: Double, size: Int = -1): DoubleArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return DoubleArray(arraySize, { aDouble(min, max) })
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0.0)
+     * @param standardDeviation the standard deviation value of the distribution (default : 1.0)
+     * @param size the size of the array, or -1 for a random size
+     * @return an array of int with a gaussian distribution
+     */
+    @JvmOverloads
+    fun aDoubleArrayWithDistribution(mean: Double = 0.0, standardDeviation: Double = 1.0, size: Int = -1): DoubleArray {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return DoubleArray(arraySize, { aGaussianDouble(mean, standardDeviation) })
+    }
+
     // endregion
 
     // region Enum

@@ -2,8 +2,9 @@ package fr.xgouchet.elmyr
 
 import io.kotlintest.specs.FeatureSpec
 import org.assertj.core.api.Assertions.assertThat
-import org.mockito.AdditionalMatchers.or
-import java.util.*
+import org.assertj.core.api.Java6Assertions.within
+import java.lang.Math.abs
+import java.lang.Math.sqrt
 
 /**
  * @author Xavier F. Gouchet
@@ -160,6 +161,204 @@ class ForgerCollectionsSpecs : FeatureSpec() {
                     assertThat(map)
                             .containsEntry(result.key, result.value)
                 })
+            }
+        }
+
+        feature("A collection Forger forges primitive arrays") {
+            val forger = Forger()
+            val seed = System.nanoTime()
+            forger.reset(seed)
+
+            scenario("Forge an int array") {
+                val size = forger.aTinyInt()
+                val data = forger.anIntArray(IntConstraint.SMALL, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isGreaterThan(0).isLessThan(Forger.SMALL_THRESHOLD) }
+            }
+
+            scenario("Forge an int array with min/max") {
+                val size = forger.aTinyInt()
+                val min = forger.aPositiveInt()
+                val max = forger.anInt(min = min + 1)
+                val data = forger.anIntArray(min, max, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
+            }
+
+            scenario("Forge an int array with gaussian distribution") {
+
+                forger.reset(seed)
+                println("Seed = $seed")
+                val size = 1024 + forger.aTinyInt()
+                val mean = forger.aSmallInt()
+                val stDev = forger.aTinyInt()
+                val data = forger.anIntArrayWithDistribution(mean, stDev, size)
+
+                assertThat(data)
+                        .hasSize(size)
+
+                var sum = 0f
+                var squareSum = 0f
+                data.forEach {
+                    sum += it
+                    squareSum += (it * it)
+                }
+
+                val computedMean = sum / size
+                val computedStDev = sqrt(abs(squareSum - (size * mean * mean)) / (size - 1.0)).toFloat()
+
+                assertThat(computedMean)
+                        .isCloseTo(mean.toFloat(), within(stDev / 10.0f))
+                assertThat(computedStDev)
+                        .isCloseTo(stDev.toFloat(), within(stDev / 2.0f))
+            }
+
+            scenario("Forge an long array") {
+                val size = forger.aTinyInt()
+                val data = forger.aLongArray(LongConstraint.NEGATIVE, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isLessThanOrEqualTo(0L) }
+            }
+
+            scenario("Forge an long array with min/max") {
+                val size = forger.aTinyInt()
+                val min = forger.aPositiveLong()
+                val max = forger.aLong(min = min + 1)
+                val data = forger.aLongArray(min, max, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
+            }
+
+            scenario("Forge an long array with gaussian distribution") {
+
+                forger.reset(seed)
+                println("Seed = $seed")
+                val size = 1024 + forger.aTinyInt()
+                val mean = forger.aLong(1L, 512L)
+                val stDev = forger.aLong(1L, 64L)
+                val data = forger.aLongArrayWithDistribution(mean, stDev, size)
+
+                assertThat(data)
+                        .hasSize(size)
+
+                var sum = 0f
+                var squareSum = 0f
+                data.forEach {
+                    sum += it
+                    squareSum += (it * it)
+                }
+
+                val computedMean = sum / size
+                val computedStDev = sqrt(abs(squareSum - (size * mean * mean)) / (size - 1.0)).toFloat()
+
+                assertThat(computedMean)
+                        .isCloseTo(mean.toFloat(), within(stDev / 10.0f))
+                assertThat(computedStDev)
+                        .isCloseTo(stDev.toFloat(), within(stDev / 2.0f))
+            }
+
+            scenario("Forge a float array") {
+                val size = forger.aTinyInt()
+                val data = forger.aFloatArray(FloatConstraint.POSITIVE_STRICT, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isGreaterThan(0f) }
+            }
+
+            scenario("Forge a float array") {
+                val size = forger.aTinyInt()
+                val min = forger.aPositiveFloat()
+                val max = forger.aFloat(min = min + 1)
+                val data = forger.aFloatArray(min, max, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
+            }
+
+            scenario("Forge a float array with gaussian distribution") {
+
+                forger.reset(seed)
+                println("Seed = $seed")
+                val size = 1024 + forger.aTinyInt()
+                val mean = forger.aFloat(-1000f, 1000f)
+                val stDev = forger.aFloat(10f, 500f)
+                val data = forger.aFloatArrayWithDistribution(mean, stDev, size)
+
+                assertThat(data)
+                        .hasSize(size)
+
+                var sum = 0f
+                var squareSum = 0f
+                data.forEach {
+                    sum += it
+                    squareSum += (it * it)
+                }
+
+                val computedMean = sum / size
+                val computedStDev = sqrt(abs(squareSum - (size * mean * mean)) / (size - 1.0)).toFloat()
+
+                assertThat(computedMean)
+                        .isCloseTo(mean, within(stDev / 10.0f))
+                assertThat(computedStDev)
+                        .isCloseTo(stDev, within(stDev / 2.0f))
+            }
+
+            scenario("Forge a double array") {
+                val size = forger.aTinyInt()
+                val data = forger.aDoubleArray(DoubleConstraint.NEGATIVE_STRICT, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isLessThan(0.0) }
+            }
+
+            scenario("Forge a double array") {
+                val size = forger.aTinyInt()
+                val min = forger.aPositiveDouble()
+                val max = forger.aDouble(min = min + 1)
+                val data = forger.aDoubleArray(min, max, size)
+
+                assertThat(data)
+                        .hasSize(size)
+                data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
+            }
+
+            scenario("Forge a double array with gaussian distribution") {
+
+                forger.reset(seed)
+                println("Seed = $seed")
+                val size = 1024 + forger.aTinyInt()
+                val mean = forger.aDouble(-1000.0, 1000.0)
+                val stDev = forger.aDouble(10.0, 500.0)
+                val data = forger.aDoubleArrayWithDistribution(mean, stDev, size)
+
+                assertThat(data)
+                        .hasSize(size)
+
+                var sum = 0.0
+                var squareSum = 0.0
+                data.forEach {
+                    sum += it
+                    squareSum += (it * it)
+                }
+
+                val computedMean = sum / size
+                val computedStDev = sqrt(abs(squareSum - (size * mean * mean)) / (size - 1.0))
+
+                assertThat(computedMean)
+                        .isCloseTo(mean, within(stDev / 10.0f))
+                assertThat(computedStDev)
+                        .isCloseTo(stDev, within(stDev / 2.0f))
             }
         }
     }
