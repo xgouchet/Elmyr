@@ -1,9 +1,5 @@
 language: java
 jdk:
   - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-script:
-  - ./gradlew check && ./gradlew jacocoTestReport
 after_success:
-  - codecov
+  - bash <(curl -s https://codecov.io/bash)
