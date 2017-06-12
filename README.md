@@ -6,7 +6,7 @@
 [![Kotlin 1.1.2-4](https://img.shields.io/badge/Kotlin-1.1.2--4-blue.svg)](http://kotlinlang.org)
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
-[![Documentation Status](https://readthedocs.org/projects/elmyr/badge/?version=0.3)](http://elmyr.readthedocs.io/en/stable/?badge=0.3)
+[![Documentation Status](https://readthedocs.org/projects/elmyr/badge/?version=0.4)](http://elmyr.readthedocs.io/en/stable/?badge=0.4)
 [![Build Status](https://travis-ci.org/xgouchet/Elmyr.svg?branch=master)](https://travis-ci.org/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
@@ -27,7 +27,7 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        testCompile 'com.github.xgouchet:Elmyr:0.3'
+        testCompile 'com.github.xgouchet:Elmyr:0.4'
     }
 ```
 
@@ -64,7 +64,7 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### 0.4 (2017/??/??)
+### 0.4 (2017/06/12)
 
  - Add pipe support in regex
  - Add Repeater JUnit rule
