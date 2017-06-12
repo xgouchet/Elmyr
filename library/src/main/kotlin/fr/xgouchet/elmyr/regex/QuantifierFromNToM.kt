@@ -2,7 +2,6 @@ package fr.xgouchet.elmyr.regex
 
 import fr.xgouchet.elmyr.Forger
 
-
 /**
  * @author Xavier F. Gouchet
  */

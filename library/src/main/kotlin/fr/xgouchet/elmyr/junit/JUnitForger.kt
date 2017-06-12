@@ -5,7 +5,7 @@ import org.junit.rules.TestRule
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import java.util.*
+import java.util.Locale
 
 /**
  * @author Xavier F. Gouchet
@@ -29,7 +29,6 @@ class JUnitForger :
             System.err.println(message.format(Locale.US, description.methodName, forger.seed))
         }
     }
-
 
     private fun reset() {
         val seed = (System.nanoTime() and 0x7FFFFFFF)

@@ -19,7 +19,6 @@ open class RegexParentNode(parent: RegexParentNode? = null) : RegexNode(parent) 
         children.remove(node)
     }
 
-
     fun updateLastElementQuantfier(quantifier: Quantifier) {
         children.last().quantifier = quantifier
     }
@@ -29,7 +28,6 @@ open class RegexParentNode(parent: RegexParentNode? = null) : RegexNode(parent) 
             sub.build(forger, builder)
         }
     }
-
 
     open fun handle(c: Char): Boolean = false
 

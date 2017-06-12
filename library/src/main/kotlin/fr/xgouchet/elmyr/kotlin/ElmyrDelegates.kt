@@ -1,8 +1,13 @@
 package fr.xgouchet.elmyr.kotlin
 
-import fr.xgouchet.elmyr.*
+import fr.xgouchet.elmyr.Case
+import fr.xgouchet.elmyr.CharConstraint
+import fr.xgouchet.elmyr.DoubleConstraint
+import fr.xgouchet.elmyr.FloatConstraint
+import fr.xgouchet.elmyr.Forger
+import fr.xgouchet.elmyr.IntConstraint
+import fr.xgouchet.elmyr.StringConstraint
 import kotlin.properties.ReadOnlyProperty
-
 
 /**
  * This object provide several delegates for forged properties
@@ -113,7 +118,6 @@ object ElmyrDelegates {
             : ReadOnlyProperty<Any?, Float>
             = ForgedFloat(mean = mean, standardDeviation = standardDeviation, forger = forger)
 
-
     /**
      * @param constraint the constraint for the Double to generate
      * @return a property delegate for a read-only property with a forged Int based on the given constraint
@@ -148,7 +152,6 @@ object ElmyrDelegates {
             forger: Forger = FORGER)
             : ReadOnlyProperty<Any?, Double>
             = ForgedDouble(mean = mean, standardDeviation = standardDeviation, forger = forger)
-
 
     /**
      * Makes a delegate from another one, potentially returning null instead of the delegate value.

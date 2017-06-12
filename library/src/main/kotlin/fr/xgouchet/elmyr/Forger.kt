@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr
 import fr.xgouchet.elmyr.regex.RegexBuilder
 import java.lang.Integer.min
 import java.lang.Math.round
-
+import java.util.concurrent.TimeUnit
 
 /**
  * @author Xavier F. Gouchet
@@ -13,13 +13,11 @@ open class Forger {
     internal val rng = java.util.Random()
 
     var seed: Long
-        internal set
 
     init {
         seed = System.nanoTime()
         reset(seed)
     }
-
 
     /**
      * Resets this forger with the given seed. Knowing the seed allow the forger to reproduce
@@ -58,10 +56,12 @@ open class Forger {
             IntConstraint.SMALL -> return aSmallInt()
             IntConstraint.BIG -> return aBigInt()
             IntConstraint.HUGE -> return aHugeInt()
-            IntConstraint.POSITIVE -> return aPositiveInt()
+            IntConstraint.POSITIVE -> return aPositiveInt(strict = false)
             IntConstraint.POSITIVE_STRICT -> return aPositiveInt(strict = true)
-            IntConstraint.NEGATIVE -> return aNegativeInt()
+            IntConstraint.NEGATIVE -> return aNegativeInt(strict = false)
             IntConstraint.NEGATIVE_STRICT -> return aNegativeInt(strict = true)
+
+            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
         }
     }
 
@@ -168,6 +168,8 @@ open class Forger {
             LongConstraint.POSITIVE_STRICT -> return aPositiveLong(strict = true)
             LongConstraint.NEGATIVE -> return aNegativeLong()
             LongConstraint.NEGATIVE_STRICT -> return aNegativeLong(strict = true)
+
+            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
         }
     }
 
@@ -233,9 +235,15 @@ open class Forger {
     /**
      * @return a long to be used as a timestamp, picked in a milliseconds range around today
      */
-    fun aTimestamp(range: Long = ONE_YEAR): Long {
+    fun aTimestamp(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECONDS): Long {
+        if (range <= 0) {
+            throw IllegalArgumentException("Time range ($range ms) must be strictly positive")
+        }
+
+        val rangeMs = unit.toMillis(range)
+        val min = -rangeMs
         val now = System.currentTimeMillis()
-        return aLong(now - range, now + range)
+        return now + aLong(min, rangeMs)
     }
 
     // endregion
@@ -253,6 +261,8 @@ open class Forger {
             FloatConstraint.POSITIVE_STRICT -> return aPositiveFloat(strict = true)
             FloatConstraint.NEGATIVE -> return aNegativeFloat()
             FloatConstraint.NEGATIVE_STRICT -> return aNegativeFloat(strict = true)
+
+            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
         }
     }
 
@@ -329,10 +339,12 @@ open class Forger {
     fun aDouble(constraint: DoubleConstraint): Double {
         when (constraint) {
             DoubleConstraint.ANY -> return aDouble()
-            DoubleConstraint.POSITIVE -> return aPositiveDouble()
+            DoubleConstraint.POSITIVE -> return aPositiveDouble(strict = false)
             DoubleConstraint.POSITIVE_STRICT -> return aPositiveDouble(strict = true)
-            DoubleConstraint.NEGATIVE -> return aNegativeDouble()
+            DoubleConstraint.NEGATIVE -> return aNegativeDouble(strict = false)
             DoubleConstraint.NEGATIVE_STRICT -> return aNegativeDouble(strict = true)
+
+            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
         }
     }
 
@@ -414,6 +426,8 @@ open class Forger {
 
             CharConstraint.ANY -> return aChar()
             CharConstraint.HEXADECIMAL -> return anHexadecimalChar(case)
+            CharConstraint.ASCII -> return anAsciiChar()
+            CharConstraint.ASCII_EXTENDED -> return anExtendedAsciiChar()
             CharConstraint.ALPHA -> return anAlphabeticalChar(case)
             CharConstraint.ALPHA_NUM -> return anAlphaNumericalChar(case)
             CharConstraint.NUMERICAL -> return aNumericalChar()
@@ -424,7 +438,7 @@ open class Forger {
             CharConstraint.NON_NUMERICAL -> return aNonNumericalChar()
             CharConstraint.NON_WHITESPACE -> return aNonWhitespaceChar()
 
-            else -> TODO("Unknown constraint !")
+            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
         }
     }
 
@@ -476,7 +490,6 @@ open class Forger {
         return res
     }
 
-
     /**
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
      * @return a standard vowel character (‘a’, ‘e’, ‘i’, ‘o’, ‘u’, ‘y’), in the given case
@@ -489,7 +502,6 @@ open class Forger {
             else -> return anElementFrom(VOWEL)
         }
     }
-
 
     /**
      * @param case the case to use (supports Case.UPPER, Case.LOWER and Case.ANY, anything else falls back to Case.ANY)
@@ -607,6 +619,8 @@ open class Forger {
             StringConstraint.HEXADECIMAL -> return anHexadecimalString(case, size)
             StringConstraint.URL -> return aUrl()
             StringConstraint.EMAIL -> return anEmail()
+
+            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
         }
     }
 
@@ -754,7 +768,6 @@ open class Forger {
             }
         }
 
-
         return builder.toString()
     }
 
@@ -818,7 +831,7 @@ open class Forger {
      * @param set a Set
      * @return an element “randomly” picked in the set
      */
-    fun <K, V> anElementFrom(map: Map<K, V>): Map.Entry<K, V> {
+    fun <K, V> anEntryFrom(map: Map<K, V>): Map.Entry<K, V> {
         val index = anInt(0, map.size)
         return map.entries.elementAt(index)
     }
@@ -873,6 +886,15 @@ open class Forger {
      * @return an element “randomly” picked in the array
      */
     fun anElementFrom(array: IntArray): Int {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param array an Array
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: LongArray): Long {
         val index = anInt(0, array.size)
         return array[index]
     }
@@ -1035,7 +1057,6 @@ open class Forger {
         return DoubleArray(arraySize, { aGaussianDouble(mean, standardDeviation) })
     }
 
-
     /**
      * @param constraint a constraint on the chars to forge
      * @param size the size of the array, or -1 for a random size
@@ -1059,7 +1080,6 @@ open class Forger {
         return CharArray(arraySize, { aChar(min, max) })
     }
 
-
     // endregion
 
     // region Enum
@@ -1077,22 +1097,22 @@ open class Forger {
     companion object {
 
         // Int
-        val TINY_THRESHOLD = 0x20
-        val SMALL_THRESHOLD = 0x100
-        val BIG_THRESHOLD = 0x10000
-        val HUGE_THRESHOLD = 0x1000000
+        internal val TINY_THRESHOLD = 0x20
+        internal val SMALL_THRESHOLD = 0x100
+        internal val BIG_THRESHOLD = 0x10000
+        internal val HUGE_THRESHOLD = 0x1000000
 
-        val MEAN_THRESHOLD_INT = Math.round(Math.sqrt(Int.MAX_VALUE.toDouble())).toInt()
+        internal val MEAN_THRESHOLD_INT = Math.round(Math.sqrt(Int.MAX_VALUE.toDouble())).toInt()
 
         // LONG
-        val ONE_YEAR = 31536000000L
-        val MEAN_THRESHOLD_LONG = Math.round(Math.sqrt(Long.MAX_VALUE.toDouble()))
+        internal val ONE_YEAR = TimeUnit.DAYS.toMillis(365)
+        internal val MEAN_THRESHOLD_LONG = Math.round(Math.sqrt(Long.MAX_VALUE.toDouble()))
 
         // FLOAT
-        val MEAN_THRESHOLD_FLOAT = Math.sqrt(Float.MAX_VALUE.toDouble()).toFloat()
+        internal val MEAN_THRESHOLD_FLOAT = Math.sqrt(Float.MAX_VALUE.toDouble()).toFloat()
 
         // DOUBLE
-        val MEAN_THRESHOLD_DOUBLE = Math.sqrt(Double.MAX_VALUE)
+        internal val MEAN_THRESHOLD_DOUBLE = Math.sqrt(Double.MAX_VALUE)
 
         // Char
         internal val MIN_PRINTABLE = 0x20.toChar()
@@ -1124,6 +1144,5 @@ open class Forger {
 
         internal val WHITESPACE = "\t\n\r ".toCharArray()
     }
-
 
 }

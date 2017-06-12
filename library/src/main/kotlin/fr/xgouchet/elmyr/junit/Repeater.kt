@@ -5,14 +5,12 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.MultipleFailureException
 import org.junit.runners.model.Statement
-import java.util.*
-
+import java.util.ArrayList
 
 /**
  * @author Xavier F. Gouchet
  */
 class Repeater : TestRule {
-
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
@@ -43,6 +41,5 @@ class Repeater : TestRule {
             }
         }
     }
-
 
 }

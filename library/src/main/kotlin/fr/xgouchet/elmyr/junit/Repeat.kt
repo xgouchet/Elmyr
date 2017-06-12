@@ -1,6 +1,5 @@
 package fr.xgouchet.elmyr.junit
 
-
 /**
  * @property count the number of times a test must be ran
  * @property failureThreshold the number of accepted failed tests

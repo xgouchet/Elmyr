@@ -9,7 +9,6 @@ import fr.xgouchet.elmyr.Forger
  */
 abstract class RegexNode(var parent: RegexParentNode? = null) {
 
-
     internal var quantifier: Quantifier = Quantifier.Companion.ONE
 
     fun build(forger: Forger, builder: StringBuilder) {
@@ -28,7 +27,6 @@ abstract class RegexNode(var parent: RegexParentNode? = null) {
         quantifier.describe(b)
         return b.toString()
     }
-
 
     abstract fun describe(builder: StringBuilder)
 }

@@ -4,6 +4,8 @@ import fr.xgouchet.elmyr.Case;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 /**

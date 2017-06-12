@@ -39,6 +39,7 @@ class RegexBuilder(regex: String) {
 
         // whitespaces
             'n' -> ongoingNode.add(RawChar('\n', ongoingNode))
+            't' -> ongoingNode.add(RawChar('\t', ongoingNode))
 
         // literal escaped characters
             '\\', '|', '^', '-', '=', '$', '!', '?', '*', '+', '.',
@@ -47,7 +48,6 @@ class RegexBuilder(regex: String) {
             else -> throw IllegalStateException("Can't escape ‘$c’")
         }
     }
-
 
     private fun handleCharacter(c: Char) {
         if (ongoingNode.handle(c)) return
@@ -68,9 +68,16 @@ class RegexBuilder(regex: String) {
             '(' -> {
                 val group = RegexGroupNode(ongoingNode)
                 ongoingNode.add(group)
-                ongoingNode = group
+                val sequence = RegexParentNode(group)
+                group.add(sequence)
+                ongoingNode = sequence
             }
             ')' -> {
+                // unstack until we find a
+                do {
+                    ongoingNode = ongoingNode.parent ?: throw IllegalStateException()
+                } while (ongoingNode !is RegexGroupNode)
+
                 ongoingNode = ongoingNode.parent ?: throw IllegalStateException()
             }
             '{' -> {
