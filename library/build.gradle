@@ -28,18 +28,11 @@ dependencies {
 junitPlatform {
     filters {
         engines {
-            include 'spek'
+            include 'spek', 'junit-jupiter', 'junit-vintage'
         }
     }
 }
 
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        csv.enabled false
-        html.enabled true
-    }
-}
 
 project.afterEvaluate {
     def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
@@ -58,6 +51,12 @@ project.afterEvaluate {
                 classDirectories =  files(project.sourceSets.main.output)
 //                executionData = files(project.jacocoTestReport.executionData)
                 executionData junitPlatformTestTask
+
+                reports {
+                    xml.enabled true
+                    csv.enabled false
+                    html.enabled true
+                }
             })
 
     project.tasks.getByName('check').dependsOn jacocoTask
