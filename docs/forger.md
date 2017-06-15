@@ -263,18 +263,24 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
 
     Returns a random string, based on constraints.
 
-    - _constraint_ : the constraint to build the char. For more information, read the [Constraints](constraints.html) page.
+    - _constraint_ : the constraint to build the String. For more information, read the [Constraints](constraints.html) page.
     - _case_ : the case to use (depending on the constraint, it might be ignored).
     - _size_ : the desired size of the string, or -1 for a random sized string.
 
+ - **fun aString(constraint: CharConstraint, case: Case = Case.ANY, size: Int = -1): String**
 
+    Returns a random string, based on a character constraint. 
+
+    - _constraint_ : the constraint to build the chars in the String. For more information, read the [Constraints](constraints.html) page.
+    - _case_ : the case to use (depending on the constraint, it might be ignored).
+    - _size_ : the desired size of the string, or -1 for a random sized string.
+    
  - **fun aWord(case: Case = Case.ANY, size: Int = -1): String**
 
     Returns a random string, mimicking a word (usually just some _gobbledygook_).
 
     - _case_ : the case to use.
     - _size_ : the desired size of the string, or -1 for a random sized string.
-
 
  - **fun aSentence(case: Case = Case.ANY, size: Int = -1): String**
 
@@ -340,6 +346,157 @@ With Elmyr, you can pick random data within a vararg / arrays / list / set / map
 
     Returns an element picked from the input collection.
 
+---
+
+### Forging arrays
+
+With Elmyr, you can forge arrays of primitives / Strings based on constraints.
+
+   - **fun anIntArray(constraint: IntConstraint, size: Int = -1): IntArray**
+
+      Returns a random array.
+
+      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_ : the size of the array, or -1 for a random size.
+      
+      
+   - **fun anIntArray(min: Int, max: Int, size: Int = -1): IntArray**
+   
+      Returns a random array.
+      
+      - _min_ : the minimum value (inclusive) for the numbers in the array.
+      - _max_ : the minimum value (exclusive) for the numbers in the array .
+      - _size_ : the size of the array, or -1 for a random size.
+      
+   
+   - **fun anIntArrayWithDistribution(mean: Int = 0, standardDeviation: Int = 100, size: Int = -1): IntArray**
+   
+      Returns a random array.
+      
+      - _mean_ : the mean value of the distribution (default : 0).
+      - _standardDeviation_ : the standard deviation value of the distribution (default : 100). 
+      - _size_ : the size of the array, or -1 for a random size.
+            
+      
+   - **fun aLongArray(constraint: LongConstraint, size: Int = -1): LongArray**
+
+      Returns a random array.
+
+      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_ : the size of the array, or -1 for a random size.
+      
+      
+   - **fun aLongArray(min: Long, max: Long, size: Int = -1): LongArray**
+   
+      Returns a random array.
+      
+      - _min_ : the minimum value (inclusive) for the numbers in the array.
+      - _max_ : the minimum value (exclusive) for the numbers in the array .
+      - _size_ : the size of the array, or -1 for a random size.
+      
+   
+   - **fun aLongArrayWithDistribution(mean: Long = 0, standardDeviation: Long = 100, size: Int = -1): LongArray**
+   
+      Returns a random array.
+      
+      - _mean_ : the mean value of the distribution (default : 0).
+      - _standardDeviation_ : the standard deviation value of the distribution (default : 100). 
+      - _size_ : the size of the array, or -1 for a random size.
+      
+      
+   - **fun aFloatArray(constraint: FloatConstraint, size: Int = -1): FloatArray**
+
+      Returns a random array.
+
+      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_ : the size of the array, or -1 for a random size.
+      
+      
+   - **fun aFloatArray(min: Float, max: Float, size: Int = -1): FloatArray**
+   
+      Returns a random array.
+      
+      - _min_ : the minimum value (inclusive) for the numbers in the array.
+      - _max_ : the minimum value (exclusive) for the numbers in the array .
+      - _size_ : the size of the array, or -1 for a random size.
+      
+   
+   - **fun aFloatArrayWithDistribution(mean: Float = 0, standardDeviation: Float = 100, size: Int = -1): FloatArray**
+   
+      Returns a random array.
+      
+      - _mean_ : the mean value of the distribution (default : 0).
+      - _standardDeviation_ : the standard deviation value of the distribution (default : 100). 
+      - _size_ : the size of the array, or -1 for a random size.
+      
+      
+   - **fun aDoubleArray(constraint: DoubleConstraint, size: Int = -1): DoubleArray**
+
+      Returns a random array.
+
+      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_ : the size of the array, or -1 for a random size.
+      
+      
+   - **fun aDoubleArray(min: Double, max: Double, size: Int = -1): DoubleArray**
+   
+      Returns a random array.
+      
+      - _min_ : the minimum value (inclusive) for the numbers in the array.
+      - _max_ : the minimum value (exclusive) for the numbers in the array .
+      - _size_ : the size of the array, or -1 for a random size.
+      
+   
+   - **fun aDoubleArrayWithDistribution(mean: Double = 0, standardDeviation: Double = 100, size: Int = -1): DoubleArray**
+   
+      Returns a random array.
+      
+      - _mean_ : the mean value of the distribution (default : 0).
+      - _standardDeviation_ : the standard deviation value of the distribution (default : 100). 
+      - _size_ : the size of the array, or -1 for a random size.
+   
+   
+   - **fun aCharArray(constraint: CharConstraint, size: Int = -1): CharArray**
+
+      Returns a random array.
+
+      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_ : the size of the array, or -1 for a random size.
+      
+      
+   - **fun aCharArray(min: Char, max: Char, size: Int = -1): CharArray**
+   
+      Returns a random array.
+      
+      - _min_ : the minimum value (inclusive) for the chars in the array.
+      - _max_ : the minimum value (exclusive) for the chars in the array .
+      - _size_ : the size of the array, or -1 for a random size.
+      
+      
+   - **fun aStringArray(constraint: CharConstraint, size: Int = -1): StringArray**
+
+      Returns a random array.
+
+      - _constraint_ :  the constraint to build the chars of the Strings in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_ : the size of the array, or -1 for a random size.
+      
+   - **fun aStringArray(constraint: StringConstraint, size: Int = -1): StringArray**
+
+      Returns a random array.
+
+      - _constraint_ :  the constraint to build the Strings in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_ : the size of the array, or -1 for a random size.
+   
+
+   - **fun aStringArray(regex: String, size: Int = -1): Array<String>**
+   - **fun aStringArray(regex: Regex, size: Int = -1): Array<String>**
+    
+        Returns a random array.
+        
+        - _regex_ : the regular expression to match.
+        - _size_ : the size of the array, or -1 for a random size.
+        
+---
 
 ### Forging a nullable value
 

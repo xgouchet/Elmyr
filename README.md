@@ -64,27 +64,12 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### 0.4 (2017/06/12)
+### 0.5
 
- - Add pipe support in regex
- - Add Repeater JUnit rule
- - Add forgery for primitive / String arrays
+ - Create Strings from CharConstraint
+ - Add forgery for String arrays
 
-### 0.3 (2017/05/29)
-
- - Add support for Long and Double
- - Add support for Nullable
-
-### 0.2 (2017/05/24)
-
- - Kotlin delegates
- - Email and Url generation
-
-
-### 0.1 (2017/05/20)
-
- - Initial version with basic feature
- - JUnit rule 
+For more information, read the [Changelog](CHANGELOG.md).
 
 
 ## Meta
