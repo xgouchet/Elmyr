@@ -603,10 +603,10 @@ open class Forger {
     // region String
 
     /**
-     * @param constraint the constraint to use (default : none)
+     * @param constraint the constraint to use (default : ANY)
      * @param case the case to use (ignored when constraint is Any)
      * @param size the size of the string (or -1 for a random sized String)
-     * @return a truly random string (with chars in the whole UTF-8 spectrum)
+     * @return a random string following the given constraint
      */
     @JvmOverloads
     fun aString(constraint: StringConstraint = StringConstraint.ANY,
@@ -622,6 +622,19 @@ open class Forger {
 
             else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
         }
+    }
+
+    /**
+     * @param constraint the character constraint to use (default : ANY)
+     * @param case the case to use (ignored when constraint is Any)
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return a random string whose chars follow the given constraint
+     */
+    @JvmOverloads
+    fun aString(constraint: CharConstraint,
+                case: Case = Case.ANY,
+                size: Int = -1): String {
+        return String(CharArray(getWordSize(size), { aChar(constraint, case) }))
     }
 
     /**

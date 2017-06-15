@@ -184,9 +184,10 @@ class ForgerSpek_Text : Spek({
         }
 
         context("forging constrained chars") {
+
             it("forges a char …") {
                 repeat(testRepeatCountSmall, {
-                    val char = forger.aChar(CharConstraint.ANY)
+                    val String = forger.aChar(CharConstraint.ANY)
                     // How do you assert that an char is an char ... ?
                 })
             }
@@ -531,6 +532,183 @@ class ForgerSpek_Text : Spek({
             }
         }
 
+        context("forging char-constrained strings") {
+
+            it("forges an hexadecimal upper char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.HEXADECIMAL, Case.UPPER)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.HEXA_UPPER)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges an hexadecimal lower char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.HEXADECIMAL, Case.LOWER)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.HEXA_LOWER)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges a numerical char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.NUMERICAL)
+                    str.toCharArray().forEach {
+                        assertThat(arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'))
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges an upper alphanum char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.ALPHA_NUM, Case.UPPER)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.ALPHA_NUM_UPPER)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges a lower alphanum char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.ALPHA_NUM, Case.LOWER)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.ALPHA_NUM_LOWER)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges an alphanum char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.ALPHA_NUM)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.ALPHA_NUM)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges an upper alpha char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.ALPHA, Case.UPPER)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.ALPHA_UPPER)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges a lower alpha char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.ALPHA, Case.LOWER)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.ALPHA_LOWER)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges an alpha char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.ALPHA)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.ALPHA)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges a whitespace char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.WHITESPACE)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.WHITESPACE)
+                                .contains(it)
+                    }
+                })
+            }
+
+            it("forges an ASCII char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.ASCII)
+                    str.toCharArray().forEach {
+                        assertThat(it)
+                                .isGreaterThanOrEqualTo(Forger.MIN_PRINTABLE)
+                                .isLessThan(Forger.MAX_ASCII)
+                    }
+                })
+            }
+
+            it("forges an extended ASCII char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.ASCII_EXTENDED)
+                    str.toCharArray().forEach {
+                        assertThat(it)
+                                .isGreaterThanOrEqualTo(Forger.MIN_PRINTABLE)
+                                .isLessThan(Forger.MAX_ASCII_EXTENDED)
+                    }
+                })
+            }
+
+            it("forges a non alpha char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.NON_ALPHA)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.ALPHA)
+                                .doesNotContain(it)
+                    }
+                })
+            }
+
+            it("forges a non alphanum char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.NON_ALPHA_NUM)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.ALPHA_NUM)
+                                .doesNotContain(it)
+                    }
+                })
+            }
+
+            it("forges a non numerical char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.NON_NUMERICAL)
+                    str.toCharArray().forEach {
+                        assertThat(arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'))
+                                .doesNotContain(it)
+                    }
+                })
+            }
+
+            it("forges a non hexadecimal char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.NON_HEXADECIMAL)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.HEXA_LOWER)
+                                .doesNotContain(it)
+                        assertThat(Forger.HEXA_UPPER)
+                                .doesNotContain(it)
+                    }
+                })
+            }
+
+            it("forges a non whitespace char") {
+                repeat(testRepeatCountSmall, {
+                    val str = forger.aString(CharConstraint.NON_WHITESPACE)
+                    str.toCharArray().forEach {
+                        assertThat(Forger.WHITESPACE)
+                                .doesNotContain(it)
+                    }
+                })
+            }
+        }
+
         context("forging regex based strings ") {
             it("forges a regex based string") {
                 val regexes = arrayOf(
@@ -545,6 +723,7 @@ class ForgerSpek_Text : Spek({
                         "[a-h][i-p][q-z]",
                         "[a-h]+[i-p]*[q-z]?",
                         "[a-h]-[q-z]",
+                        "[*+?]",
 
                         // groups
                         "([a-h]-[q-z])+",
@@ -565,6 +744,7 @@ class ForgerSpek_Text : Spek({
 
                         // quantifier range
                         "[abc]{3}-[xyz]{2,9}",
+                        "[abc]{10,}",
 
                         // Or
                         "abc|xyz",
