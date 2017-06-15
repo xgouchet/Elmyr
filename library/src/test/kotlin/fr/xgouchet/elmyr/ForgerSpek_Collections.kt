@@ -15,7 +15,8 @@ class ForgerSpek_Collections : Spek({
         val forger = Forger()
         var seed: Long = 0
         val testRepeatCountSmall = 16
-        val arraySize = 32
+        val arraySize = 32 + forger.aTinyInt()
+        val arraySizeBig = 1024 + forger.aTinyInt()
 
         beforeEachTest {
             seed = System.nanoTime()
@@ -123,22 +124,20 @@ class ForgerSpek_Collections : Spek({
         context("forging collections ") {
 
             it("forges an int array") {
-                val size = forger.aTinyInt()
-                val data = forger.anIntArray(fr.xgouchet.elmyr.IntConstraint.SMALL, size)
+                val data = forger.anIntArray(fr.xgouchet.elmyr.IntConstraint.SMALL, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
                 data.forEach { assertThat(it).isGreaterThan(0).isLessThan(fr.xgouchet.elmyr.Forger.Companion.SMALL_THRESHOLD) }
             }
 
             it("forges an int array with min/max") {
-                val size = forger.aTinyInt()
                 val min = forger.aPositiveInt()
                 val max = forger.anInt(min = min + 1)
-                val data = forger.anIntArray(min, max, size)
+                val data = forger.anIntArray(min, max, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
                 data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
             }
 
@@ -146,34 +145,31 @@ class ForgerSpek_Collections : Spek({
 
                 forger.reset(seed)
                 println("Seed = $seed")
-                val size = 1024 + forger.aTinyInt()
                 val mean = forger.aSmallInt()
                 val stDev = forger.aTinyInt()
-                val data = forger.anIntArrayWithDistribution(mean, stDev, size)
+                val data = forger.anIntArrayWithDistribution(mean, stDev, arraySizeBig)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySizeBig)
 
-                verifyGaussianDistribution(size, mean.toDouble(), stDev.toDouble(), { i -> data[i].toDouble() })
+                verifyGaussianDistribution(arraySizeBig, mean.toDouble(), stDev.toDouble(), { i -> data[i].toDouble() })
             }
 
             it("forges an long array") {
-                val size = forger.aTinyInt()
-                val data = forger.aLongArray(fr.xgouchet.elmyr.LongConstraint.NEGATIVE, size)
+                val data = forger.aLongArray(fr.xgouchet.elmyr.LongConstraint.NEGATIVE, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
                 data.forEach { assertThat(it).isLessThanOrEqualTo(0L) }
             }
 
             it("forges an long array with min/max") {
-                val size = forger.aTinyInt()
                 val min = forger.aPositiveLong()
                 val max = forger.aLong(min = min + 1)
-                val data = forger.aLongArray(min, max, size)
+                val data = forger.aLongArray(min, max, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
                 data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
             }
 
@@ -193,22 +189,20 @@ class ForgerSpek_Collections : Spek({
             }
 
             it("forges a float array with constraint") {
-                val size = forger.aTinyInt()
                 val constraint = forger.aValueFrom(FloatConstraint::class.java)
-                val data = forger.aFloatArray(constraint, size)
+                val data = forger.aFloatArray(constraint, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
             }
 
             it("forges a float array") {
-                val size = forger.aTinyInt()
                 val min = forger.aPositiveFloat()
                 val max = forger.aFloat(min = min + 1)
-                val data = forger.aFloatArray(min, max, size)
+                val data = forger.aFloatArray(min, max, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
                 data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
             }
 
@@ -228,22 +222,20 @@ class ForgerSpek_Collections : Spek({
             }
 
             it("forges a double array with constraint") {
-                val size = forger.aTinyInt()
                 val constraint = forger.aValueFrom(DoubleConstraint::class.java)
-                val data = forger.aDoubleArray(constraint, size)
+                val data = forger.aDoubleArray(constraint, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
             }
 
             it("forges a double array with min / max") {
-                val size = forger.aTinyInt()
                 val min = forger.aPositiveDouble()
                 val max = forger.aDouble(min = min + 1)
-                val data = forger.aDoubleArray(min, max, size)
+                val data = forger.aDoubleArray(min, max, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
                 data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
             }
 
@@ -263,23 +255,58 @@ class ForgerSpek_Collections : Spek({
             }
 
             it("forges an char array") {
-                val size = forger.aTinyInt()
                 val constraint = forger.aValueFrom(CharConstraint::class.java)
-                val data = forger.aCharArray(constraint, Case.LOWER, size)
+                val case = forger.aValueFrom(Case::class.java)
+                val data = forger.aCharArray(constraint, case, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
             }
 
             it("forges an char array with min/max") {
-                val size = forger.aTinyInt()
                 val min = forger.aChar()
                 val max = forger.aChar(min = min + 1)
-                val data = forger.aCharArray(min, max, size)
+                val data = forger.aCharArray(min, max, arraySize)
 
                 assertThat(data)
-                        .hasSize(size)
+                        .hasSize(arraySize)
                 data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
+            }
+
+            it("forges a String array with constraint") {
+                val constraint = forger.aValueFrom(StringConstraint::class.java)
+                val case = forger.aValueFrom(Case::class.java)
+                val data = forger.aStringArray(constraint, case, arraySize)
+
+                assertThat(data)
+                        .hasSize(arraySize)
+            }
+
+            it("forges a String array with char constraint") {
+                val constraint = forger.aValueFrom(CharConstraint::class.java)
+                val case = forger.aValueFrom(Case::class.java)
+                val data = forger.aStringArray(constraint, case, arraySize)
+
+                assertThat(data)
+                        .hasSize(arraySize)
+            }
+
+            it("forges a String array with regex") {
+                val regex = "[\\d]+-[A-Z]+"
+                val data = forger.aStringArray(regex, arraySize)
+
+                assertThat(data)
+                        .hasSize(arraySize)
+                data.forEach { assertThat(it).matches(regex) }
+            }
+
+            it("forges a String array with regex") {
+                val regex = Regex("""[\d]+-[A-Z]+""")
+                val data = forger.aStringArray(regex, arraySize)
+
+                assertThat(data)
+                        .hasSize(arraySize)
+                data.forEach { assertThat(it).matches(regex.pattern) }
             }
         }
 

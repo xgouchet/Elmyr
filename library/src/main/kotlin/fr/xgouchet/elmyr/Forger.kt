@@ -1093,6 +1093,50 @@ open class Forger {
         return CharArray(arraySize, { aChar(min, max) })
     }
 
+    /**
+     * @param constraint a constraint on the Strings to forge
+     * @param size the size of the array, or -1 for a random size
+     * * @return an array of Strings
+     */
+    @JvmOverloads
+    fun aStringArray(constraint: StringConstraint, case: Case = Case.ANY, size: Int = -1): Array<String> {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return Array(arraySize, { aString(constraint, case) })
+    }
+
+    /**
+     * @param constraint a constraint on the characters of the Strings to forge
+     * @param size the size of the array, or -1 for a random size
+     * * @return an array of Strings
+     */
+    @JvmOverloads
+    fun aStringArray(constraint: CharConstraint, case: Case = Case.ANY, size: Int = -1): Array<String> {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return Array(arraySize, { aString(constraint, case) })
+    }
+
+    /**
+     * @param regex a regex for the Strings to forge
+     * @param size the size of the array, or -1 for a random size
+     * * @return an array of Strings
+     */
+    @JvmOverloads
+    fun aStringArray(regex: String, size: Int = -1): Array<String> {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return Array(arraySize, { aStringMatching(regex) })
+    }
+
+    /**
+     * @param regex a regex for the Strings to forge
+     * @param size the size of the array, or -1 for a random size
+     * * @return an array of Strings
+     */
+    @JvmOverloads
+    fun aStringArray(regex: Regex, size: Int = -1): Array<String> {
+        val arraySize = if (size < 0) aTinyInt() else size
+        return Array(arraySize, { aStringMatching(regex) })
+    }
+
     // endregion
 
     // region Enum
