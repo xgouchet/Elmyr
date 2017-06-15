@@ -6,7 +6,7 @@
 [![Kotlin 1.1.2-4](https://img.shields.io/badge/Kotlin-1.1.2--4-blue.svg)](http://kotlinlang.org)
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
-[![Documentation Status](https://readthedocs.org/projects/elmyr/badge/?version=0.4)](http://elmyr.readthedocs.io/en/stable/?badge=0.4)
+[![Documentation Status](https://img.shields.io/badge/docs-0.5-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.5)
 [![Build Status](https://travis-ci.org/xgouchet/Elmyr.svg?branch=master)](https://travis-ci.org/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
@@ -27,7 +27,7 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        testCompile 'com.github.xgouchet:Elmyr:0.4'
+        testCompile 'com.github.xgouchet:Elmyr:0.5'
     }
 ```
 

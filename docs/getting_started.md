@@ -20,7 +20,7 @@ Then, add the dependency in your app's build.gradle :
 
 ```groovy
 dependencies {
-    testCompile 'com.github.xgouchet:Elmyr:0.4'
+    testCompile 'com.github.xgouchet:Elmyr:0.5'
 }
 ```
 
@@ -36,7 +36,7 @@ To add this library, add the following repository to your `pom.xml` :
 		    <id>jitpack.io</id>
 		    <url>https://jitpack.io</url>
 		</repository>
-	</repositories>Copy
+	</repositories>
 ```
 
 Then, add the dependency : 
@@ -46,7 +46,7 @@ Then, add the dependency :
 	    <scope>test</scope>
 	    <groupId>com.github.xgouchet</groupId>
 	    <artifactId>Elmyr</artifactId>
-	    <version>0.4</version>
+	    <version>0.5</version>
 	</dependency>
 ```
 
