@@ -7,7 +7,7 @@ apply plugin: "io.gitlab.arturbosch.detekt"
 
 dependencies {
     // KOTLIN
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    provided "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     compileOnly 'junit:junit:4.12'
 
