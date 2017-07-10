@@ -1,6 +1,7 @@
 package fr.xgouchet.elmyr
 
 import fr.xgouchet.elmyr.regex.RegexBuilder
+import org.junit.AssumptionViolatedException
 import java.lang.Integer.min
 import java.lang.Math.round
 import java.util.concurrent.TimeUnit
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit
 open class Forger {
 
     internal val rng = java.util.Random()
+    var ignorePreconditionsErrors: Boolean = false
 
     var seed: Long
 
@@ -61,7 +63,7 @@ open class Forger {
             IntConstraint.NEGATIVE -> return aNegativeInt(strict = false)
             IntConstraint.NEGATIVE_STRICT -> return aNegativeInt(strict = true)
 
-            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
+            else -> preconditionException("Unexpected constraint : $constraint")
         }
     }
 
@@ -74,7 +76,7 @@ open class Forger {
     fun anInt(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): Int {
 
         if (min >= max) {
-            throw IllegalArgumentException("The ‘min’ boundary ($min) of the range should be less than the ‘max’ boundary ($max)")
+            preconditionException("The ‘min’ boundary ($min) of the range should be less than the ‘max’ boundary ($max)")
         }
 
         val range = max.toLong() - min.toLong()
@@ -137,13 +139,13 @@ open class Forger {
     @JvmOverloads
     fun aGaussianInt(mean: Int = 0, standardDeviation: Int = 100): Int {
         if (mean > MEAN_THRESHOLD_INT) {
-            throw IllegalArgumentException("Cannot use a mean greater than $MEAN_THRESHOLD_INT due to distribution imprecision")
+            preconditionException("Cannot use a mean greater than $MEAN_THRESHOLD_INT due to distribution imprecision")
         }
         if (mean < -MEAN_THRESHOLD_INT) {
-            throw IllegalArgumentException("Cannot use a mean less than -$MEAN_THRESHOLD_INT due to distribution imprecision")
+            preconditionException("Cannot use a mean less than -$MEAN_THRESHOLD_INT due to distribution imprecision")
         }
         if (standardDeviation < 0) {
-            throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
+            preconditionException("Standard deviation ($standardDeviation) must be a positive (or null) value")
         }
 
         if (standardDeviation == 0) {
@@ -169,7 +171,7 @@ open class Forger {
             LongConstraint.NEGATIVE -> return aNegativeLong()
             LongConstraint.NEGATIVE_STRICT -> return aNegativeLong(strict = true)
 
-            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
+            else -> preconditionException("Unexpected constraint : $constraint")
         }
     }
 
@@ -182,7 +184,7 @@ open class Forger {
     fun aLong(min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE): Long {
 
         if (min >= max) {
-            throw IllegalArgumentException("The ‘min’ boundary ($min) of the range should be less than the ‘max’ boundary ($max)")
+            preconditionException("The ‘min’ boundary ($min) of the range should be less than the ‘max’ boundary ($max)")
         }
 
         val range = max - min
@@ -216,13 +218,13 @@ open class Forger {
     @JvmOverloads
     fun aGaussianLong(mean: Long = 0L, standardDeviation: Long = 100L): Long {
         if (mean > MEAN_THRESHOLD_LONG) {
-            throw IllegalArgumentException("Cannot use a mean greater than $MEAN_THRESHOLD_LONG due to distribution imprecision")
+            preconditionException("Cannot use a mean greater than $MEAN_THRESHOLD_LONG due to distribution imprecision")
         }
         if (mean < -MEAN_THRESHOLD_LONG) {
-            throw IllegalArgumentException("Cannot use a mean less than -$MEAN_THRESHOLD_LONG due to distribution imprecision")
+            preconditionException("Cannot use a mean less than -$MEAN_THRESHOLD_LONG due to distribution imprecision")
         }
         if (standardDeviation < 0L) {
-            throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
+            preconditionException("Standard deviation ($standardDeviation) must be a positive (or null) value")
         }
 
         if (standardDeviation == 0L) {
@@ -237,7 +239,7 @@ open class Forger {
      */
     fun aTimestamp(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECONDS): Long {
         if (range <= 0) {
-            throw IllegalArgumentException("Time range ($range ms) must be strictly positive")
+            preconditionException("Time range ($range ms) must be strictly positive")
         }
 
         val rangeMs = unit.toMillis(range)
@@ -262,7 +264,7 @@ open class Forger {
             FloatConstraint.NEGATIVE -> return aNegativeFloat()
             FloatConstraint.NEGATIVE_STRICT -> return aNegativeFloat(strict = true)
 
-            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
+            else -> preconditionException("Unexpected constraint : $constraint")
         }
     }
 
@@ -275,7 +277,7 @@ open class Forger {
     fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float {
 
         if (min > max) {
-            throw IllegalArgumentException("The ‘min’ boundary ($min) of the range should be less than (or equal to) the ‘max’ boundary ($max)")
+            preconditionException("The ‘min’ boundary ($min) of the range should be less than (or equal to) the ‘max’ boundary ($max)")
         }
 
         val range = max - min
@@ -312,13 +314,13 @@ open class Forger {
     @JvmOverloads
     fun aGaussianFloat(mean: Float = 0f, standardDeviation: Float = 1f): Float {
         if (mean > MEAN_THRESHOLD_FLOAT) {
-            throw IllegalArgumentException("Cannot use a mean greater than $MEAN_THRESHOLD_FLOAT due to floating point precision error")
+            preconditionException("Cannot use a mean greater than $MEAN_THRESHOLD_FLOAT due to floating point precision error")
         }
         if (mean < -MEAN_THRESHOLD_FLOAT) {
-            throw IllegalArgumentException("Cannot use a mean less than -$MEAN_THRESHOLD_FLOAT due to floating point precision error")
+            preconditionException("Cannot use a mean less than -$MEAN_THRESHOLD_FLOAT due to floating point precision error")
         }
         if (standardDeviation < 0) {
-            throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
+            preconditionException("Standard deviation ($standardDeviation) must be a positive (or null) value")
         }
 
         if (standardDeviation == 0f) {
@@ -344,7 +346,7 @@ open class Forger {
             DoubleConstraint.NEGATIVE -> return aNegativeDouble(strict = false)
             DoubleConstraint.NEGATIVE_STRICT -> return aNegativeDouble(strict = true)
 
-            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
+            else -> preconditionException("Unexpected constraint : $constraint")
         }
     }
 
@@ -357,7 +359,7 @@ open class Forger {
     fun aDouble(min: Double = -Double.MAX_VALUE, max: Double = Double.MAX_VALUE): Double {
 
         if (min > max) {
-            throw IllegalArgumentException("The ‘min’ boundary ($min) of the range should be less than (or equal to) the ‘max’ boundary ($max)")
+            preconditionException("The ‘min’ boundary ($min) of the range should be less than (or equal to) the ‘max’ boundary ($max)")
         }
 
         val range = max - min
@@ -394,13 +396,13 @@ open class Forger {
     @JvmOverloads
     fun aGaussianDouble(mean: Double = 0.0, standardDeviation: Double = 1.0): Double {
         if (mean > MEAN_THRESHOLD_DOUBLE) {
-            throw IllegalArgumentException("Cannot use a mean greater than $MEAN_THRESHOLD_DOUBLE due to floating point precision error")
+            preconditionException("Cannot use a mean greater than $MEAN_THRESHOLD_DOUBLE due to floating point precision error")
         }
         if (mean < -MEAN_THRESHOLD_DOUBLE) {
-            throw IllegalArgumentException("Cannot use a mean less than -$MEAN_THRESHOLD_DOUBLE due to floating point precision error")
+            preconditionException("Cannot use a mean less than -$MEAN_THRESHOLD_DOUBLE due to floating point precision error")
         }
         if (standardDeviation < 0) {
-            throw IllegalArgumentException("Standard deviation ($standardDeviation) must be a positive (or null) value")
+            preconditionException("Standard deviation ($standardDeviation) must be a positive (or null) value")
         }
 
         if (standardDeviation == 0.0) {
@@ -438,7 +440,7 @@ open class Forger {
             CharConstraint.NON_NUMERICAL -> return aNonNumericalChar()
             CharConstraint.NON_WHITESPACE -> return aNonWhitespaceChar()
 
-            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
+            else -> preconditionException("Unexpected constraint : $constraint")
         }
     }
 
@@ -620,7 +622,7 @@ open class Forger {
             StringConstraint.URL -> return aUrl()
             StringConstraint.EMAIL -> return anEmail()
 
-            else -> throw IllegalArgumentException("Unexpected constraint : $constraint")
+            else -> preconditionException("Unexpected constraint : $constraint")
         }
     }
 
@@ -1147,6 +1149,18 @@ open class Forger {
      */
     fun <E : Enum<E>> aValueFrom(enumClass: Class<E>): E {
         return anElementFrom(*enumClass.enumConstants)
+    }
+
+    // endregion
+
+    // region Internal
+
+    internal fun preconditionException(message: String): Nothing {
+        if(ignorePreconditionsErrors){
+            throw AssumptionViolatedException(message)
+        } else {
+            throw IllegalArgumentException(message)
+        }
     }
 
     // endregion
