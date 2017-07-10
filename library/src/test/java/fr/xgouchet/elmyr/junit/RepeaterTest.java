@@ -3,6 +3,8 @@ package fr.xgouchet.elmyr.junit;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.MultipleFailureException;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -56,8 +58,13 @@ public class RepeaterTest {
 
     @Test
     @Repeat(count = 100, ignoreThreshold = 50)
-    public void test_ignroed_often() {
+    public void test_ignored_often() {
         assumeThat(forger.aBool(0.25f), is(true));
+    }
+
+    @Test
+    public void test_no_repeat(){
+        // just testing
     }
 
     @AfterClass

@@ -21,8 +21,9 @@ class Repeater : TestRule {
                 val ignores = ArrayList<Throwable>()
 
                 val repeat = description.getAnnotation(Repeat::class.java)
+                val count = repeat?.count ?: 1
 
-                repeat(repeat.count, {
+                repeat(count, {
                     try {
                         base.evaluate()
                     } catch (e: AssumptionViolatedException) {
@@ -33,10 +34,15 @@ class Repeater : TestRule {
                     }
                 })
 
-                if (errors.size > repeat.failureThreshold) {
+                val failureThreshold = repeat?.failureThreshold ?: 0
+                val ignoreThreshold = repeat?.ignoreThreshold ?: 0
+
+                if (errors.size > failureThreshold) {
                     throw MultipleFailureException(errors)
-                } else if (ignores.size > repeat.ignoreThreshold) {
-                    throw AssumptionViolatedException("${ignores.size}(over ${repeat.count}) iteration(s) were ignored for ${description.displayName}")
+                } else {
+                    if (ignores.size > ignoreThreshold) {
+                        throw AssumptionViolatedException("${ignores.size}(over ${repeat.count}) iteration(s) were ignored for ${description.displayName}")
+                    }
                 }
             }
         }
