@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
  */
 open class Forger {
 
-    internal val rng = java.util.Random()
+    private val rng = java.util.Random()
     var ignorePreconditionsErrors: Boolean = false
 
     var seed: Long
@@ -1156,7 +1156,7 @@ open class Forger {
     // region Internal
 
     internal fun preconditionException(message: String): Nothing {
-        if(ignorePreconditionsErrors){
+        if (ignorePreconditionsErrors) {
             throw AssumptionViolatedException(message)
         } else {
             throw IllegalArgumentException(message)

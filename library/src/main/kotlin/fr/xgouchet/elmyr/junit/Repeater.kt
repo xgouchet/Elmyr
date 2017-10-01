@@ -30,7 +30,6 @@ class Repeater : TestRule {
                         ignores.add(e)
                     } catch (e: Throwable) {
                         errors.add(e)
-                    } finally {
                     }
                 })
 
