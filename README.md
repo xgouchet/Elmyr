@@ -3,7 +3,7 @@
 > Elmyr is a Kotlin library providing tools to generate “random” values, specifically usefull for tests
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
-[![Kotlin 1.1.2-4](https://img.shields.io/badge/Kotlin-1.1.2--4-blue.svg)](http://kotlinlang.org)
+[![Kotlin 1.1.2-4](https://img.shields.io/badge/Kotlin-1.1.51-blue.svg)](http://kotlinlang.org)
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
 [![Documentation Status](https://img.shields.io/badge/docs-0.5-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.5)

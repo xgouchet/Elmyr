@@ -4,7 +4,10 @@ import fr.xgouchet.elmyr.regex.RegexBuilder
 import org.junit.AssumptionViolatedException
 import java.lang.Integer.min
 import java.lang.Math.round
+import java.util.ArrayList
+import java.util.Random
 import java.util.concurrent.TimeUnit
+
 
 /**
  * @author Xavier F. Gouchet
@@ -1137,6 +1140,56 @@ open class Forger {
     fun aStringArray(regex: Regex, size: Int = -1): Array<String> {
         val arraySize = if (size < 0) aTinyInt() else size
         return Array(arraySize, { aStringMatching(regex) })
+    }
+
+    /**
+     * Creates a sub list of the given list, with random elements selected from the input
+     *
+     * @param list       the list to choose from
+     * @param outputSize the size of the sublist. If the input list is smaller than the given size,
+     * the result will have the size of the input list.
+     * @param <T>        The type of elements in the list
+     * @return a non null list, with elements picked at random in the input, without duplicates.
+     * Note that if the input list contains duplicates, some might appear in the output.
+     * The order in the output matches the input order
+    </T> */
+    fun <T> aSubListOf(list: List<T>, outputSize: Int): List<T> {
+        // fast exit : input too short
+        if (list.size <= outputSize) return ArrayList(list)
+
+        // fast exit : output <= 0
+        if (outputSize <= 0) return emptyList()
+
+
+        val inputSize = list.size
+        val result = ArrayList<T>(outputSize)
+        val rng = Random()
+
+        var numberOfItemsToChooseFrom: Int
+        var numberOfItemsToSelect = outputSize
+
+        var i = 0
+        while (i < inputSize && numberOfItemsToSelect > 0) {
+
+            numberOfItemsToChooseFrom = inputSize - i
+            val probabilityToSelectCurrent = numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
+            val randomProbability = rng.nextDouble()
+
+            // On first iteration, two cases are possible :
+            //  1 : numberOfItemsToChooseFrom == numberOfItemsToSelect
+            //  2 : numberOfItemsToChooseFrom > numberOfItemsToSelect
+            // in the second case, numberOfItemsToChooseFrom will shrink faster than numberOfItemsToSelect until
+            // both are equals.
+            // From this moment, the `probabilityToSelectCurrent` will be 1,
+            // and will stay 1 until the end of the loop as both variables will be decremented together
+            if (randomProbability < probabilityToSelectCurrent) {
+                numberOfItemsToSelect--
+                result.add(list[i])
+            }
+            // we still have
+            i++
+        }
+        return result
     }
 
     // endregion

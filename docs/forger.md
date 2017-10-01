@@ -496,6 +496,13 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
         - _regex_ : the regular expression to match.
         - _size_ : the size of the array, or -1 for a random size.
         
+   - **fun <T> aSubListOf(list: List<T>, outputSize: Int): List<T>**
+   
+        Returns a list with elements picked (in order) from the input list. If the input list doesn't have duplicates, then the output is guaranteed to be without duplicates.
+        
+        - _list_ : the input list to pick elements from.
+        - _size_ : the size of the output list. If the input list is smaller, then the output will have the size of the input list.
+        
 ---
 
 ### Forging a nullable value

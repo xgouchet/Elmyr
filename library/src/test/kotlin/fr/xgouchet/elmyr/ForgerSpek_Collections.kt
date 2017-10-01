@@ -310,6 +310,88 @@ class ForgerSpek_Collections : Spek({
             }
         }
 
+        context("forging sublist") {
+
+            it("forges a sublist of an empty list") {
+                val inputList = emptyList<String>()
+                val outputSize = forger.anInt(1, Forger.Companion.SMALL_THRESHOLD)
+
+                val data = forger.aSubListOf(inputList, outputSize)
+
+                assertThat(data)
+                        .isNotNull()
+                        .isEmpty()
+            }
+
+            it("forges a sublist of a non empty list, with enough data") {
+                val inputSize = forger.anInt(forger.aSmallInt(), 1000)
+                val inputList = ArrayList<String>(inputSize).apply{
+                    for (i in 0 until inputSize) {
+                        add("${i}_${forger.aWord()}")
+                    }
+                }
+
+                val outputSize = forger.anInt(1, inputList.size)
+
+                val data = forger.aSubListOf(inputList, outputSize)
+
+                assertThat(data)
+                        // output is a new list, non null
+                        .isNotNull()
+                        .isNotSameAs(inputList)
+                        // check the size
+                        .hasSize(outputSize)
+                        // no duplicates, no null
+                        .doesNotHaveDuplicates()
+                        .doesNotContainNull()
+            }
+
+            it("forges a sublist of a non empty list, with exactly enough data") {
+                val inputSize = forger.anInt(forger.aSmallInt(), 1000)
+                val inputList = ArrayList<String>(inputSize).apply{
+                    for (i in 0 until inputSize) {
+                        add("${i}_${forger.aWord()}")
+                    }
+                }
+
+                val outputSize = inputSize
+
+                val data = forger.aSubListOf(inputList, outputSize)
+
+                assertThat(data)
+                        // output is a new list, non null
+                        .isNotNull()
+                        .isNotSameAs(inputList)
+                        // check the size
+                        .hasSize(outputSize)
+                        // no duplicates, no null
+                        .doesNotHaveDuplicates()
+                        .doesNotContainNull()
+            }
+
+            it("forges a sublist of a non empty list, with not enough data") {
+                val inputSize = forger.anInt(forger.aSmallInt(), 1000)
+                val inputList = ArrayList<String>(inputSize).apply{
+                    for (i in 0 until inputSize) {
+                        add("${i}_${forger.aWord()}")
+                    }
+                }
+
+                val outputSize = forger.anInt(inputSize + 1, 2000)
+
+                val data : List<String> = forger.aSubListOf(inputList, outputSize)
+
+                assertThat(data)
+                        // output is a new list, non null
+                        .isNotNull()
+                        .isNotSameAs(inputList)
+                        // check the size
+                        .hasSize(inputSize)
+                        // no duplicates, no null
+                        .doesNotHaveDuplicates()
+                        .doesNotContainNull()
+            }
+        }
     }
 
 })
