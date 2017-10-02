@@ -1152,7 +1152,7 @@ open class Forger {
      * @return a non null list, with elements picked at random in the input, without duplicates.
      * Note that if the input list contains duplicates, some might appear in the output.
      * The order in the output matches the input order
-    </T> */
+     */
     fun <T> aSubListOf(list: List<T>, outputSize: Int): List<T> {
         // fast exit : input too short
         if (list.size <= outputSize) return ArrayList(list)
@@ -1175,18 +1175,50 @@ open class Forger {
             val probabilityToSelectCurrent = numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
             val randomProbability = rng.nextDouble()
 
-            // On first iteration, two cases are possible :
-            //  1 : numberOfItemsToChooseFrom == numberOfItemsToSelect
-            //  2 : numberOfItemsToChooseFrom > numberOfItemsToSelect
-            // in the second case, numberOfItemsToChooseFrom will shrink faster than numberOfItemsToSelect until
-            // both are equals.
-            // From this moment, the `probabilityToSelectCurrent` will be 1,
-            // and will stay 1 until the end of the loop as both variables will be decremented together
             if (randomProbability < probabilityToSelectCurrent) {
                 numberOfItemsToSelect--
                 result.add(list[i])
             }
-            // we still have
+            i++
+        }
+        return result
+    }
+
+    /**
+     * Creates a sub set of the given set, with random elements selected from the input
+     *
+     * @param set       the set to choose from
+     * @param outputSize the size of the sublist. If the input set is smaller than the given size,
+     * the result will have the size of the input set.
+     * @param <T>        The type of elements in the set
+     * @return a non null set, with elements picked at random in the input, without duplicates.
+     */
+    fun <T> aSubSetOf(set: Set<T>, outputSize: Int): Set<T> {
+        // fast exit : input too short
+        if (set.size <= outputSize) return HashSet(set)
+
+        // fast exit : output <= 0
+        if (outputSize <= 0) return emptySet()
+
+        val setList = set.toList()
+        val inputSize = set.size
+        val result = HashSet<T>(outputSize)
+        val rng = Random()
+
+        var numberOfItemsToChooseFrom: Int
+        var numberOfItemsToSelect = outputSize
+
+        var i = 0
+        while (i < inputSize && numberOfItemsToSelect > 0) {
+
+            numberOfItemsToChooseFrom = inputSize - i
+            val probabilityToSelectCurrent = numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
+            val randomProbability = rng.nextDouble()
+
+            if (randomProbability < probabilityToSelectCurrent) {
+                numberOfItemsToSelect--
+                result.add(setList[i])
+            }
             i++
         }
         return result

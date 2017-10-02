@@ -392,6 +392,89 @@ class ForgerSpek_Collections : Spek({
                         .doesNotContainNull()
             }
         }
+
+        context("forging subset") {
+
+            it("forges a subset of an empty set") {
+                val inputSet = emptySet<String>()
+                val outputSize = forger.anInt(1, Forger.Companion.SMALL_THRESHOLD)
+
+                val data = forger.aSubSetOf(inputSet, outputSize)
+
+                assertThat(data)
+                        .isNotNull()
+                        .isEmpty()
+            }
+
+            it("forges a subset of a non empty set, with enough data") {
+                val inputSize = forger.anInt(forger.aSmallInt(), 1000)
+                val inputSet = HashSet<String>(inputSize).apply{
+                    for (i in 0 until inputSize) {
+                        add("${i}_${forger.aWord()}")
+                    }
+                }
+
+                val outputSize = forger.anInt(1, inputSet.size)
+
+                val data = forger.aSubSetOf(inputSet, outputSize)
+
+                assertThat(data)
+                        // output is a new set, non null
+                        .isNotNull()
+                        .isNotSameAs(inputSet)
+                        // check the size
+                        .hasSize(outputSize)
+                        // no duplicates, no null
+                        .doesNotHaveDuplicates()
+                        .doesNotContainNull()
+            }
+
+            it("forges a subset of a non empty set, with exactly enough data") {
+                val inputSize = forger.anInt(forger.aSmallInt(), 1000)
+                val inputSet = HashSet<String>(inputSize).apply{
+                    for (i in 0 until inputSize) {
+                        add("${i}_${forger.aWord()}")
+                    }
+                }
+
+                val outputSize = inputSize
+
+                val data = forger.aSubSetOf(inputSet, outputSize)
+
+                assertThat(data)
+                        // output is a new set, non null
+                        .isNotNull()
+                        .isNotSameAs(inputSet)
+                        // check the size
+                        .hasSize(outputSize)
+                        // no duplicates, no null
+                        .doesNotHaveDuplicates()
+                        .doesNotContainNull()
+            }
+
+            it("forges a subset of a non empty set, with not enough data") {
+                val inputSize = forger.anInt(forger.aSmallInt(), 1000)
+                val inputSet = HashSet<String>(inputSize).apply{
+                    for (i in 0 until inputSize) {
+                        add("${i}_${forger.aWord()}")
+                    }
+                }
+
+                val outputSize = forger.anInt(inputSize + 1, 2000)
+
+                val data : Set<String> = forger.aSubSetOf(inputSet, outputSize)
+
+                assertThat(data)
+                        // output is a new set, non null
+                        .isNotNull()
+                        .isNotSameAs(inputSet)
+                        // check the size
+                        .hasSize(inputSize)
+                        // no duplicates, no null
+                        .doesNotHaveDuplicates()
+                        .doesNotContainNull()
+            }
+        }
     }
 
 })

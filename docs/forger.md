@@ -497,11 +497,12 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
         - _size_ : the size of the array, or -1 for a random size.
         
    - **fun <T> aSubListOf(list: List<T>, outputSize: Int): List<T>**
+   - **fun <T> aSubSetOf(set: Set<T>, outputSize: Int): Set<T>**
    
-        Returns a list with elements picked (in order) from the input list. If the input list doesn't have duplicates, then the output is guaranteed to be without duplicates.
+        Returns a list/set with elements picked (in order) from the input list/set. (If the input list doesn't have duplicates, then the output is guaranteed to be without duplicates.)
         
-        - _list_ : the input list to pick elements from.
-        - _size_ : the size of the output list. If the input list is smaller, then the output will have the size of the input list.
+        - _list_/_set_ : the input list/set to pick elements from.
+        - _size_ : the size of the output list/set. If the input list/set is smaller, then the output will have the size of the input.
         
 ---
 

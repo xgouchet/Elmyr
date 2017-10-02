@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.6 (???)
+
+ - Add forgery to generate a sub collection
+ - Add forgery to shuffle a collection
+
 ### 0.5 (2017/06/15)
 
  - Create Strings from CharConstraint
