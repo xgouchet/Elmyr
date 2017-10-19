@@ -15,9 +15,8 @@ dependencies {
 
     // TESTS
     testCompileOnly "junit:junit:${junit4_version}"
-    testCompile "org.assertj:assertj-core:${assertj_version}"
+    testCompile "net.wuerl.kotlin:assertj-core-kotlin:${assertj_version}"
     testCompile "com.nhaarman:mockito-kotlin:${mockito_kotlin_version}"
-//    testCompile "io.kotlintest:kotlintest:2.0.1"
     testCompile "org.jetbrains.kotlin:kotlin-reflect:${kotlin_version}"
 
     // SPEK

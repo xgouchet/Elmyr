@@ -1224,6 +1224,28 @@ open class Forger {
         return result
     }
 
+    /**
+     * Shuffles a list (like a deck of card)
+     * @param list the list to shuffle
+     * @return a new list with the same elements as the input, but in a random order
+     */
+    inline fun <reified T> shuffle(list: List<T>): List<T> {
+        // fast exit : input is empty
+        if (list.isEmpty()) return emptyList()
+
+        val result = list.toTypedArray()
+
+
+        for (i in 0..(list.size - 2)) {
+            val j = anInt(i, list.size)
+            val temp = result[i]
+            result[i] = result[j]
+            result[j] = temp
+        }
+
+        return listOf(*result)
+    }
+
     // endregion
 
     // region Enum

@@ -503,7 +503,13 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
         
         - _list_/_set_ : the input list/set to pick elements from.
         - _size_ : the size of the output list/set. If the input list/set is smaller, then the output will have the size of the input.
+
+   - **fun <T> shuffle(list: List<T>): List<T>**
+   
+        Returns a list with all the elements from the input list in a random order
         
+        - _list_ : the input list to shuffle.
+
 ---
 
 ### Forging a nullable value

@@ -1,11 +1,13 @@
 package fr.xgouchet.elmyr
 
-import org.assertj.core.api.Java6Assertions.assertThat
+import org.assertj.core.api.Java6Assertions
+import org.assertj.core.api.KotlinAssertions.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 
+@Suppress("UsePropertyAccessSyntax")
 /**
  * @author Xavier F. Gouchet
  */
@@ -79,17 +81,17 @@ class ForgerSpek_Collections : Spek({
 
                 repeat(testRepeatCountSmall, {
                     val result = forger.anElementFrom(data)
-                    assertThat(data)
+                    Java6Assertions.assertThat(data)
                             .contains(result)
                 })
             }
 
             it("selects an Object from a vararg") {
-                val data = Array(arraySize) { "<$it> = ${Integer.toHexString(it)}" }
+                val data: Array<String> = Array(arraySize) { "<$it> = ${Integer.toHexString(it)}" }
 
                 repeat(testRepeatCountSmall, {
                     val result = forger.anElementFrom(*data)
-                    assertThat(data)
+                    Java6Assertions.assertThat(data)
                             .contains(result)
                 })
             }
@@ -259,7 +261,7 @@ class ForgerSpek_Collections : Spek({
                 val case = forger.aValueFrom(Case::class.java)
                 val data = forger.aCharArray(constraint, case, arraySize)
 
-                assertThat(data)
+                Java6Assertions.assertThat(data)
                         .hasSize(arraySize)
             }
 
@@ -268,9 +270,9 @@ class ForgerSpek_Collections : Spek({
                 val max = forger.aChar(min = min + 1)
                 val data = forger.aCharArray(min, max, arraySize)
 
-                assertThat(data)
+                Java6Assertions.assertThat(data)
                         .hasSize(arraySize)
-                data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
+                data.forEach { Java6Assertions.assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
             }
 
             it("forges a String array with constraint") {
@@ -278,7 +280,7 @@ class ForgerSpek_Collections : Spek({
                 val case = forger.aValueFrom(Case::class.java)
                 val data = forger.aStringArray(constraint, case, arraySize)
 
-                assertThat(data)
+                Java6Assertions.assertThat(data)
                         .hasSize(arraySize)
             }
 
@@ -287,7 +289,7 @@ class ForgerSpek_Collections : Spek({
                 val case = forger.aValueFrom(Case::class.java)
                 val data = forger.aStringArray(constraint, case, arraySize)
 
-                assertThat(data)
+                Java6Assertions.assertThat(data)
                         .hasSize(arraySize)
             }
 
@@ -295,7 +297,7 @@ class ForgerSpek_Collections : Spek({
                 val regex = "[\\d]+-[A-Z]+"
                 val data = forger.aStringArray(regex, arraySize)
 
-                assertThat(data)
+                Java6Assertions.assertThat(data)
                         .hasSize(arraySize)
                 data.forEach { assertThat(it).matches(regex) }
             }
@@ -304,7 +306,7 @@ class ForgerSpek_Collections : Spek({
                 val regex = Regex("""[\d]+-[A-Z]+""")
                 val data = forger.aStringArray(regex, arraySize)
 
-                assertThat(data)
+                Java6Assertions.assertThat(data)
                         .hasSize(arraySize)
                 data.forEach { assertThat(it).matches(regex.pattern) }
             }
@@ -325,7 +327,7 @@ class ForgerSpek_Collections : Spek({
 
             it("forges a sublist of a non empty list, with enough data") {
                 val inputSize = forger.anInt(forger.aSmallInt(), 1000)
-                val inputList = ArrayList<String>(inputSize).apply{
+                val inputList = ArrayList<String>(inputSize).apply {
                     for (i in 0 until inputSize) {
                         add("${i}_${forger.aWord()}")
                     }
@@ -348,7 +350,7 @@ class ForgerSpek_Collections : Spek({
 
             it("forges a sublist of a non empty list, with exactly enough data") {
                 val inputSize = forger.anInt(forger.aSmallInt(), 1000)
-                val inputList = ArrayList<String>(inputSize).apply{
+                val inputList = ArrayList<String>(inputSize).apply {
                     for (i in 0 until inputSize) {
                         add("${i}_${forger.aWord()}")
                     }
@@ -371,7 +373,7 @@ class ForgerSpek_Collections : Spek({
 
             it("forges a sublist of a non empty list, with not enough data") {
                 val inputSize = forger.anInt(forger.aSmallInt(), 1000)
-                val inputList = ArrayList<String>(inputSize).apply{
+                val inputList = ArrayList<String>(inputSize).apply {
                     for (i in 0 until inputSize) {
                         add("${i}_${forger.aWord()}")
                     }
@@ -379,7 +381,7 @@ class ForgerSpek_Collections : Spek({
 
                 val outputSize = forger.anInt(inputSize + 1, 2000)
 
-                val data : List<String> = forger.aSubListOf(inputList, outputSize)
+                val data: List<String> = forger.aSubListOf(inputList, outputSize)
 
                 assertThat(data)
                         // output is a new list, non null
@@ -408,7 +410,7 @@ class ForgerSpek_Collections : Spek({
 
             it("forges a subset of a non empty set, with enough data") {
                 val inputSize = forger.anInt(forger.aSmallInt(), 1000)
-                val inputSet = HashSet<String>(inputSize).apply{
+                val inputSet = HashSet<String>(inputSize).apply {
                     for (i in 0 until inputSize) {
                         add("${i}_${forger.aWord()}")
                     }
@@ -431,7 +433,7 @@ class ForgerSpek_Collections : Spek({
 
             it("forges a subset of a non empty set, with exactly enough data") {
                 val inputSize = forger.anInt(forger.aSmallInt(), 1000)
-                val inputSet = HashSet<String>(inputSize).apply{
+                val inputSet = HashSet<String>(inputSize).apply {
                     for (i in 0 until inputSize) {
                         add("${i}_${forger.aWord()}")
                     }
@@ -454,7 +456,7 @@ class ForgerSpek_Collections : Spek({
 
             it("forges a subset of a non empty set, with not enough data") {
                 val inputSize = forger.anInt(forger.aSmallInt(), 1000)
-                val inputSet = HashSet<String>(inputSize).apply{
+                val inputSet = HashSet<String>(inputSize).apply {
                     for (i in 0 until inputSize) {
                         add("${i}_${forger.aWord()}")
                     }
@@ -462,7 +464,7 @@ class ForgerSpek_Collections : Spek({
 
                 val outputSize = forger.anInt(inputSize + 1, 2000)
 
-                val data : Set<String> = forger.aSubSetOf(inputSet, outputSize)
+                val data: Set<String> = forger.aSubSetOf(inputSet, outputSize)
 
                 assertThat(data)
                         // output is a new set, non null
@@ -474,6 +476,46 @@ class ForgerSpek_Collections : Spek({
                         .doesNotHaveDuplicates()
                         .doesNotContainNull()
             }
+        }
+        context("shuffling a list") {
+            it("shuffles an empty list") {
+                val inputList = emptyList<String>()
+
+                val data = forger.shuffle(inputList)
+
+                assertThat(data)
+                        .isNotNull()
+                        .isEmpty()
+            }
+
+            it("shuffles a non empty list") {
+                val size = forger.aSmallInt() + 128
+                val inputList = listOf(*forger.aStringArray(StringConstraint.WORD, size = size))
+                var previousList: List<String>? = null
+
+                repeat(testRepeatCountSmall) {
+                    val shuffled = forger.shuffle(inputList)
+
+                    assertThat(shuffled)
+                            .isNotSameAs(inputList)
+                            .isNotNull()
+                            .containsAll(inputList)
+
+                    previousList?.let {
+                        var sameOrder = true
+                        for (i in 0 until size) {
+                            if (shuffled[i] != it[i]) {
+                                sameOrder = false
+                                break
+                            }
+                        }
+                        assertThat(sameOrder).isFalse()
+                    }
+
+                    previousList = shuffled
+                }
+            }
+
         }
     }
 

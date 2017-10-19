@@ -7,7 +7,7 @@ buildscript {
         junit_vintage_version = '4.12.0'
         junit4_version = '4.12'
         detekt_version = '1.0.0.M13'
-        assertj_version = '3.8.0'
+        assertj_version = '0.2.1'
         mockito_kotlin_version = '1.5.0'
     }
 
