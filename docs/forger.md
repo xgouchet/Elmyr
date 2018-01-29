@@ -8,7 +8,7 @@ Note that this documentation use the Kotlin syntax, but it's transparent for Jav
 
 Like many random generators, the Forger class is based on a seed, which is a Long number. You can re-set the seed using the `reset` method.
 
- - **fun reset(seed : Long)**
+ - **fun reset(seed: Long)**
 
     Resets this forger with the given seed. Knowing the seed allow the forger to reproduce previous data.
 
@@ -19,13 +19,13 @@ Like many random generators, the Forger class is based on a seed, which is a Lon
 
 ### Forging Booleans
 
-With Elmyr, you can forge Boolean values (ie : `true` or `false`). 
+With Elmyr, you can forge Boolean values (ie: `true` or `false`). 
 
- - **fun aBool(probability : Float = 0.5f) : Bool**
+ - **fun aBool(probability: Float = 0.5f): Bool**
 
     Returns a random boolean, with a biased probability of returning `true`.
 
-    - _probability_ : the probability for the result to be `true`. _0.0f_ means always `false`, _1.0f_ means always `true`.
+    - _probability_: the probability for the result to be `true`. _0.0f_ means always `false`, _1.0f_ means always `true`.
 
 
 ---
@@ -39,7 +39,7 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
     Returns a random int/long, based on a constraint. 
 
-    - _constraint_ : the constraint to build the int. For more information, read the [Constraints](constraints.html) page
+    - _constraint_: the constraint to build the int. For more information, read the [Constraints](constraints.html) page
 
 
  - **fun anInt(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): Int**
@@ -47,8 +47,8 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
     Returns a random int/long, within the given range. 
     
-    - _min_ : the minimum value (inclusive).
-    - _max_ : the maximum value (exclusive).
+    - _min_: the minimum value (inclusive).
+    - _max_: the maximum value (exclusive).
 
 
  - **fun aPositiveInt(strict: Boolean = false): Int**
@@ -56,7 +56,7 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
     Returns a random int/long greater than 0. 
     
-    - _script_ : if `true`, then then it will return a non 0 int.
+    - _script_: if `true`, then then it will return a non 0 int.
 
 
  - **fun aNegativeInt(strict: Boolean = false): Int**
@@ -64,7 +64,7 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
     Returns a random int/long less than 0. 
     
-    - _script_ : if `true`, then then it will return a non 0 int.
+    - _script_: if `true`, then then it will return a non 0 int.
 
 
  - **fun aTinyInt(): Int**
@@ -92,15 +92,15 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
 
     Returns an int picked from a gaussian distribution (aka bell curve)
 
-    - _mean_ : the mean value of the distribution
-    - _script_ : the standard deviation value of the distribution
+    - _mean_: the mean value of the distribution
+    - _script_: the standard deviation value of the distribution
 
 
  - **fun aTimestamp(range: Long = ONE_YEAR): Long **
  
     Returns a long that can be used as a timestamp, picked in a range around the current time.
     
-    - _range_ : the range around the current time, in milliseconds
+    - _range_: the range around the current time, in milliseconds
 
 
 ---
@@ -114,7 +114,7 @@ With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, �
 
     Returns a random float/double, based on a constraint. 
 
-    - _constraint_ : the constraint to build the float. For more information, read the [Constraints](constraints.html) page.
+    - _constraint_: the constraint to build the float. For more information, read the [Constraints](constraints.html) page.
 
 
  - **fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float**
@@ -122,8 +122,8 @@ With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, �
 
     Returns a random float/double, within the given range. 
     
-    - _min_ : the minimum value (inclusive).
-    - _max_ : the maximum value (exclusive).
+    - _min_: the minimum value (inclusive).
+    - _max_: the maximum value (exclusive).
 
 
  - **fun aPositiveFloat(strict: Boolean = false): Float**
@@ -131,7 +131,7 @@ With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, �
 
     Returns a random float/double greater than 0. 
     
-    - _script_ : if `true`, then then it will return a non 0 float.
+    - _script_: if `true`, then then it will return a non 0 float.
 
 
  - **fun aNegativeFloat(strict: Boolean = false): Float**
@@ -139,7 +139,7 @@ With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, �
 
     Returns a random float/double less than 0. 
     
-    - _script_ : if `true`, then then it will return a non 0 float.
+    - _script_: if `true`, then then it will return a non 0 float.
 
 
  - **fun aGaussianFloat(mean: Float = 0, standardDeviation: Float = 100): Float**
@@ -147,8 +147,8 @@ With Elmyr, you can forge floating point values (eg: `3.14`, `1.618`, `2.718`, �
 
     Returns a float/double picked from a gaussian distribution (aka bell curve)
 
-    - _mean_ : the mean value of the distribution
-    - _script_ : the standard deviation value of the distribution
+    - _mean_: the mean value of the distribution
+    - _script_: the standard deviation value of the distribution
     
     
 ---
@@ -161,16 +161,16 @@ With Elmyr, you can forge character values (eg: `‘m’`, `‘π’`, `‘✓�
 
     Returns a random char, based on constraints.
 
-    - _constraint_ : the constraint to build the char. For more information, read the [Constraints](constraints.html) page.
-    - _case_ : the case to use (depending on the constraint, it might be ignored)
+    - _constraint_: the constraint to build the char. For more information, read the [Constraints](constraints.html) page.
+    - _case_: the case to use (depending on the constraint, it might be ignored)
 
 
  - **fun aChar(min: Char = 0x20, max: Char = 0xD800): Char**
 
     Returns a random char, in the given range.
 
-    - _min_ : the minimum value (inclusive).
-    - _max_ : the maximum value (exclusive).
+    - _min_: the minimum value (inclusive).
+    - _max_: the maximum value (exclusive).
 
 
  - **fun anAsciiChar(): Char**
@@ -187,7 +187,7 @@ With Elmyr, you can forge character values (eg: `‘m’`, `‘π’`, `‘✓�
 
     Returns a random char, within the roman alphabet (‘a’ to ‘z’).
 
-    - _case_ : the case to use 
+    - _case_: the case to use 
 
 
  - **fun aNonAlphabeticalChar(): Char**
@@ -199,21 +199,21 @@ With Elmyr, you can forge character values (eg: `‘m’`, `‘π’`, `‘✓�
 
     Returns a random char, within the roman vowels.
 
-    - _case_ : the case to use 
+    - _case_: the case to use 
 
 
  - **fun aConsonantChar(case: Case = Case.ANY): Char**
 
     Returns a random char, within the roman consonants.
 
-    - _case_ : the case to use 
+    - _case_: the case to use 
 
 
  - **fun anAlphaNumericalChar(case: Case = Case.ANY): Char**
 
     Returns a random char, within the roman alphabet (‘a’ to ‘z’) or the arabic numerals (‘0’ to ‘9’).
 
-    - _case_ : the case to use 
+    - _case_: the case to use 
 
 
  - **fun aNonAlphabeticalChar(): Char**
@@ -225,7 +225,7 @@ With Elmyr, you can forge character values (eg: `‘m’`, `‘π’`, `‘✓�
 
     Returns a random char, within the hexadecimal characters (‘a’ to ‘f’ and ‘0’ to ‘9’).
 
-    - _case_ : the case to use 
+    - _case_: the case to use 
 
 
  - **fun aNonHexadecimalChar(): Char**
@@ -245,7 +245,7 @@ With Elmyr, you can forge character values (eg: `‘m’`, `‘π’`, `‘✓�
 
  - **fun aWhitespaceChar(): Char**
 
-    Returns a random char representing a whitespace : a space, a tab or a new line.
+    Returns a random char representing a whitespace: a space, a tab or a new line.
 
 
  - **fun aNonNumericalChar(): Char**
@@ -263,39 +263,39 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
 
     Returns a random string, based on constraints.
 
-    - _constraint_ : the constraint to build the String. For more information, read the [Constraints](constraints.html) page.
-    - _case_ : the case to use (depending on the constraint, it might be ignored).
-    - _size_ : the desired size of the string, or -1 for a random sized string.
+    - _constraint_: the constraint to build the String. For more information, read the [Constraints](constraints.html) page.
+    - _case_: the case to use (depending on the constraint, it might be ignored).
+    - _size_: the desired size of the string, or -1 for a random sized string.
 
  - **fun aString(constraint: CharConstraint, case: Case = Case.ANY, size: Int = -1): String**
 
     Returns a random string, based on a character constraint. 
 
-    - _constraint_ : the constraint to build the chars in the String. For more information, read the [Constraints](constraints.html) page.
-    - _case_ : the case to use (depending on the constraint, it might be ignored).
-    - _size_ : the desired size of the string, or -1 for a random sized string.
+    - _constraint_: the constraint to build the chars in the String. For more information, read the [Constraints](constraints.html) page.
+    - _case_: the case to use (depending on the constraint, it might be ignored).
+    - _size_: the desired size of the string, or -1 for a random sized string.
     
  - **fun aWord(case: Case = Case.ANY, size: Int = -1): String**
 
     Returns a random string, mimicking a word (usually just some _gobbledygook_).
 
-    - _case_ : the case to use.
-    - _size_ : the desired size of the string, or -1 for a random sized string.
+    - _case_: the case to use.
+    - _size_: the desired size of the string, or -1 for a random sized string.
 
  - **fun aSentence(case: Case = Case.ANY, size: Int = -1): String**
 
     Returns a random string, mimicking a sentence structure (usually just some kind of _Lorem Ipsum_).
 
-    - _case_ : the case to use.
-    - _size_ : the desired size of the string, or -1 for a random sized string.
+    - _case_: the case to use.
+    - _size_: the desired size of the string, or -1 for a random sized string.
 
 
  - **fun anHexadecimalString(case: Case = Case.LOWER, size: Int = -1): String**
 
     Returns a random string, using only hexadecimal characters.
 
-    - _case_ : the case to use (UPPER or LOWER only).
-    - _size_ : the desired size of the string, or -1 for a random sized string.
+    - _case_: the case to use (UPPER or LOWER only).
+    - _size_: the desired size of the string, or -1 for a random sized string.
 
 
  - **fun aStringMatching(regex: String): String**
@@ -303,7 +303,7 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
 
     Returns a random string, matching the given regular-expression pattern. Note that parsing the regex can take some time depending on the regex complexity. Also not all regex feature are supported.
 
-    - _regex_ : the regular expression to match.
+    - _regex_: the regular expression to match.
 
 
  - **fun aUrl(): String**
@@ -315,6 +315,14 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
 
     Returns a string following the e-mail format.
 
+ - **fun aLocalPath(absolute: Boolean): String**
+ - **fun aLinuxPath(absolute: Boolean): String**
+ - **fun aWindowsPath(absolute: Boolean): String**
+ - **fun aMacOsPath(absolute: Boolean): String**
+
+    Returns a string forming a valid path for the given platform (or current for `aLocalPath`).
+    
+    - _absolute_: whether to build an absolute or relative path
 
 ---
 
@@ -326,7 +334,7 @@ With Elmyr, you can forge enum values.
 
     Returns a random, valid enum value.
 
-    - _enumClass_ : the class from which to pick a value.
+    - _enumClass_: the class from which to pick a value.
 
 ---
 
@@ -356,136 +364,136 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
 
       Returns a random array.
 
-      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
-      - _size_ : the size of the array, or -1 for a random size.
+      - _constraint_:  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_: the size of the array, or -1 for a random size.
       
       
    - **fun anIntArray(min: Int, max: Int, size: Int = -1): IntArray**
    
       Returns a random array.
       
-      - _min_ : the minimum value (inclusive) for the numbers in the array.
-      - _max_ : the minimum value (exclusive) for the numbers in the array .
-      - _size_ : the size of the array, or -1 for a random size.
+      - _min_: the minimum value (inclusive) for the numbers in the array.
+      - _max_: the minimum value (exclusive) for the numbers in the array .
+      - _size_: the size of the array, or -1 for a random size.
       
    
    - **fun anIntArrayWithDistribution(mean: Int = 0, standardDeviation: Int = 100, size: Int = -1): IntArray**
    
       Returns a random array.
       
-      - _mean_ : the mean value of the distribution (default : 0).
-      - _standardDeviation_ : the standard deviation value of the distribution (default : 100). 
-      - _size_ : the size of the array, or -1 for a random size.
+      - _mean_: the mean value of the distribution (default: 0).
+      - _standardDeviation_: the standard deviation value of the distribution (default: 100). 
+      - _size_: the size of the array, or -1 for a random size.
             
       
    - **fun aLongArray(constraint: LongConstraint, size: Int = -1): LongArray**
 
       Returns a random array.
 
-      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
-      - _size_ : the size of the array, or -1 for a random size.
+      - _constraint_:  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_: the size of the array, or -1 for a random size.
       
       
    - **fun aLongArray(min: Long, max: Long, size: Int = -1): LongArray**
    
       Returns a random array.
       
-      - _min_ : the minimum value (inclusive) for the numbers in the array.
-      - _max_ : the minimum value (exclusive) for the numbers in the array .
-      - _size_ : the size of the array, or -1 for a random size.
+      - _min_: the minimum value (inclusive) for the numbers in the array.
+      - _max_: the minimum value (exclusive) for the numbers in the array .
+      - _size_: the size of the array, or -1 for a random size.
       
    
    - **fun aLongArrayWithDistribution(mean: Long = 0, standardDeviation: Long = 100, size: Int = -1): LongArray**
    
       Returns a random array.
       
-      - _mean_ : the mean value of the distribution (default : 0).
-      - _standardDeviation_ : the standard deviation value of the distribution (default : 100). 
-      - _size_ : the size of the array, or -1 for a random size.
+      - _mean_: the mean value of the distribution (default: 0).
+      - _standardDeviation_: the standard deviation value of the distribution (default: 100). 
+      - _size_: the size of the array, or -1 for a random size.
       
       
    - **fun aFloatArray(constraint: FloatConstraint, size: Int = -1): FloatArray**
 
       Returns a random array.
 
-      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
-      - _size_ : the size of the array, or -1 for a random size.
+      - _constraint_:  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_: the size of the array, or -1 for a random size.
       
       
    - **fun aFloatArray(min: Float, max: Float, size: Int = -1): FloatArray**
    
       Returns a random array.
       
-      - _min_ : the minimum value (inclusive) for the numbers in the array.
-      - _max_ : the minimum value (exclusive) for the numbers in the array .
-      - _size_ : the size of the array, or -1 for a random size.
+      - _min_: the minimum value (inclusive) for the numbers in the array.
+      - _max_: the minimum value (exclusive) for the numbers in the array .
+      - _size_: the size of the array, or -1 for a random size.
       
    
    - **fun aFloatArrayWithDistribution(mean: Float = 0, standardDeviation: Float = 100, size: Int = -1): FloatArray**
    
       Returns a random array.
       
-      - _mean_ : the mean value of the distribution (default : 0).
-      - _standardDeviation_ : the standard deviation value of the distribution (default : 100). 
-      - _size_ : the size of the array, or -1 for a random size.
+      - _mean_: the mean value of the distribution (default: 0).
+      - _standardDeviation_: the standard deviation value of the distribution (default: 100). 
+      - _size_: the size of the array, or -1 for a random size.
       
       
    - **fun aDoubleArray(constraint: DoubleConstraint, size: Int = -1): DoubleArray**
 
       Returns a random array.
 
-      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
-      - _size_ : the size of the array, or -1 for a random size.
+      - _constraint_:  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_: the size of the array, or -1 for a random size.
       
       
    - **fun aDoubleArray(min: Double, max: Double, size: Int = -1): DoubleArray**
    
       Returns a random array.
       
-      - _min_ : the minimum value (inclusive) for the numbers in the array.
-      - _max_ : the minimum value (exclusive) for the numbers in the array .
-      - _size_ : the size of the array, or -1 for a random size.
+      - _min_: the minimum value (inclusive) for the numbers in the array.
+      - _max_: the minimum value (exclusive) for the numbers in the array .
+      - _size_: the size of the array, or -1 for a random size.
       
    
    - **fun aDoubleArrayWithDistribution(mean: Double = 0, standardDeviation: Double = 100, size: Int = -1): DoubleArray**
    
       Returns a random array.
       
-      - _mean_ : the mean value of the distribution (default : 0).
-      - _standardDeviation_ : the standard deviation value of the distribution (default : 100). 
-      - _size_ : the size of the array, or -1 for a random size.
+      - _mean_: the mean value of the distribution (default: 0).
+      - _standardDeviation_: the standard deviation value of the distribution (default: 100). 
+      - _size_: the size of the array, or -1 for a random size.
    
    
    - **fun aCharArray(constraint: CharConstraint, size: Int = -1): CharArray**
 
       Returns a random array.
 
-      - _constraint_ :  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
-      - _size_ : the size of the array, or -1 for a random size.
+      - _constraint_:  the constraint to build the data in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_: the size of the array, or -1 for a random size.
       
       
    - **fun aCharArray(min: Char, max: Char, size: Int = -1): CharArray**
    
       Returns a random array.
       
-      - _min_ : the minimum value (inclusive) for the chars in the array.
-      - _max_ : the minimum value (exclusive) for the chars in the array .
-      - _size_ : the size of the array, or -1 for a random size.
+      - _min_: the minimum value (inclusive) for the chars in the array.
+      - _max_: the minimum value (exclusive) for the chars in the array .
+      - _size_: the size of the array, or -1 for a random size.
       
       
    - **fun aStringArray(constraint: CharConstraint, size: Int = -1): StringArray**
 
       Returns a random array.
 
-      - _constraint_ :  the constraint to build the chars of the Strings in the array. For more information, read the [Constraints](constraints.html) page.
-      - _size_ : the size of the array, or -1 for a random size.
+      - _constraint_:  the constraint to build the chars of the Strings in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_: the size of the array, or -1 for a random size.
       
    - **fun aStringArray(constraint: StringConstraint, size: Int = -1): StringArray**
 
       Returns a random array.
 
-      - _constraint_ :  the constraint to build the Strings in the array. For more information, read the [Constraints](constraints.html) page.
-      - _size_ : the size of the array, or -1 for a random size.
+      - _constraint_:  the constraint to build the Strings in the array. For more information, read the [Constraints](constraints.html) page.
+      - _size_: the size of the array, or -1 for a random size.
    
 
    - **fun aStringArray(regex: String, size: Int = -1): Array<String>**
@@ -493,22 +501,22 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
     
         Returns a random array.
         
-        - _regex_ : the regular expression to match.
-        - _size_ : the size of the array, or -1 for a random size.
+        - _regex_: the regular expression to match.
+        - _size_: the size of the array, or -1 for a random size.
         
    - **fun <T> aSubListOf(list: List<T>, outputSize: Int): List<T>**
    - **fun <T> aSubSetOf(set: Set<T>, outputSize: Int): Set<T>**
    
         Returns a list/set with elements picked (in order) from the input list/set. (If the input list doesn't have duplicates, then the output is guaranteed to be without duplicates.)
         
-        - _list_/_set_ : the input list/set to pick elements from.
-        - _size_ : the size of the output list/set. If the input list/set is smaller, then the output will have the size of the input.
+        - _list_/_set_: the input list/set to pick elements from.
+        - _size_: the size of the output list/set. If the input list/set is smaller, then the output will have the size of the input.
 
    - **fun <T> shuffle(list: List<T>): List<T>**
    
         Returns a list with all the elements from the input list in a random order
         
-        - _list_ : the input list to shuffle.
+        - _list_: the input list to shuffle.
 
 ---
 
@@ -523,7 +531,7 @@ All the values forged by Elmyr are guaranteed to be non null. If you want to hav
     - _value_ the value to use
     - _nullProbability_ the probability used to return `null` instead of `value`
 
-    You can use another method from Forger, eg : 
+    You can use another method from Forger, eg: 
     
     ```kotlin
     val s = forger.aNullableFrom(forger.aString())

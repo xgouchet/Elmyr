@@ -5,6 +5,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import java.io.File
 
 /**
  * @author Xavier F. Gouchet
@@ -187,7 +188,7 @@ class ForgerSpek_Text : Spek({
 
             it("forges a char …") {
                 repeat(testRepeatCountSmall, {
-                    val String = forger.aChar(CharConstraint.ANY)
+                    val char = forger.aChar(CharConstraint.ANY)
                     // How do you assert that an char is an char ... ?
                 })
             }
@@ -205,6 +206,17 @@ class ForgerSpek_Text : Spek({
                     val char = forger.aChar(CharConstraint.HEXADECIMAL, Case.LOWER)
                     assertThat(Forger.HEXA_LOWER)
                             .contains(char)
+                })
+            }
+
+            it("forges an hexadecimal char with forbidden chars") {
+                val blacklist = CharArray(4, { forger.aChar(CharConstraint.HEXADECIMAL) })
+                repeat(testRepeatCountSmall, {
+                    val char = forger.aChar(CharConstraint.HEXADECIMAL, forbiddenChars = blacklist)
+                    assertThat(Forger.HEXA)
+                            .contains(char)
+                    assertThat(blacklist)
+                            .doesNotContain(char)
                 })
             }
 
@@ -237,6 +249,17 @@ class ForgerSpek_Text : Spek({
                     val char = forger.aChar(CharConstraint.ALPHA_NUM)
                     assertThat(Forger.ALPHA_NUM)
                             .contains(char)
+                })
+            }
+
+            it("forges an alphanum char with forbidden chars") {
+                val blacklist = CharArray(4, { forger.aChar(CharConstraint.ALPHA_NUM) })
+                repeat(testRepeatCountSmall, {
+                    val char = forger.aChar(CharConstraint.ALPHA_NUM, forbiddenChars = blacklist)
+                    assertThat(Forger.ALPHA_NUM)
+                            .contains(char)
+                    assertThat(blacklist)
+                            .doesNotContain(char)
                 })
             }
 
@@ -339,86 +362,86 @@ class ForgerSpek_Text : Spek({
         context("forging meaningful strings ") {
 
             it("forges a lowercase word-like string") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aTinyInt()
                     val word = forger.aWord(Case.LOWER, size)
                     assertThat(word)
                             .hasSize(size)
                             .matches("[aeiouy]?([zrtpqsdfghjklmwxcvbn][aeiouy])*[zrtpqsdfghjklmwxcvbn]?")
-                })
+                }
             }
 
             it("forges an uppercase word-like string") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aTinyInt()
                     val word = forger.aWord(Case.UPPER, size)
                     assertThat(word)
                             .hasSize(size)
                             .matches("[AEIOUY]?([ZRTPQSDFGHJKLMWXCVBN][AEIOUY])*[ZRTPQSDFGHJKLMWXCVBN]?")
-                })
+                }
             }
 
             it("forges a capitalized word-like string") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aTinyInt()
                     val word = forger.aWord(Case.CAPITALIZE, size)
                     assertThat(word)
                             .hasSize(size)
                             .matches("[A-Z][aeiouy]?([zrtpqsdfghjklmwxcvbn][aeiouy])*[zrtpqsdfghjklmwxcvbn]?")
-                })
+                }
             }
 
             it("forges an anycase word-like string") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aTinyInt()
                     val word = forger.aWord(Case.ANY, size)
                     assertThat(word)
                             .hasSize(size)
                             .matches("[aeiouyAEIOUY]?([zrtpqsdfghjklmwxcvbnZRTPQSDFGHJKLMWXCVBN][aeiouyAEIOUY])*[zrtpqsdfghjklmwxcvbnZRTPQSDFGHJKLMWXCVBN]?")
-                })
+                }
             }
 
             it("forges an anycase word-like string of anySize") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val word = forger.aWord(Case.ANY)
                     assertThat(word)
                             .matches("[aeiouyAEIOUY]?([zrtpqsdfghjklmwxcvbnZRTPQSDFGHJKLMWXCVBN][aeiouyAEIOUY])*[zrtpqsdfghjklmwxcvbnZRTPQSDFGHJKLMWXCVBN]?")
                     assertThat(word.length)
                             .isGreaterThan(0)
                             .isLessThan(32)
-                })
+                }
             }
 
             it("forges a lipsum sentence of size 1") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = 1
                     val case = forger.aValueFrom(Case::class.java)
                     val word = forger.aSentence(case, size)
 
                     assertThat(word)
                             .isEqualTo("‽")
-                })
+                }
             }
 
             it("forges a lowercase lipsum sentence") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aSmallInt() + 1
                     val word = forger.aSentence(Case.LOWER, size)
 
                     assertThat(word)
                             .hasSize(size)
                             .matches("([a-z]+ )*[a-z]+\\.")
-                })
+                }
             }
 
             it("forges an uppercase lipsum sentence") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aSmallInt() + 1
                     val word = forger.aSentence(Case.UPPER, size)
                     assertThat(word)
                             .hasSize(size)
                             .matches("([A-Z]+ )*[A-Z]+\\.")
-                })
+                }
             }
 
             it("forges a capitalized lipsum sentence") {
@@ -432,60 +455,81 @@ class ForgerSpek_Text : Spek({
             }
 
             it("forges a sentence capitalized lipsum sentence") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aSmallInt() + 1
                     val word = forger.aSentence(Case.CAPITALIZED_SENTENCE, size)
                     assertThat(word)
                             .hasSize(size)
                             .matches("[A-Z][a-z]*( [a-z]+)*\\.")
-                })
+                }
             }
 
             it("forges a sentence capitalized lipsum sentence of any size") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val word = forger.aSentence(Case.CAPITALIZED_SENTENCE)
                     assertThat(word)
                             .matches("[A-Z][a-z]+( [a-z]+)*\\.")
                     assertThat(word.length)
                             .isGreaterThan(4)
                             .isLessThanOrEqualTo(260)
-                })
+                }
             }
 
             it("forges an uppercase hexadecimal string") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aTinyInt()
                     val word = forger.anHexadecimalString(Case.UPPER, size)
                     assertThat(word)
                             .hasSize(size)
                             .matches("[A-F0-9]+")
-                })
+                }
             }
 
             it("forges a lowercase hexadecimal string") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val size = forger.aTinyInt()
                     val word = forger.anHexadecimalString(Case.LOWER, size)
                     assertThat(word)
                             .hasSize(size)
                             .matches("[a-f0-9]+")
-                })
+                }
             }
 
             it("forges a url string") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val url = forger.aUrl()
                     assertThat(url)
                             .matches(Regex("""[a-z]+://[a-z]+\.[a-z]+\.[a-z]+/(([\w]+/)*|([\w-]+))(#\w+)?(\?\w+=\w+(&\w+=\w+)*)?""").pattern)
-                })
+                }
             }
 
             it("forges an email string") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val email = forger.anEmail()
                     assertThat(email)
                             .matches(Regex("""[\w._\-+]+@([a-z]+\.)*[a-z]+""").pattern)
-                })
+                }
+            }
+
+            it("forges a Linux style path string") {
+                repeat(testRepeatCountSmall) {
+                    val path = forger.aLinuxPath()
+                    // how to test ?
+                }
+            }
+
+            it("forges a Windows style path string") {
+                repeat(testRepeatCountSmall) {
+                    val path = forger.aWindowsPath()
+                    // how to test ?
+                }
+            }
+
+            it("forges a MacOs style path string") {
+                repeat(testRepeatCountSmall) {
+                    val path = forger.aMacOsPath()
+                    // how to test ?
+                }
             }
         }
 

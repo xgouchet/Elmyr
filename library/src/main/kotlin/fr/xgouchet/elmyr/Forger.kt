@@ -1,8 +1,11 @@
 package fr.xgouchet.elmyr
 
+import com.sun.xml.internal.fastinfoset.util.StringArray
 import fr.xgouchet.elmyr.regex.RegexBuilder
 import org.junit.AssumptionViolatedException
+import java.io.File
 import java.lang.Integer.min
+import java.lang.Math.abs
 import java.lang.Math.round
 import java.util.ArrayList
 import java.util.Random
@@ -422,29 +425,34 @@ open class Forger {
     /**
      * @param constraint a constraint on the char to forge
      * @param case the case to use (depending on the constraint, it might be ignored)
+     * @param forbiddenChars an array of characters forbidden within the constraint
      * @return a Char with the given constraints
      */
     @JvmOverloads
     fun aChar(constraint: CharConstraint,
-              case: Case = Case.ANY): Char {
-        when (constraint) {
+              case: Case = Case.ANY,
+              forbiddenChars: CharArray? = null): Char {
+        var result: Char
 
-            CharConstraint.ANY -> return aChar()
-            CharConstraint.HEXADECIMAL -> return anHexadecimalChar(case)
-            CharConstraint.ASCII -> return anAsciiChar()
-            CharConstraint.ASCII_EXTENDED -> return anExtendedAsciiChar()
-            CharConstraint.ALPHA -> return anAlphabeticalChar(case)
-            CharConstraint.ALPHA_NUM -> return anAlphaNumericalChar(case)
-            CharConstraint.NUMERICAL -> return aNumericalChar()
-            CharConstraint.WHITESPACE -> return aWhitespaceChar()
-            CharConstraint.NON_HEXADECIMAL -> return aNonHexadecimalChar()
-            CharConstraint.NON_ALPHA -> return aNonAlphabeticalChar()
-            CharConstraint.NON_ALPHA_NUM -> return aNonAlphaNumericalChar()
-            CharConstraint.NON_NUMERICAL -> return aNonNumericalChar()
-            CharConstraint.NON_WHITESPACE -> return aNonWhitespaceChar()
+        do {
+            when (constraint) {
+                CharConstraint.ANY -> result = aChar()
+                CharConstraint.HEXADECIMAL -> result = anHexadecimalChar(case)
+                CharConstraint.ASCII -> result = anAsciiChar()
+                CharConstraint.ASCII_EXTENDED -> result = anExtendedAsciiChar()
+                CharConstraint.ALPHA -> result = anAlphabeticalChar(case)
+                CharConstraint.ALPHA_NUM -> result = anAlphaNumericalChar(case)
+                CharConstraint.NUMERICAL -> result = aNumericalChar()
+                CharConstraint.WHITESPACE -> result = aWhitespaceChar()
+                CharConstraint.NON_HEXADECIMAL -> result = aNonHexadecimalChar()
+                CharConstraint.NON_ALPHA -> result = aNonAlphabeticalChar()
+                CharConstraint.NON_ALPHA_NUM -> result = aNonAlphaNumericalChar()
+                CharConstraint.NON_NUMERICAL -> result = aNonNumericalChar()
+                CharConstraint.NON_WHITESPACE -> result = aNonWhitespaceChar()
+            }
+        } while (forbiddenChars != null && result in forbiddenChars)
 
-            else -> preconditionException("Unexpected constraint : $constraint")
-        }
+        return result
     }
 
     /**
@@ -633,13 +641,15 @@ open class Forger {
      * @param constraint the character constraint to use (default : ANY)
      * @param case the case to use (ignored when constraint is Any)
      * @param size the size of the string (or -1 for a random sized String)
+     * @param forbiddenChars an array of forbidden characters (or null if all characters (within the constraints) are allowed)
      * @return a random string whose chars follow the given constraint
      */
     @JvmOverloads
     fun aString(constraint: CharConstraint,
                 case: Case = Case.ANY,
-                size: Int = -1): String {
-        return String(CharArray(getWordSize(size), { aChar(constraint, case) }))
+                size: Int = -1,
+                forbiddenChars: CharArray? = null): String {
+        return String(CharArray(getWordSize(size), { aChar(constraint, case, forbiddenChars) }))
     }
 
     /**
@@ -735,9 +745,117 @@ open class Forger {
     }
 
     /**
+     * @param absolute whether to build an absolute or relative path
+     * @return a String matching a standard path for the current OS
+     */
+    @JvmOverloads
+    fun aLocalPath(absolute: Boolean? = null): String {
+        val osName = System.getProperty("os.name")
+        if (osName.contains("win")) {
+            return aWindowsPath(absolute)
+        } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) {
+            return aLinuxPath(absolute)
+        } else if (osName.contains("mac")) {
+            return aMacOsPath(absolute)
+        } else {
+            unsupportedFeature("Unsupported OS path format for “$osName”")
+        }
+    }
+
+    /**
+     * @param absolute whether to build an absolute or relative path
+     * @return a String matching a standard Linux path format
+     */
+    @JvmOverloads
+    fun aLinuxPath(absolute: Boolean? = null): String {
+        val isAbsolute = absolute ?: aBool()
+        val ancestorRoot = Array(aTinyInt(), { ".." }).joinToString(UNIX_SEP.toString()) { it }
+        val roots = if (isAbsolute) LINUX_ROOTS else listOf(".", ancestorRoot)
+        val forbiddenChars = arrayOf(0.toChar(), UNIX_SEP).toCharArray()
+        return aPath(UNIX_SEP.toString(), roots, 1024, 128, forbiddenChars)
+    }
+
+    /**
+     * @param absolute whether to build an absolute or relative path
+     * @return a String matching a standard MacOs path format
+     */
+    @JvmOverloads
+    fun aWindowsPath(absolute: Boolean? = null): String {
+        val isAbsolute = absolute ?: aBool()
+        val ancestorRoot = Array(aTinyInt(), { ".." }).joinToString(WINDOWS_SEP.toString()) { it }
+        val roots = if (isAbsolute) WINDOWS_ROOTS else listOf(".", ancestorRoot)
+        return aPath(WINDOWS_SEP.toString(), roots, 1024, 128, WINDOWS_FORBIDDEN_CHARS, WINDOWS_RESERVED_FILENAMES)
+    }
+
+    /**
+     * @param absolute whether to build an absolute or relative path
+     * @return a String matching a standard MacOs path format
+     */
+    @JvmOverloads
+    fun aMacOsPath(absolute: Boolean? = null): String {
+        val isAbsolute = absolute ?: aBool()
+        val ancestorRoot = Array(aTinyInt(), { ".." }).joinToString(UNIX_SEP.toString()) { it }
+        val roots = if (isAbsolute) MAC_ROOTS else listOf(".", ancestorRoot)
+        val forbiddenChars = arrayOf(0.toChar(), UNIX_SEP).toCharArray()
+        return aPath(UNIX_SEP.toString(), roots, 1024, 128, forbiddenChars)
+    }
+
+    /**
+     * @param separator the char/string to use as separator. Defaults to the current platform's separator.
+     * @param roots the possible path roots
+     * @param maxPathSize the maximum size for a full path
+     * @param maxFileSize the maximum size for a file/directory name
+     * @param forbiddenChars an array of reserved characters forbidden in a directory or file name
+     * @return a String matching a standard path format
+     */
+    private fun aPath(separator: String = File.separator,
+                      roots: List<String>,
+                      maxPathSize: Int,
+                      maxFileSize: Int,
+                      forbiddenChars: CharArray? = null,
+                      reservedFilenames: List<String>? = null): String {
+        val builder = StringBuilder()
+        var segments = 0
+
+        if (roots.isNotEmpty()) {
+            builder.append(anElementFrom(roots))
+                    .append(separator)
+            segments++
+        }
+
+        val isFile = aBool()
+        val fileSize = if (isFile) anInt(3, maxFileSize) else 0
+        val maxSize = (maxPathSize - fileSize - separator.length)
+        val reserved = reservedFilenames ?: emptyList()
+
+        while ((builder.length < maxSize) or !aBool(segments.toFloat() / 10.0f)) {
+            val max = min(maxFileSize, maxSize - builder.length - separator.length)
+            if (max <= 1) break
+
+            val segmentSize = anInt(1, max)
+            // TODO maybe extend the charset to full UTF 8 ?
+            var folder: String
+            do {
+                folder = aString(CharConstraint.ASCII, size = segmentSize, forbiddenChars = forbiddenChars)
+            } while (folder in reserved)
+
+            builder.append(folder)
+                    .append(separator)
+            segments++
+        }
+
+        if (isFile) {
+
+        }
+
+        return builder.toString()
+    }
+
+    /**
      * @return a String matching a standard URL format
      */
     fun aUrl(): String {
+        // TODO check the RFC for all the tricky yet compliant urls !
         val builder = StringBuilder()
 
         // scheme
@@ -793,6 +911,7 @@ open class Forger {
      * @return a String matching a standard URL format
      */
     fun anEmail(): String {
+        // TODO check the RFC for all the tricky yet compliant urls !
         val builder = StringBuilder()
 
         // username
@@ -846,7 +965,7 @@ open class Forger {
     // region Collections
 
     /**
-     * @param set a Set
+     * @param map a non empty Map
      * @return an element “randomly” picked in the set
      */
     fun <K, V> anEntryFrom(map: Map<K, V>): Map.Entry<K, V> {
@@ -855,7 +974,7 @@ open class Forger {
     }
 
     /**
-     * @param set a Set
+     * @param set a non empty Set
      * @return an element “randomly” picked in the set
      */
     fun <T> anElementFrom(set: Set<T>): T {
@@ -864,7 +983,7 @@ open class Forger {
     }
 
     /**
-     * @param list a List
+     * @param list a non empty List
      * @return an element “randomly” picked in the list
      */
     fun <T> anElementFrom(list: List<T>): T {
@@ -873,16 +992,16 @@ open class Forger {
     }
 
     /**
-     * @param array an Array
+     * @param array a non empty Array
      * @return an element “randomly” picked in the array
      */
-    fun <T> anElementFrom(vararg elements: T): T {
-        val index = anInt(0, elements.size)
-        return elements[index]
+    fun <T> anElementFrom(vararg array: T): T {
+        val index = anInt(0, array.size)
+        return array[index]
     }
 
     /**
-     * @param array an Array
+     * @param array a non empty BooleanArray
      * @return an element “randomly” picked in the array
      */
     fun anElementFrom(array: BooleanArray): Boolean {
@@ -891,7 +1010,7 @@ open class Forger {
     }
 
     /**
-     * @param array an Array
+     * @param array a non empty CharArray
      * @return an element “randomly” picked in the array
      */
     fun anElementFrom(array: CharArray): Char {
@@ -900,7 +1019,7 @@ open class Forger {
     }
 
     /**
-     * @param array an Array
+     * @param array a non empty IntArray
      * @return an element “randomly” picked in the array
      */
     fun anElementFrom(array: IntArray): Int {
@@ -909,7 +1028,7 @@ open class Forger {
     }
 
     /**
-     * @param array an Array
+     * @param array a non empty LongArray
      * @return an element “randomly” picked in the array
      */
     fun anElementFrom(array: LongArray): Long {
@@ -918,7 +1037,7 @@ open class Forger {
     }
 
     /**
-     * @param array an Array
+     * @param array a non empty FloatArray
      * @return an element “randomly” picked in the array
      */
     fun anElementFrom(array: FloatArray): Float {
@@ -927,8 +1046,8 @@ open class Forger {
     }
 
     /**
-     * @param array an Array
-     * @return an element “randomly” picked in the array
+     * @param array a non empty DoubleArray
+     * @return an element “randomly” picked in the
      */
     fun anElementFrom(array: DoubleArray): Double {
         val index = anInt(0, array.size)
@@ -1270,57 +1389,64 @@ open class Forger {
         }
     }
 
+    internal fun unsupportedFeature(message: String): Nothing {
+        throw UnsupportedOperationException("$message. You can report an issue or submit a PR to https://github.com/xgouchet/Elmyr/")
+    }
+
     // endregion
 
     companion object {
 
         // Int
-        internal val TINY_THRESHOLD = 0x20
-        internal val SMALL_THRESHOLD = 0x100
-        internal val BIG_THRESHOLD = 0x10000
-        internal val HUGE_THRESHOLD = 0x1000000
+        const internal val TINY_THRESHOLD = 0x20
+        const internal val SMALL_THRESHOLD = 0x100
+        const internal val BIG_THRESHOLD = 0x10000
+        const internal val HUGE_THRESHOLD = 0x1000000
 
-        internal val MEAN_THRESHOLD_INT = Math.round(Math.sqrt(Int.MAX_VALUE.toDouble())).toInt()
+        @JvmField internal val MEAN_THRESHOLD_INT = Math.round(Math.sqrt(Int.MAX_VALUE.toDouble())).toInt()
 
         // LONG
-        internal val ONE_YEAR = TimeUnit.DAYS.toMillis(365)
-        internal val MEAN_THRESHOLD_LONG = Math.round(Math.sqrt(Long.MAX_VALUE.toDouble()))
+        @JvmField internal val ONE_YEAR = TimeUnit.DAYS.toMillis(365)
+        @JvmField internal val MEAN_THRESHOLD_LONG = Math.round(Math.sqrt(Long.MAX_VALUE.toDouble()))
 
         // FLOAT
-        internal val MEAN_THRESHOLD_FLOAT = Math.sqrt(Float.MAX_VALUE.toDouble()).toFloat()
+        @JvmField internal val MEAN_THRESHOLD_FLOAT = Math.sqrt(Float.MAX_VALUE.toDouble()).toFloat()
 
         // DOUBLE
-        internal val MEAN_THRESHOLD_DOUBLE = Math.sqrt(Double.MAX_VALUE)
+        @JvmField internal val MEAN_THRESHOLD_DOUBLE = Math.sqrt(Double.MAX_VALUE)
 
         // Char
-        internal val MIN_PRINTABLE = 0x20.toChar()
-        internal val MAX_ASCII = 0x7F.toChar()
-        internal val MAX_ASCII_EXTENDED = 0xFF.toChar()
-        internal val MAX_UTF8 = 0xD800.toChar()
+        const internal val MIN_PRINTABLE = 0x20.toChar()
+        const internal val MAX_ASCII = 0x7F.toChar()
+        const internal val MAX_ASCII_EXTENDED = 0xFF.toChar()
+        const internal val MAX_UTF8 = 0xD800.toChar()
 
-        internal val ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray()
-        internal val ALPHA_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
-        internal val ALPHA_LOWER = "abcdefghijklmnopqrstuvwxyz".toCharArray()
+        @JvmField internal val ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray()
+        @JvmField internal val ALPHA_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
+        @JvmField internal val ALPHA_LOWER = "abcdefghijklmnopqrstuvwxyz".toCharArray()
 
-        internal val ALPHA_NUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
-        internal val ALPHA_NUM_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789".toCharArray()
-        internal val ALPHA_NUM_LOWER = "abcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
+        @JvmField internal val ALPHA_NUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
+        @JvmField internal val ALPHA_NUM_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789".toCharArray()
+        @JvmField internal val ALPHA_NUM_LOWER = "abcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
 
-        internal val HEXA_UPPER = "ABCDEF0123456789".toCharArray()
-        internal val HEXA_LOWER = "abcdef0123456789".toCharArray()
+        @JvmField internal val HEXA = "abcdefABCDEF0123456789".toCharArray()
+        @JvmField internal val HEXA_UPPER = "ABCDEF0123456789".toCharArray()
+        @JvmField internal val HEXA_LOWER = "abcdef0123456789".toCharArray()
 
-        internal val VOWEL = "aeiouyAEIOUY".toCharArray()
-        internal val VOWEL_UPPER = "AEIOUY".toCharArray()
+        @JvmField internal val VOWEL = "aeiouyAEIOUY".toCharArray()
+        @JvmField internal val VOWEL_UPPER = "AEIOUY".toCharArray()
 
-        internal val VOWEL_LOWER = "aeiouy".toCharArray()
-        internal val CONSONANT = "ZRTPQSDFGHJKLMWXCVBNzrtpqsdfghjklmwxcvbn".toCharArray()
-        internal val CONSONANT_UPPER = "ZRTPQSDFGHJKLMWXCVBN".toCharArray()
+        @JvmField internal val VOWEL_LOWER = "aeiouy".toCharArray()
+        @JvmField internal val CONSONANT = "ZRTPQSDFGHJKLMWXCVBNzrtpqsdfghjklmwxcvbn".toCharArray()
+        @JvmField internal val CONSONANT_UPPER = "ZRTPQSDFGHJKLMWXCVBN".toCharArray()
 
-        internal val CONSONANT_LOWER = "zrtpqsdfghjklmwxcvbn".toCharArray()
+        @JvmField internal val CONSONANT_LOWER = "zrtpqsdfghjklmwxcvbn".toCharArray()
 
-        internal val DIGIT = "0123456789".toCharArray()
+        @JvmField internal val DIGIT = "0123456789".toCharArray()
 
-        internal val WHITESPACE = "\t\n\r ".toCharArray()
+        @JvmField internal val WHITESPACE = "\t\n\r ".toCharArray()
+
+
     }
 
 }
