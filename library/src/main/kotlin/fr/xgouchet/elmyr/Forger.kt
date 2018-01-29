@@ -1,11 +1,10 @@
 package fr.xgouchet.elmyr
 
-import com.sun.xml.internal.fastinfoset.util.StringArray
+import com.sun.org.apache.xpath.internal.operations.Bool
 import fr.xgouchet.elmyr.regex.RegexBuilder
 import org.junit.AssumptionViolatedException
 import java.io.File
 import java.lang.Integer.min
-import java.lang.Math.abs
 import java.lang.Math.round
 import java.util.ArrayList
 import java.util.Random
@@ -632,6 +631,10 @@ open class Forger {
             StringConstraint.HEXADECIMAL -> return anHexadecimalString(case, size)
             StringConstraint.URL -> return aUrl()
             StringConstraint.EMAIL -> return anEmail()
+            StringConstraint.PATH -> return aLocalPath()
+            StringConstraint.PATH_LINUX -> return aLinuxPath()
+            StringConstraint.PATH_WINDOWS -> return aWindowsPath()
+            StringConstraint.PATH_MACOS -> return aMacOsPath()
 
             else -> preconditionException("Unexpected constraint : $constraint")
         }
@@ -801,57 +804,6 @@ open class Forger {
     }
 
     /**
-     * @param separator the char/string to use as separator. Defaults to the current platform's separator.
-     * @param roots the possible path roots
-     * @param maxPathSize the maximum size for a full path
-     * @param maxFileSize the maximum size for a file/directory name
-     * @param forbiddenChars an array of reserved characters forbidden in a directory or file name
-     * @return a String matching a standard path format
-     */
-    private fun aPath(separator: String = File.separator,
-                      roots: List<String>,
-                      maxPathSize: Int,
-                      maxFileSize: Int,
-                      forbiddenChars: CharArray? = null,
-                      reservedFilenames: List<String>? = null): String {
-        val builder = StringBuilder()
-        var segments = 0
-
-        if (roots.isNotEmpty()) {
-            builder.append(anElementFrom(roots))
-                    .append(separator)
-            segments++
-        }
-
-        val isFile = aBool()
-        val fileSize = if (isFile) anInt(3, maxFileSize) else 0
-        val maxSize = (maxPathSize - fileSize - separator.length)
-        val reserved = reservedFilenames ?: emptyList()
-
-        while ((builder.length < maxSize) or !aBool(segments.toFloat() / 10.0f)) {
-            val max = min(maxFileSize, maxSize - builder.length - separator.length)
-            if (max <= 1) break
-
-            val segmentSize = anInt(1, max)
-            // TODO maybe extend the charset to full UTF 8 ?
-            var folder: String
-            do {
-                folder = aString(CharConstraint.ASCII, size = segmentSize, forbiddenChars = forbiddenChars)
-            } while (folder in reserved)
-
-            builder.append(folder)
-                    .append(separator)
-            segments++
-        }
-
-        if (isFile) {
-
-        }
-
-        return builder.toString()
-    }
-
-    /**
      * @return a String matching a standard URL format
      */
     fun aUrl(): String {
@@ -908,38 +860,35 @@ open class Forger {
     }
 
     /**
-     * @return a String matching a standard URL format
+     * @param rfc2822Compliant if true, it will return an email compliant with the RFC2822 broader format
+     * @return an email String
      */
-    fun anEmail(): String {
-        // TODO check the RFC for all the tricky yet compliant urls !
-        val builder = StringBuilder()
-
-        // username
-        builder.append(aWord(Case.CAPITALIZE, anInt(3, 11)))
-                .append(anElementFrom('_', '.', '-'))
-                .append(aWord(Case.CAPITALIZE, anInt(3, 11)))
-                .append(aTinyInt())
-
-        // category ?
-        if (aBool()) {
-            builder.append('+')
-                    .append(aWord(Case.LOWER))
+    fun anEmail(rfc2822Compliant: Boolean = false): String {
+        val builder = StringBuilder(255)
+        if (rfc2822Compliant) {
+            RFCDefinitions.RFC2822_buildEmail(this, builder)
+        } else {
+            RFCDefinitions.RFC822_buildEmail(this, builder)
         }
-
-        builder.append('@')
-
-        // host (subdomain.domain.tld)
-        builder.append(aWord(Case.LOWER, anInt(3, 7)))
-                .append('.')
-                .append(aWord(Case.LOWER, anInt(5, 11)))
-                .append('.')
-                .append(aWord(Case.LOWER, 3))
-
         return builder.toString()
     }
 
-    private fun getWordSize(size: Int): Int {
-        return if (size > 0) size else aTinyInt()
+    /**
+     * @return an IP address (using the IPv4 format)
+     */
+    fun anIPv4Address(): String {
+        val builder = StringBuilder(16)
+        RFCDefinitions.RFC791_buildIPv4Address(this, builder)
+        return builder.toString()
+    }
+
+    /**
+     * @return an IP address (using the IPv6 format)
+     */
+    fun anIPv6Address(): String {
+        val builder = StringBuilder(48)
+        RFCDefinitions.RFC4291_buildIPv6Address(this, builder)
+        return builder.toString()
     }
 
     // endregion
@@ -1392,6 +1341,64 @@ open class Forger {
     internal fun unsupportedFeature(message: String): Nothing {
         throw UnsupportedOperationException("$message. You can report an issue or submit a PR to https://github.com/xgouchet/Elmyr/")
     }
+
+
+    /**
+     * @param separator the char/string to use as separator. Defaults to the current platform's separator.
+     * @param roots the possible path roots
+     * @param maxPathSize the maximum size for a full path
+     * @param maxFileSize the maximum size for a file/directory name
+     * @param forbiddenChars an array of reserved characters forbidden in a directory or file name
+     * @return a String matching a standard path format
+     */
+    internal fun aPath(separator: String = File.separator,
+                       roots: List<String>,
+                       maxPathSize: Int,
+                       maxFileSize: Int,
+                       forbiddenChars: CharArray? = null,
+                       reservedFilenames: List<String>? = null): String {
+        val builder = StringBuilder()
+        var segments = 0
+
+        if (roots.isNotEmpty()) {
+            builder.append(anElementFrom(roots))
+                    .append(separator)
+            segments++
+        }
+
+        val isFile = aBool()
+        val fileSize = if (isFile) anInt(3, maxFileSize) else 0
+        val maxSize = (maxPathSize - fileSize - separator.length)
+        val reserved = reservedFilenames ?: emptyList()
+
+        while ((builder.length < maxSize) or !aBool(segments.toFloat() / 10.0f)) {
+            val max = min(maxFileSize, maxSize - builder.length - separator.length)
+            if (max <= 1) break
+
+            val segmentSize = anInt(1, max)
+            // TODO maybe extend the charset to full UTF 8 ?
+            var folder: String
+            do {
+                folder = aString(CharConstraint.ASCII, size = segmentSize, forbiddenChars = forbiddenChars)
+            } while (folder in reserved)
+
+            builder.append(folder)
+                    .append(separator)
+            segments++
+        }
+
+        if (isFile) {
+
+        }
+
+        return builder.toString()
+    }
+
+
+    private fun getWordSize(size: Int): Int {
+        return if (size > 0) size else aTinyInt()
+    }
+
 
     // endregion
 

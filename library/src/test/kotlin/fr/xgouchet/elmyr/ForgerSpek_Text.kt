@@ -6,6 +6,9 @@ import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.io.File
+import java.util.EnumSet
+import emailvalidator4j.EmailValidator
+
 
 /**
  * @author Xavier F. Gouchet
@@ -503,11 +506,21 @@ class ForgerSpek_Text : Spek({
                 }
             }
 
-            it("forges an email string") {
+            it("forges an RFC822 email string") {
                 repeat(testRepeatCountSmall) {
-                    val email = forger.anEmail()
-                    assertThat(email)
-                            .matches(Regex("""[\w._\-+]+@([a-z]+\.)*[a-z]+""").pattern)
+                    val email = forger.anEmail(false)
+                    val validator = EmailValidator()
+                    val isValid = validator.isValid(email)
+                    assertThat(isValid).isTrue()
+                }
+            }
+
+            it("forges an RFC2822 email string") {
+                repeat(testRepeatCountSmall) {
+                    val email = forger.anEmail(false)
+                    val validator = EmailValidator()
+                    val isValid = validator.isValid(email)
+                    assertThat(isValid).isTrue()
                 }
             }
 
@@ -529,6 +542,22 @@ class ForgerSpek_Text : Spek({
                 repeat(testRepeatCountSmall) {
                     val path = forger.aMacOsPath()
                     // how to test ?
+                }
+            }
+
+            it("forges an IPv4 address") {
+                repeat(testRepeatCountSmall) {
+                    val ip = forger.anIPv4Address()
+                    assertThat(ip)
+                            .matches("[0-9]{1,3}(.[0-9]{1,3}){3}")
+                }
+            }
+
+            it("forges an IPv6 address without port") {
+                repeat(testRepeatCountSmall) {
+                    val ip = forger.anIPv6Address()
+                    assertThat(ip)
+                            .matches("(::)?[0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4})*(::)?([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4})*)?(:?[0-9]{1,3}(.[0-9]{1,3}){3})?")
                 }
             }
         }
@@ -570,8 +599,37 @@ class ForgerSpek_Text : Spek({
             it("forges an email string") {
                 repeat(testRepeatCountSmall, {
                     val email = forger.aString(StringConstraint.EMAIL)
-                    assertThat(email)
-                            .matches(Regex("""[\w._\-+]+@([a-z]+\.)*[a-z]+""").pattern)
+                    val validator = EmailValidator()
+                    val isValid = validator.isValid(email)
+                    assertThat(isValid).isTrue()
+                })
+            }
+
+            it("forges a local Path string") {
+                repeat(testRepeatCountSmall, {
+                    val path = forger.aString(StringConstraint.PATH)
+                    // How to test that ?
+                })
+            }
+
+            it("forges a Linux path string") {
+                repeat(testRepeatCountSmall, {
+                    val path = forger.aString(StringConstraint.PATH_LINUX)
+                    // How to test that ?
+                })
+            }
+
+            it("forges a Windows Path string") {
+                repeat(testRepeatCountSmall, {
+                    val path = forger.aString(StringConstraint.PATH_WINDOWS)
+                    // How to test that ?
+                })
+            }
+
+            it("forges a MacOS Path string") {
+                repeat(testRepeatCountSmall, {
+                    val path = forger.aString(StringConstraint.PATH_MACOS)
+                    // How to test that ?
                 })
             }
         }

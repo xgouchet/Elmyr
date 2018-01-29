@@ -311,9 +311,16 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
     Returns a string following the URL format.
 
 
- - **fun anEmail(): String**
+ - **fun anEmail(rfc2822compliant: Boolean = false): String**
 
     Returns a string following the e-mail format.
+    
+    - _rfc2822compliant_ if true, it will uses a broader definition of valid email address according to the RFC 2822
+    
+ - **fun anIPv4Address()**
+ - **fun anIPv6Address()**
+ 
+    Returns an IP address, following either the IPv4 / IPv6 address format
 
  - **fun aLocalPath(absolute: Boolean): String**
  - **fun aLinuxPath(absolute: Boolean): String**

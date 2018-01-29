@@ -25,6 +25,9 @@ dependencies {
     testRuntime "org.jetbrains.spek:spek-junit-platform-engine:$spek_version"
     testRuntime "org.junit.platform:junit-platform-launcher:$junit_platform_version"
     testRuntime("org.junit.vintage:junit-vintage-engine:${junit_vintage_version}")
+
+    // Email validation
+    testCompile "egulias:EmailValidator4J:1.0.0"
 }
 
 junitPlatform {
