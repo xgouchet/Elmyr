@@ -306,9 +306,10 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
     - _regex_: the regular expression to match.
 
 
+ - **fun aUri(): String**
  - **fun aUrl(): String**
 
-    Returns a string following the URL format.
+    Returns a string following the URI/URL format. (Please note that although all URL are URIs, some URIs are not valid URLs)
 
 
  - **fun anEmail(rfc2822compliant: Boolean = false): String**

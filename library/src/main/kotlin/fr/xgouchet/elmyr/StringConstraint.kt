@@ -9,6 +9,7 @@ enum class StringConstraint {
     LIPSUM,
     HEXADECIMAL,
     URL,
+    URI,
     EMAIL,
     PATH,
     PATH_LINUX,

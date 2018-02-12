@@ -1,13 +1,13 @@
 package fr.xgouchet.elmyr
 
+import emailvalidator4j.EmailValidator
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import java.io.File
-import java.util.EnumSet
-import emailvalidator4j.EmailValidator
+import java.net.URI
+import java.net.URL
 
 
 /**
@@ -498,11 +498,17 @@ class ForgerSpek_Text : Spek({
                 }
             }
 
+            it("forges a uri string") {
+                repeat(testRepeatCountSmall) {
+                    val uri = forger.aUri()
+                    assertThat(URI(uri)).isNotNull()
+                }
+            }
+
             it("forges a url string") {
                 repeat(testRepeatCountSmall) {
                     val url = forger.aUrl()
-                    assertThat(url)
-                            .matches(Regex("""[a-z]+://[a-z]+\.[a-z]+\.[a-z]+/(([\w]+/)*|([\w-]+))(#\w+)?(\?\w+=\w+(&\w+=\w+)*)?""").pattern)
+                    assertThat(URL(url)).isNotNull()
                 }
             }
 
@@ -566,33 +572,39 @@ class ForgerSpek_Text : Spek({
 
             it("forges an hexadecimal string") {
                 repeat(testRepeatCountSmall, {
-                    val url = forger.aString(StringConstraint.HEXADECIMAL)
-                    assertThat(url)
+                    val hexa = forger.aString(StringConstraint.HEXADECIMAL)
+                    assertThat(hexa)
                             .matches("[a-fA-F0-9]+")
                 })
             }
 
             it("forges a word string") {
                 repeat(testRepeatCountSmall, {
-                    val url = forger.aString(StringConstraint.WORD)
-                    assertThat(url)
+                    val word = forger.aString(StringConstraint.WORD)
+                    assertThat(word)
                             .matches("[aeiouyAEIOUY]?([zrtpqsdfghjklmwxcvbnZRTPQSDFGHJKLMWXCVBN][aeiouyAEIOUY])*[zrtpqsdfghjklmwxcvbnZRTPQSDFGHJKLMWXCVBN]?")
                 })
             }
 
             it("forges a lipsum string") {
                 repeat(testRepeatCountSmall, {
-                    val url = forger.aString(StringConstraint.LIPSUM, Case.CAPITALIZED_SENTENCE)
-                    assertThat(url)
+                    val lipsum = forger.aString(StringConstraint.LIPSUM, Case.CAPITALIZED_SENTENCE)
+                    assertThat(lipsum)
                             .matches("[A-Z][a-z]+( [a-z]+)*\\.")
+                })
+            }
+
+            it("forges a uri string") {
+                repeat(testRepeatCountSmall, {
+                    val uri = forger.aString(StringConstraint.URI)
+                    assertThat(URI(uri)).isNotNull()
                 })
             }
 
             it("forges a url string") {
                 repeat(testRepeatCountSmall, {
                     val url = forger.aString(StringConstraint.URL)
-                    assertThat(url)
-                            .matches(Regex("""[a-z]+://[a-z]+\.[a-z]+\.[a-z]+/(([\w]+/)*|([\w-]+))(#\w+)?(\?\w+=\w+(&\w+=\w+)*)?""").pattern)
+                    assertThat(URL(url)).isNotNull()
                 })
             }
 

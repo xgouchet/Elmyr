@@ -1,20 +1,15 @@
+@file:Suppress("FunctionName")
+
 package fr.xgouchet.elmyr
 
+import java.lang.Math.max
 import java.lang.Math.min
 
 object RFCDefinitions {
 
-    const val MAX_LOCALPART_LENGTH = 64
-    const val MAX_DOMAIN_LENGTH = 255
-    const val MAX_EMAIL_LENGTH = 254
-
-    @JvmField
-    val RFC2822_ATEXT_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabscdefghijklmnopqrstuvwxyz!#$%&'*+-/=?^_`{|}~".toCharArray()
-
-    @JvmField
-    val RFC822_ATOM_CHARS = "!#\$%&'*+-/0123456789=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abscdefghijklmnopqrstuvwxyz{|}~".toCharArray()
-
     // region RFC 1035 (domain names)
+
+    const val MAX_DOMAIN_LENGTH = 255
 
     // <domain> ::= <subdomain> | " "
     internal fun RFC1035_buildDomain(forger: Forger, builder: StringBuilder, size: Int? = null) {
@@ -53,10 +48,15 @@ object RFCDefinitions {
 
     // region RFC 822 (email address pre 2001)
 
+    const val MAX_LOCALPART_LENGTH = 64
+    const val MAX_EMAIL_LENGTH = 254
+
+    private val RFC822_ATOM_CHARS = "!#\$%&'*+-/0123456789=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abscdefghijklmnopqrstuvwxyz{|}~".toCharArray()
+
     // addr-spec   =  local-part "@" domain
     internal fun RFC822_buildEmail(forger: Forger, builder: StringBuilder, size: Int? = null): String {
         val emailSize = size ?: MAX_EMAIL_LENGTH
-        val localSize = min(forger.anInt(1, 64), emailSize - 2)
+        val localSize = min(forger.anInt(1, MAX_LOCALPART_LENGTH), emailSize - 2)
         val domainSize = forger.anInt(1, min(emailSize - localSize - 1, MAX_DOMAIN_LENGTH))
 
         RFC822_buildLocalPart(forger, builder, localSize)
@@ -95,6 +95,8 @@ object RFCDefinitions {
     // endregion
 
     // region RFC 2822 (email address)
+
+    private val RFC2822_ATEXT_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabscdefghijklmnopqrstuvwxyz!#$%&'*+-/=?^_`{|}~".toCharArray()
 
     // addr-spec       =       local-part "@" domain
     internal fun RFC2822_buildEmail(forger: Forger, builder: StringBuilder, size: Int? = null): String {
@@ -177,8 +179,8 @@ object RFCDefinitions {
 
     internal fun RFC4291_buildIPv6Address(forger: Forger, builder: StringBuilder) {
         val full = forger.aBool()
-        val withv4 = forger.aBool()
-        if (withv4) {
+        val v4 = forger.aBool()
+        if (v4) {
             if (full) {
                 RFC4291_buildIPv6v4FullAddress(forger, builder)
             } else {
@@ -216,7 +218,7 @@ object RFCDefinitions {
         builder.append("::")
         if (trailingCount > 0) {
             RFC4291_buildIPv6Hex(forger, builder)
-            for (i in 1 until leadingCount) {
+            for (i in 1 until trailingCount) {
                 builder.append(':')
                 RFC4291_buildIPv6Hex(forger, builder)
             }
@@ -225,7 +227,7 @@ object RFCDefinitions {
 
     private fun RFC4291_buildIPv6v4FullAddress(forger: Forger, builder: StringBuilder) {
         RFC4291_buildIPv6Hex(forger, builder)
-        for (i in 1 until 5) {
+        for (i in 1 until 6) {
             builder.append(':')
             RFC4291_buildIPv6Hex(forger, builder)
         }
@@ -249,7 +251,7 @@ object RFCDefinitions {
         builder.append("::")
         if (trailingCount > 0) {
             RFC4291_buildIPv6Hex(forger, builder)
-            for (i in 1 until leadingCount) {
+            for (i in 1 until trailingCount) {
                 builder.append(':')
                 RFC4291_buildIPv6Hex(forger, builder)
             }
@@ -262,5 +264,212 @@ object RFCDefinitions {
     private fun RFC4291_buildIPv6Hex(forger: Forger, builder: StringBuilder) {
         builder.append(forger.anHexadecimalString(Case.ANY, forger.anInt(1, 5)))
     }
+    // endregion
+
+    // region RFC 3986 (URI)
+
+    // Known URL schemes
+    internal val KNOWN_URL_SCHEMES = listOf("file", "ftp", "http", "https", "mailto", "netdoc")
+
+    // scheme      = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+    private val RFC3986_SCHEME_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789+-.".toCharArray()
+
+    // unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+    private val RFC3986_UNRESERVED_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789+-.".toCharArray()
+
+    // gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+    private val RFC3986_GEN_DELIM_CHARS = ":/?#[]@".toCharArray()
+
+    // sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+    private val RFC3986_SUB_DELIM_CHARS = "!$&'()*+,;=".toCharArray()
+
+    // pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
+    private val RFC3986_PATH_CHARS = RFC3986_UNRESERVED_CHARS.union(RFC3986_SUB_DELIM_CHARS.toList()).union(listOf(':', '@'))
+
+    //  URI         = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
+    internal fun RFC3986_buildURI(forger: Forger, builder: StringBuilder) {
+
+        val schemeSize: Int = forger.anInt(1, 32)
+        RFC3986_buildScheme(forger, builder, schemeSize)
+
+        builder.append(":")
+
+        val hierarchySize: Int = forger.anInt(1, 255)
+        RFC3986_buildHierarchy(forger, builder, hierarchySize)
+
+        // TODO add query ?foo=42&bar=toto
+        // TODO add fragment #spam
+    }
+
+    //  URL         = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
+    internal fun RFC3986_buildURL(forger: Forger, builder: StringBuilder) {
+
+        builder.append(forger.anElementFrom(KNOWN_URL_SCHEMES))
+
+        builder.append(":")
+
+        val hierarchySize: Int = forger.anInt(1, 255)
+        RFC3986_buildHierarchy(forger, builder, hierarchySize)
+
+        // TODO add query ?foo=42&bar=toto
+        // TODO add fragment #spam
+    }
+
+    // scheme      = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+    private fun RFC3986_buildScheme(forger: Forger, builder: StringBuilder, size: Int) {
+        // Even though we could use upper case too, let's just, not
+        builder.append(forger.anAlphabeticalChar(Case.LOWER))
+
+        for (i in 1 until size) {
+            builder.append(forger.anElementFrom(RFC3986_SCHEME_CHARS))
+        }
+    }
+
+    // hier-part   = "//" authority path-abempty / path-absolute / path-rootless / path-empty
+    private fun RFC3986_buildHierarchy(forger: Forger, builder: StringBuilder, size: Int) {
+        val hasAuthority = forger.aBool()
+        if (hasAuthority) {
+            val authoritySize = forger.anInt(1, max(min(64, size - 2), 2))
+            val pathSize = size - authoritySize - 2
+            builder.append("//")
+            RFC3986_buildAuthority(forger, builder, authoritySize)
+            RFC3986_buildPathAbsoluteEmpty(forger, builder, pathSize)
+        } else {
+            when (forger.anInt(0, 2)) {
+                0 -> RFC3986_buildPathAbsolute(forger, builder, size)
+                1 -> RFC3986_buildPathRootless(forger, builder, size)
+            }
+        }
+    }
+
+    // authority   = [ userinfo "@" ] host [ ":" port ]
+    private fun RFC3986_buildAuthority(forger: Forger, builder: StringBuilder, size: Int) {
+        val userInfoSize = if (forger.aBool() && size > 5) forger.anInt(1, size - 4) else 0
+        val withPort = ((size - userInfoSize - 2) > 8) and forger.aBool()
+        val maxPortSize = if (withPort) 6 else 0
+        val hostSize = size - userInfoSize - maxPortSize - 2
+
+        if (userInfoSize > 0) {
+            RFC3986_buildUserInfo(forger, builder, userInfoSize)
+            builder.append("@")
+        }
+
+        RFC3986_buildHost(forger, builder, hostSize)
+
+        if (withPort) {
+            builder.append(":")
+            builder.append(forger.anInt(1, 65536))
+        }
+    }
+
+    // path-abempty  = *( "/" segment )
+    private fun RFC3986_buildPathAbsoluteEmpty(forger: Forger, builder: StringBuilder, size: Int) {
+        var remainingSize = size
+        while (remainingSize > 0) {
+            builder.append('/')
+            remainingSize--
+            val segmentSize = forger.anInt(0, max(remainingSize, 1))
+            RFC3986_buildSegment(forger, builder, segmentSize)
+            remainingSize -= segmentSize
+        }
+    }
+
+    // path-absolute = "/" [ segment-nz *( "/" segment ) ]
+    private fun RFC3986_buildPathAbsolute(forger: Forger, builder: StringBuilder, size: Int) {
+        builder.append('/')
+        if (size <= 1) return
+
+        RFC3986_buildPathRootless(forger, builder, size - 1)
+    }
+
+    // path-rootless = segment-nz *( "/" segment )
+    private fun RFC3986_buildPathRootless(forger: Forger, builder: StringBuilder, size: Int) {
+        val firstSegmentSize = forger.anInt(1, max(size - 1, 2))
+        RFC3986_buildSegmentNZ(forger, builder, size)
+
+        RFC3986_buildPathAbsoluteEmpty(forger, builder, size - firstSegmentSize)
+    }
+
+    // segment       = *pchar
+    private fun RFC3986_buildSegment(forger: Forger, builder: StringBuilder, size: Int) {
+        for (i in 0..size) {
+            builder.append(forger.anElementFrom(RFC3986_PATH_CHARS))
+        }
+    }
+
+    // segment-nz    = 1*pchar
+    private fun RFC3986_buildSegmentNZ(forger: Forger, builder: StringBuilder, size: Int) {
+        val actualSize = if (size <= 0) 1 else size
+        for (i in 0..actualSize) {
+            builder.append(forger.anElementFrom(RFC3986_PATH_CHARS))
+        }
+    }
+
+    // userinfo    = *( unreserved / pct-encoded / sub-delims / ":" )
+    private fun RFC3986_buildUserInfo(forger: Forger, builder: StringBuilder, size: Int) {
+        var remainingSize = size
+
+        do {
+            if (forger.aBool(0.15f) and (remainingSize >= 3)) {
+                RFC3986_buildPctEncoded(forger, builder)
+                remainingSize -= 3
+            } else if (forger.aBool(0.1f)) {
+                builder.append(':')
+                remainingSize--
+            } else if (forger.aBool(0.15f)) {
+                builder.append(forger.anElementFrom(RFC3986_SUB_DELIM_CHARS))
+                remainingSize--
+            } else {
+                builder.append(forger.anElementFrom(RFC3986_UNRESERVED_CHARS))
+                remainingSize--
+            }
+        } while (remainingSize > 0)
+    }
+
+    // host        = IP-literal / IPv4address / reg-name
+    private fun RFC3986_buildHost(forger: Forger, builder: StringBuilder, size: Int) {
+        when (forger.anInt(0, 3)) {
+            0 -> RFC3986_buildIPLiteral(forger, builder)
+            1 -> RFC791_buildIPv4Address(forger, builder)
+            2 -> RFC3986_buildRegName(forger, builder, size)
+        }
+    }
+
+    // IP-literal = "[" ( IPv6address / IPvFuture  ) "]"
+    private fun RFC3986_buildIPLiteral(forger: Forger, builder: StringBuilder) {
+        // let's drop the IPvFuture for now
+        builder.append('[')
+        RFC4291_buildIPv6Address(forger, builder)
+        builder.append(']')
+    }
+
+    // reg-name    = *( unreserved / pct-encoded / sub-delims )
+    private fun RFC3986_buildRegName(forger: Forger, builder: StringBuilder, size: Int) {
+        var remainingSize = size
+
+        do {
+            if (forger.aBool(0.15f) and (remainingSize >= 3)) {
+                RFC3986_buildPctEncoded(forger, builder)
+                remainingSize -= 3
+            } else if (forger.aBool(0.1f)) {
+                builder.append('.')
+                remainingSize--
+            } else if (forger.aBool(0.15f)) {
+                builder.append(forger.anElementFrom(RFC3986_SUB_DELIM_CHARS))
+                remainingSize--
+            } else {
+                builder.append(forger.anElementFrom(RFC3986_UNRESERVED_CHARS))
+                remainingSize--
+            }
+        } while (remainingSize > 0)
+    }
+
+    // pct-encoded   = "%" HEXDIG HEXDIG
+    private fun RFC3986_buildPctEncoded(forger: Forger, builder: StringBuilder) {
+        builder.append('%')
+        builder.append(forger.anHexadecimalChar())
+        builder.append(forger.anHexadecimalChar())
+    }
+
     // endregion
 }

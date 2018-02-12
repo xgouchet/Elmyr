@@ -1,6 +1,5 @@
 package fr.xgouchet.elmyr
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import fr.xgouchet.elmyr.regex.RegexBuilder
 import org.junit.AssumptionViolatedException
 import java.io.File
@@ -630,6 +629,7 @@ open class Forger {
             StringConstraint.LIPSUM -> return aSentence(case, size)
             StringConstraint.HEXADECIMAL -> return anHexadecimalString(case, size)
             StringConstraint.URL -> return aUrl()
+            StringConstraint.URI -> return aUri()
             StringConstraint.EMAIL -> return anEmail()
             StringConstraint.PATH -> return aLocalPath()
             StringConstraint.PATH_LINUX -> return aLinuxPath()
@@ -804,58 +804,21 @@ open class Forger {
     }
 
     /**
-     * @return a String matching a standard URL format
+     * @return a String matching a standard URI according to RFC 3986
+     */
+    fun aUri(): String {
+        val builder = StringBuilder()
+        RFCDefinitions.RFC3986_buildURI(this, builder)
+        return builder.toString()
+    }
+
+    /**
+     * @return a String matching a standard URL according to RFC 3986
+     * (Although the RFC itself doesn't give a clear definition of which URI are proper URL, we use a relatively broad definition)
      */
     fun aUrl(): String {
-        // TODO check the RFC for all the tricky yet compliant urls !
         val builder = StringBuilder()
-
-        // scheme
-        builder.append(aWord(Case.LOWER, anInt(2, 7)))
-                .append("://")
-
-        // host (subdomain.domain.tld)
-        builder.append(aWord(Case.LOWER, anInt(3, 7)))
-                .append('.')
-                .append(aWord(Case.LOWER, anInt(5, 11)))
-                .append('.')
-                .append(aWord(Case.LOWER, 3))
-                .append('/')
-
-        // path segments
-        if (aBool()) {
-            val pathSegmentCount = aTinyInt()
-            for (i in 0 until pathSegmentCount) {
-                builder.append(aWord(Case.ANY, anInt(2, 13)))
-                        .append('/')
-            }
-        } else {
-            // an article blurb
-            builder.append(aWord(Case.CAPITALIZE, anInt(2, 13)))
-            val wordsCount = aTinyInt()
-            for (i in 0 until wordsCount) {
-                builder.append('-')
-                        .append(aWord(Case.LOWER, anInt(2, 7)))
-            }
-        }
-
-        // anchor ?
-        if (aBool()) {
-            builder.append('#')
-                    .append(aWord())
-        }
-
-        // query params
-        if (aBool()) {
-            val queryParamsCount = aTinyInt()
-            for (i in 0 until queryParamsCount) {
-                builder.append(if (i == 0) '?' else '&')
-                        .append(aWord(Case.ANY, anInt(2, 7)))
-                        .append('=')
-                        .append(aWord(Case.ANY, anInt(3, 13)))
-            }
-        }
-
+        RFCDefinitions.RFC3986_buildURL(this, builder)
         return builder.toString()
     }
 
