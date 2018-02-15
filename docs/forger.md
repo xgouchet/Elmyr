@@ -512,6 +512,17 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
         - _regex_: the regular expression to match.
         - _size_: the size of the array, or -1 for a random size.
         
+---
+
+### Forging collections
+
+   - **fun <T> aList(size: Int = -1, creator: (Forger) -> T): List<T>**
+   
+        Returns a list with elements generated from the given lambda
+        
+        - _size_: the size of the array, or -1 for a random size.
+        - _creator_ : a lambda invoked for each element in the list to populate it  
+        
    - **fun <T> aSubListOf(list: List<T>, outputSize: Int): List<T>**
    - **fun <T> aSubSetOf(set: Set<T>, outputSize: Int): Set<T>**
    

@@ -310,6 +310,14 @@ class ForgerSpek_Collections : Spek({
                         .hasSize(arraySize)
                 data.forEach { assertThat(it).matches(regex.pattern) }
             }
+
+            it("forges a list of whatever") {
+                var i = 0
+                val data = forger.aList { it.anElementFrom(i++) }
+                val expectedData = IntArray(data.size) { it }.toTypedArray()
+
+                assertThat(data).containsExactly(*expectedData)
+            }
         }
 
         context("forging sublist") {

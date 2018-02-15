@@ -1256,6 +1256,20 @@ open class Forger {
     }
 
     /**
+     * Creates a random sized list
+     */
+    fun <T> aList(size: Int = -1, creator: (Forger) -> T): List<T> {
+        val listSize = if (size < 0) aTinyInt() else size
+        val list = ArrayList<T>(listSize)
+
+        for (i in 0 until listSize) {
+            list.add(creator(this))
+        }
+
+        return list
+    }
+
+    /**
      * Shuffles a list (like a deck of card)
      * @param list the list to shuffle
      * @return a new list with the same elements as the input, but in a random order
