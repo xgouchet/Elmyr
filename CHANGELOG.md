@@ -1,9 +1,11 @@
 # Changelog
 
-### 0.6 (???)
+### 0.6 (2018/02/15)
 
  - Add forgery to generate a sub collection
  - Add forgery to shuffle a collection
+ - Improve Email / URL / URI forgery
+ - Add forgery to generate a list
 
 ### 0.5 (2017/06/15)
 
