@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.7 (2018/08/23)
+
+ - Add forgery to generate nullable with lambdas (`forger.aNullableFrom { aString() }` instead of `forger.aNullableFrom(forger.aString())`)
+ - Add Forgery to generate Date (`forger.aDate()`, `forger.aPastDate()` and `forger.aFutureDate()`)
+
 ### 0.6 (2018/02/15)
 
  - Add forgery to generate a sub collection

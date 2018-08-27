@@ -9,17 +9,12 @@ buildscript {
         detekt_version = '1.0.0.M13'
         assertj_version = '0.2.1'
         mockito_kotlin_version = '1.6.0'
-        dokka_version = '0.9.15'
+        dokka_version = '0.9.17'
         pitest_version = '0.0.9'
     }
 
     repositories {
-        google()
         jcenter()
-        mavenCentral()
-        maven { url "https://jitpack.io" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "http://dl.bintray.com/arturbosch/code-analysis" }
     }
     dependencies {
         classpath "org.junit.platform:junit-platform-gradle-plugin:$junit_platform_version"
@@ -30,13 +25,7 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
         jcenter()
-        mavenCentral()
-        maven { url "https://jitpack.io" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "http://dl.bintray.com/jetbrains/spek" }
-        maven { url "http://dl.bintray.com/arturbosch/code-analysis" }
     }
 }
 
