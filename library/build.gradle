@@ -1,12 +1,16 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.1.51"
-    id 'com.github.ben-manes.versions' version '0.17.0'
+    id "org.jetbrains.kotlin.jvm" version "1.2.61"
+    id 'com.github.ben-manes.versions' version '0.20.0'
+     id "io.gitlab.arturbosch.detekt" version "1.0.0.RC8"
 }
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'jacoco'
 apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'org.jetbrains.dokka'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
     // KOTLIN
@@ -31,14 +35,7 @@ dependencies {
     testCompile "egulias:EmailValidator4J:1.0.0"
 }
 
-junitPlatform {
-    filters {
-        engines {
-            include 'spek', 'junit-jupiter', 'junit-vintage'
-        }
-    }
-}
-
+// region Javadoc
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
     outputFormat = 'javadoc'
     outputDirectory = javadoc.destinationDir
@@ -49,6 +46,18 @@ task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     classifier = 'javadoc'
     archiveName = 'javadoc.jar'
     from javadoc.destinationDir
+}
+
+// endregion
+
+// region JUnit
+
+junitPlatform {
+    filters {
+        engines {
+            include 'spek', 'junit-jupiter', 'junit-vintage'
+        }
+    }
 }
 
 project.afterEvaluate {
@@ -70,7 +79,7 @@ project.afterEvaluate {
 
                 reports {
                     xml.enabled true
-                    xml.destination "${buildDir}/reports/jacoco/report.xml"
+                    xml.destination file("${buildDir}/reports/jacoco/report.xml")
                     csv.enabled false
                     html.enabled true
                 }
@@ -81,8 +90,21 @@ project.afterEvaluate {
     project.tasks.getByName('install').dependsOn javadocJar
 }
 
+// endregion
 
+// region Detekt
 
+detekt {
+    version = "1.0.0.RC8"
+    profile("main") {
+        input = "$projectDir/src/main/kotlin"
+        output = "$project.projectDir/build/reports/detekt"
+        config = "$project.rootDir/detekt-config.yml"
+        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
+    }
+}
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+//check.dependsOn detektCheck
+
+// endregion
+

@@ -20,7 +20,7 @@ interface Quantifier {
         }
 
         val MAYBE_ONE = object : Quantifier {
-            override fun getQuantity(forger: Forger): Int = forger.anInt(0, 2)
+            override fun getQuantity(forger: Forger): Int = if (forger.aBool()) 1 else 0
 
             override fun describe(builder: StringBuilder) {
                 builder.append("?")
@@ -28,7 +28,7 @@ interface Quantifier {
         }
 
         val ZERO_OR_MORE = object : Quantifier {
-            override fun getQuantity(forger: Forger): Int = forger.anInt(0, 16)
+            override fun getQuantity(forger: Forger): Int = forger.anInt(0, Forger.TINY_THRESHOLD)
 
             override fun describe(builder: StringBuilder) {
                 builder.append("*")
@@ -36,7 +36,7 @@ interface Quantifier {
         }
 
         val ONE_OR_MORE = object : Quantifier {
-            override fun getQuantity(forger: Forger): Int = forger.anInt(1, 16)
+            override fun getQuantity(forger: Forger): Int = forger.anInt(1, Forger.TINY_THRESHOLD)
 
             override fun describe(builder: StringBuilder) {
                 builder.append("+")

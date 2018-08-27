@@ -13,9 +13,10 @@ import kotlin.properties.ReadOnlyProperty
  * This object provide several delegates for forged properties
  * @author Xavier F. Gouchet
  */
+@Suppress("TooManyFunctions")
 object ElmyrDelegates {
 
-    internal val FORGER: Forger = Forger()
+    private val FORGER: Forger = Forger()
 
     /**
      * Returns a property delegate for a read/write property with a non-`null` value that is initialized not during
@@ -26,8 +27,7 @@ object ElmyrDelegates {
                               case: Case = Case.ANY,
                               size: Int = -1,
                               forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, String>
-            = ForgedString(constraint, case, size, forger = forger)
+            : ReadOnlyProperty<Any?, String> = ForgedString(constraint, case, size, forger = forger)
 
     /**
      * @param regex the regex to use to generate a String
@@ -36,8 +36,7 @@ object ElmyrDelegates {
     fun forgeryWithRegex(
             regex: Regex,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, String>
-            = ForgedString(regex = regex, forger = forger)
+            : ReadOnlyProperty<Any?, String> = ForgedString(regex = regex, forger = forger)
 
     /**
      * @param regex the regex to use to generate a String
@@ -46,8 +45,7 @@ object ElmyrDelegates {
     fun forgeryWithRegex(
             regex: String,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, String>
-            = ForgedString(regex = Regex(regex), forger = forger)
+            : ReadOnlyProperty<Any?, String> = ForgedString(regex = Regex(regex), forger = forger)
 
     /**
      * @param constraint the constraint for the Char to generate
@@ -58,8 +56,7 @@ object ElmyrDelegates {
             constraint: CharConstraint,
             case: Case = Case.ANY,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Char>
-            = ForgedChar(constraint, case, forger = forger)
+            : ReadOnlyProperty<Any?, Char> = ForgedChar(constraint, case, forger = forger)
 
     /**
      * @param constraint the constraint for the Int to generate
@@ -68,8 +65,7 @@ object ElmyrDelegates {
     fun forgeryWithConstraint(
             constraint: IntConstraint,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Int>
-            = ForgedInt(constraint, forger = forger)
+            : ReadOnlyProperty<Any?, Int> = ForgedInt(constraint, forger = forger)
 
     /**
      * @param min the min value (inclusive)
@@ -80,8 +76,7 @@ object ElmyrDelegates {
             min: Int,
             max: Int,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Int>
-            = ForgedInt(min = min, max = max, forger = forger)
+            : ReadOnlyProperty<Any?, Int> = ForgedInt(min = min, max = max, forger = forger)
 
     /**
      * @param constraint the constraint for the Float to generate
@@ -90,8 +85,7 @@ object ElmyrDelegates {
     fun forgeryWithConstraint(
             constraint: FloatConstraint,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Float>
-            = ForgedFloat(constraint = constraint, forger = forger)
+            : ReadOnlyProperty<Any?, Float> = ForgedFloat(constraint = constraint, forger = forger)
 
     /**
      * @param min the min value (inclusive)
@@ -102,8 +96,7 @@ object ElmyrDelegates {
             min: Float = -Float.MAX_VALUE,
             max: Float = Float.MAX_VALUE,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Float>
-            = ForgedFloat(min = min, max = max, forger = forger)
+            : ReadOnlyProperty<Any?, Float> = ForgedFloat(min = min, max = max, forger = forger)
 
     /**
      * @param mean the mean value of the distribution (default 0.0f)
@@ -115,8 +108,7 @@ object ElmyrDelegates {
             mean: Float = 0f,
             standardDeviation: Float = 1f,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Float>
-            = ForgedFloat(mean = mean, standardDeviation = standardDeviation, forger = forger)
+            : ReadOnlyProperty<Any?, Float> = ForgedFloat(mean = mean, standardDeviation = standardDeviation, forger = forger)
 
     /**
      * @param constraint the constraint for the Double to generate
@@ -125,8 +117,7 @@ object ElmyrDelegates {
     fun forgeryWithConstraint(
             constraint: DoubleConstraint,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Double>
-            = ForgedDouble(constraint = constraint, forger = forger)
+            : ReadOnlyProperty<Any?, Double> = ForgedDouble(constraint = constraint, forger = forger)
 
     /**
      * @param min the min value (inclusive)
@@ -137,8 +128,7 @@ object ElmyrDelegates {
             min: Double = -Double.MAX_VALUE,
             max: Double = Double.MAX_VALUE,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Double>
-            = ForgedDouble(min = min, max = max, forger = forger)
+            : ReadOnlyProperty<Any?, Double> = ForgedDouble(min = min, max = max, forger = forger)
 
     /**
      * @param mean the mean value of the distribution (default 0.0f)
@@ -150,8 +140,7 @@ object ElmyrDelegates {
             mean: Double = 0.0,
             standardDeviation: Double = 1.0,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, Double>
-            = ForgedDouble(mean = mean, standardDeviation = standardDeviation, forger = forger)
+            : ReadOnlyProperty<Any?, Double> = ForgedDouble(mean = mean, standardDeviation = standardDeviation, forger = forger)
 
     /**
      * Makes a delegate from another one, potentially returning null instead of the delegate value.
@@ -160,9 +149,7 @@ object ElmyrDelegates {
      */
     fun <T> nullable(
             delegate: ReadOnlyProperty<Any?, T>,
-            probability: Float = 0.5f,
+            probability: Float = Forger.HALF_PROBABILITY,
             forger: Forger = FORGER)
-            : ReadOnlyProperty<Any?, T?>
-            = ForgedNullableProperty(delegate, probability, forger)
+            : ReadOnlyProperty<Any?, T?> = ForgedNullableProperty(delegate, probability, forger)
 }
-

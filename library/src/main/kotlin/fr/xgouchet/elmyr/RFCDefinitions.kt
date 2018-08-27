@@ -4,6 +4,7 @@ package fr.xgouchet.elmyr
 
 import java.lang.Math.min
 
+@Suppress("LargeClass", "TooManyFunctions", "ComplexMethod", "MagicNumber")
 object RFCDefinitions {
 
     // region RFC 1035 (domain names)
@@ -12,7 +13,7 @@ object RFCDefinitions {
 
     // <domain> ::= <subdomain> | " "
     internal fun RFC1035_buildDomain(forger: Forger, builder: StringBuilder, size: Int? = null) {
-        val resultSize = size ?: forger.anInt(0, MAX_DOMAIN_LENGTH) + 1
+        val resultSize = size ?: forger.anInt(0, MAX_DOMAIN_LENGTH)+1
 
         RFC1035_buildSubdomain(forger, builder, resultSize)
     }
@@ -50,7 +51,8 @@ object RFCDefinitions {
     const val MAX_LOCALPART_LENGTH = 64
     const val MAX_EMAIL_LENGTH = 254
 
-    private val RFC822_ATOM_CHARS = "!#\$%&'*+-/0123456789=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abscdefghijklmnopqrstuvwxyz{|}~".toCharArray()
+    private val RFC822_ATOM_CHARS = "!#\$%&'*+-/0123456789=?ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abscdefghijklmnopqrstuvwxyz{|}~"
+            .toCharArray()
 
     // addr-spec   =  local-part "@" domain
     internal fun RFC822_buildEmail(forger: Forger, builder: StringBuilder, size: Int? = null): String {
@@ -81,6 +83,7 @@ object RFCDefinitions {
             wordSize = min(forger.anInt(1, 64), remainingSize)
             RFC822_buildWord(forger, builder, wordSize)
             remainingSize -= wordSize
+            started = true
         } while (remainingSize > 0)
     }
 
@@ -92,12 +95,12 @@ object RFCDefinitions {
         builder.append(array)
     }
 
-
     // endregion
 
     // region RFC 2822 (email address)
 
-    private val RFC2822_ATEXT_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabscdefghijklmnopqrstuvwxyz!#$%&'*+-/=?^_`{|}~".toCharArray()
+    private val RFC2822_ATEXT_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabscdefghijklmnopqrstuvwxyz!#$%&'*+-/=?^_`{|}~"
+            .toCharArray()
 
     // addr-spec       =       local-part "@" domain
     internal fun RFC2822_buildEmail(forger: Forger, builder: StringBuilder, size: Int? = null): String {
@@ -166,7 +169,6 @@ object RFCDefinitions {
         }
 
     }
-
 
     // endregion
 
@@ -285,7 +287,7 @@ object RFCDefinitions {
     private val RFC3986_SUB_DELIM_CHARS = "!$&'()*+,;=".toCharArray()
 
     // reserved      = gen-delims / sub-delims
-    private val RFC3986_RESERVED_CHARS = RFC3986_GEN_DELIM_CHARS.union(RFC3986_SUB_DELIM_CHARS.toList())
+//    private val RFC3986_RESERVED_CHARS = RFC3986_GEN_DELIM_CHARS.union(RFC3986_SUB_DELIM_CHARS.toList())
 
     // pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
     private val RFC3986_PATH_CHARS = RFC3986_UNRESERVED_CHARS.union(RFC3986_SUB_DELIM_CHARS.toList()).union(listOf(':', '@'))
@@ -393,9 +395,7 @@ object RFCDefinitions {
 
     // path-rootless = segment-nz *( "/" segment )
     private fun RFC3986_buildPathRootless(forger: Forger, builder: StringBuilder) {
-        val firstSegmentSize = forger.anInt(1, 64)
         RFC3986_buildSegmentNZ(forger, builder)
-
         RFC3986_buildPathAbsoluteEmpty(forger, builder)
     }
 
@@ -484,7 +484,6 @@ object RFCDefinitions {
             }
         }
     }
-
 
     // pct-encoded   = "%" HEXDIG HEXDIG
     private fun RFC3986_buildPctEncoded(forger: Forger, builder: StringBuilder) {

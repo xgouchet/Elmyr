@@ -8,7 +8,7 @@ import fr.xgouchet.elmyr.Forger
 class QuantifierFromN(val n: Int) : Quantifier {
 
     override fun getQuantity(forger: Forger): Int {
-        return forger.anInt(n, n + 16)
+        return forger.anInt(n, n + Forger.TINY_THRESHOLD)
     }
 
     override fun describe(builder: StringBuilder) {

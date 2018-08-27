@@ -7,10 +7,10 @@ package fr.xgouchet.elmyr.regex
  */
 class RegexRangeNode(parent: RegexParentNode) : RegexParentNode(parent) {
 
-    internal var readingFrom = true
+    private var readingFrom = true
 
-    internal var from = 0
-    internal var to = 0
+    private var from = 0
+    private var to = 0
 
     override fun handle(c: Char): Boolean {
         if (c == '}') return false
@@ -20,6 +20,7 @@ class RegexRangeNode(parent: RegexParentNode) : RegexParentNode(parent) {
         } else {
             handleTo(c)
         }
+
         return true
     }
 
@@ -35,18 +36,17 @@ class RegexRangeNode(parent: RegexParentNode) : RegexParentNode(parent) {
             else -> throw IllegalStateException("Unexpected character in range : ‘$c’")
         }
 
-        from = (from * 10) + digit
+        from = (from * BASE_10) + digit
     }
 
     private fun handleTo(c: Char) {
-        val digit: Int
-        when (c) {
-            '1', '2', '3', '4', '5', '6', '7', '8', '9' -> digit = (c - '1') + 1
-            '0' -> digit = 0
+        val digit = when (c) {
+            '1', '2', '3', '4', '5', '6', '7', '8', '9' -> (c - '1') + 1
+            '0' -> 0
             else -> throw IllegalStateException("Unexpected character in range : ‘$c’")
         }
 
-        to = (to * 10) + digit
+        to = (to * BASE_10) + digit
     }
 
     override fun describe(builder: StringBuilder) {
@@ -60,12 +60,16 @@ class RegexRangeNode(parent: RegexParentNode) : RegexParentNode(parent) {
     }
 
     fun toQuantifier(): Quantifier {
-        if (readingFrom) {
-            return QuantifierN(from)
+        return if (readingFrom) {
+            QuantifierN(from)
         } else if (to == 0) {
-            return QuantifierFromN(from)
+            QuantifierFromN(from)
         } else {
-            return QuantifierFromNToM(from, to)
+            QuantifierFromNToM(from, to)
         }
+    }
+
+    companion object {
+        const val BASE_10 = 10
     }
 }

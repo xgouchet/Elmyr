@@ -96,11 +96,12 @@ With Elmyr, you can forge integer values (eg: `42`, `24601`, `4815162342`, …).
     - _script_: the standard deviation value of the distribution
 
 
- - **fun aTimestamp(range: Long = ONE_YEAR): Long **
+ - **fun aTimestamp(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECOND): Long **
  
     Returns a long that can be used as a timestamp, picked in a range around the current time.
     
-    - _range_: the range around the current time, in milliseconds
+    - _range_: the range around the current time, in the given unit
+    - _unit_: the time unit the range is given in
 
 
 ---
@@ -331,6 +332,20 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
     Returns a string forming a valid path for the given platform (or current for `aLocalPath`).
     
     - _absolute_: whether to build an absolute or relative path
+
+---
+
+### Forging Dates
+
+
+ - **fun aDate(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECOND): String**
+ - **fun aFutureDate(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECOND): String**
+ - **fun aPastDate(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECOND): String**
+
+     Returns a java.util.Date object, picked in a range around the current time.
+
+     - _range_: the range around the current time, in the given unit
+     - _unit_: the time unit the range is given in
 
 ---
 

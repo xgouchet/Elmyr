@@ -18,14 +18,13 @@ class ForgedFloat(
     : ForgedProperty<Float>(forger) {
 
     override fun generate(forger: Forger): Float {
-        if (standardDeviation >= 0) {
-            return forger.aGaussianFloat(mean, standardDeviation)
+        return if (standardDeviation >= 0) {
+            forger.aGaussianFloat(mean, standardDeviation)
         } else if ((min != Float.NEGATIVE_INFINITY) and (max != Float.POSITIVE_INFINITY)) {
-            return forger.aFloat(min, max)
+            forger.aFloat(min, max)
         } else {
-            return forger.aFloat(constraint)
+            forger.aFloat(constraint)
         }
     }
 
 }
-

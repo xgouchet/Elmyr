@@ -5,11 +5,12 @@ import fr.xgouchet.elmyr.Forger
 /**
  * @author Xavier F. Gouchet
  */
+@Suppress("ComplexMethod")
 class RegexBuilder(regex: String) {
 
-    internal var rootNode: RegexParentNode = RegexParentNode()
-    internal var ongoingNode: RegexParentNode = rootNode
-    internal var escapeNext = false
+    private var rootNode: RegexParentNode = RegexParentNode()
+    private var ongoingNode: RegexParentNode = rootNode
+    private var escapeNext = false
 
     init {
         parse(regex)
@@ -29,7 +30,7 @@ class RegexBuilder(regex: String) {
 
     private fun handleEscapedCharacter(c: Char) {
         when (c) {
-        // character classes
+            // character classes
             's' -> ongoingNode.add(RegexWhitespaceNode(ongoingNode))
             'S' -> ongoingNode.add(RegexNonWhitespaceNode(ongoingNode))
             'w' -> ongoingNode.add(RegexWordCharNode(ongoingNode))
@@ -37,11 +38,11 @@ class RegexBuilder(regex: String) {
             'W' -> ongoingNode.add(RegexNonWordCharNode(ongoingNode))
             'D' -> ongoingNode.add(RegexNonDigitCharNode(ongoingNode))
 
-        // whitespaces
+            // whitespaces
             'n' -> ongoingNode.add(RawChar('\n', ongoingNode))
             't' -> ongoingNode.add(RawChar('\t', ongoingNode))
 
-        // literal escaped characters
+            // literal escaped characters
             '\\', '|', '^', '-', '=', '$', '!', '?', '*', '+', '.',
             '{', '}', '(', ')', '[', ']', '<', '>' -> ongoingNode.add(RawChar(c, ongoingNode))
 
@@ -49,6 +50,7 @@ class RegexBuilder(regex: String) {
         }
     }
 
+    @Suppress("ThrowsCount")
     private fun handleCharacter(c: Char) {
         if (ongoingNode.handle(c)) return
 
@@ -85,7 +87,8 @@ class RegexBuilder(regex: String) {
                 ongoingNode = group
             }
             '}' -> {
-                val rangeNode = ongoingNode as? RegexRangeNode ?: throw IllegalStateException("Expecting to be reading a range")
+                val rangeNode = ongoingNode as? RegexRangeNode
+                        ?: throw IllegalStateException("Expecting to be reading a range")
                 val rangeQuantifier = rangeNode.toQuantifier()
                 ongoingNode = ongoingNode.parent ?: throw IllegalStateException()
                 ongoingNode.updateLastElementQuantfier(rangeQuantifier)
@@ -134,4 +137,3 @@ class RegexBuilder(regex: String) {
     }
 
 }
-

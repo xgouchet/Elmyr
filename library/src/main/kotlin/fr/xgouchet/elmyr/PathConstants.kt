@@ -10,9 +10,8 @@ val MAC_ROOTS = listOf("", "/Applications", "/Developer", "/Library", "/Network"
         "/usr/lib", "/usr/share", "/usr/local", "/usr/local/bin", "/var", "/var/lib", "/var/log")
 @JvmField
 val WINDOWS_ROOTS = listOf("A:", "C:", "D:", "C:\\Program Files", "C:\\Program Files (x86)",
-        "C:\\Program Files\\Common Files", "C:\\ProgramData", "C:\\Users", "C:\\Users\\Public", "C:\\Documents and Settings",
-        "C:\\Windows", "C:\\Windows\\System32")
-
+        "C:\\Program Files\\Common Files", "C:\\ProgramData", "C:\\Users", "C:\\Users\\Public",
+        "C:\\Documents and Settings", "C:\\Windows", "C:\\Windows\\System32")
 
 @JvmField
 val UNIX_SEP = '/'
@@ -23,8 +22,12 @@ val WINDOWS_SEP = '\\'
 @JvmField
 val LINUX_FORBIDDEN_CHARS = arrayOf(0.toChar(), UNIX_SEP).toCharArray()
 
+@Suppress("MagicNumber")
 @JvmField
-val WINDOWS_FORBIDDEN_CHARS = IntArray(32) { it }.map { it.toChar() }.union(listOf('<', '>', ':', '"', '/', '\\', '|', '?', '.')).toCharArray()
+val WINDOWS_FORBIDDEN_CHARS = IntArray(32) { it }
+        .map { it.toChar() }
+        .union(listOf('<', '>', ':', '"', '/', '\\', '|', '?', '.'))
+        .toCharArray()
 
 @JvmField
 val WINDOWS_RESERVED_FILENAMES = listOf("CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4",

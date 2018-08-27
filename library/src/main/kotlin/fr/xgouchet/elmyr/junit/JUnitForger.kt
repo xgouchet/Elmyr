@@ -31,7 +31,11 @@ class JUnitForger :
     }
 
     private fun reset() {
-        val seed = (System.nanoTime() and 0x7FFFFFFF)
+        val seed = (System.nanoTime() and SEED_MASK)
         reset(seed)
+    }
+
+    companion object {
+        const val SEED_MASK = 0x7FFFFFFFL
     }
 }

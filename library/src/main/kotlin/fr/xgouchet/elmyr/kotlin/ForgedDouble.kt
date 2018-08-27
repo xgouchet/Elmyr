@@ -18,14 +18,13 @@ class ForgedDouble(
     : ForgedProperty<Double>(forger) {
 
     override fun generate(forger: Forger): Double {
-        if (standardDeviation >= 0) {
-            return forger.aGaussianDouble(mean, standardDeviation)
+        return if (standardDeviation >= 0) {
+            forger.aGaussianDouble(mean, standardDeviation)
         } else if ((min != Double.NEGATIVE_INFINITY) and (max != Double.POSITIVE_INFINITY)) {
-            return forger.aDouble(min, max)
+            forger.aDouble(min, max)
         } else {
-            return forger.aDouble(constraint)
+            forger.aDouble(constraint)
         }
     }
 
 }
-

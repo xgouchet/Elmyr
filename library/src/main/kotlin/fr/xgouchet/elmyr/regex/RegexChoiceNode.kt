@@ -12,17 +12,17 @@ internal class RegexChoiceNode(parent: RegexParentNode? = null)
     private var ongoingRange: Boolean = false
 
     override fun handle(c: Char): Boolean {
-        when (c) {
+        return when (c) {
             '*', '.', '+', '?' -> {
                 add(RawChar(c, this))
-                return true
+                true
             }
             '-' -> {
                 ongoingRange = true
-                return true
+                true
             }
+            else -> false
         }
-        return false
     }
 
     override fun add(b: RegexNode) {
@@ -39,7 +39,20 @@ internal class RegexChoiceNode(parent: RegexParentNode? = null)
         }
     }
 
-    fun buildRange(from: RegexNode, to: RegexNode): RegexNode? {
+    override fun describe(builder: StringBuilder) {
+        builder.append(("["))
+        super.describe(builder)
+        builder.append(("]"))
+    }
+
+    override fun buildIteration(forger: Forger, builder: StringBuilder) {
+        val node = forger.anElementFrom(children)
+        node.buildIteration(forger, builder)
+    }
+
+    // TODO cleanup this method !
+    @Suppress("ReturnCount")
+    private fun buildRange(from: RegexNode, to: RegexNode): RegexNode? {
         if (from !is RawChar) return null
         if (to !is RawChar) return null
 
@@ -55,14 +68,4 @@ internal class RegexChoiceNode(parent: RegexParentNode? = null)
         return RegexCharRangeNode(fromChar, toChar, this)
     }
 
-    override fun describe(builder: StringBuilder) {
-        builder.append(("["))
-        super.describe(builder)
-        builder.append(("]"))
-    }
-
-    override fun buildIteration(forger: Forger, builder: StringBuilder) {
-        val node = forger.anElementFrom(children)
-        node.buildIteration(forger, builder)
-    }
 }
