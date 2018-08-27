@@ -6,14 +6,18 @@ import java.io.File
 import java.lang.Integer.min
 import java.lang.Math.round
 import java.util.ArrayList
+import java.util.Date
 import java.util.Random
 import java.util.concurrent.TimeUnit
-
 
 /**
  * @author Xavier F. Gouchet
  */
+@Suppress("LargeClass", "TooManyFunctions", "ComplexMethod", "ReturnCount")
 open class Forger {
+
+    // TODO cleanup complext methods
+    // TODO cleanup return count issues
 
     private val rng = java.util.Random()
     var ignorePreconditionsErrors: Boolean = false
@@ -43,7 +47,7 @@ open class Forger {
      * @return a boolean
      */
     @JvmOverloads
-    fun aBool(probability: Float = 0.5f): Boolean {
+    fun aBool(probability: Float = HALF_PROBABILITY): Boolean {
         return rng.nextFloat() < probability
     }
 
@@ -86,7 +90,7 @@ open class Forger {
         val range = max.toLong() - min.toLong()
         val rn = (Math.abs(rng.nextLong()) % range) + min
 
-        return (rn and 0xFFFFFFFFL).toInt()
+        return (rn and MAX_INT).toInt()
     }
 
     /**
@@ -141,7 +145,7 @@ open class Forger {
      * @return an int picked from a gaussian distribution (aka bell curve)
      */
     @JvmOverloads
-    fun aGaussianInt(mean: Int = 0, standardDeviation: Int = 100): Int {
+    fun aGaussianInt(mean: Int = 0, standardDeviation: Int = DEFAULT_STDEV_INT): Int {
         if (mean > MEAN_THRESHOLD_INT) {
             preconditionException("Cannot use a mean greater than $MEAN_THRESHOLD_INT due to distribution imprecision")
         }
@@ -220,7 +224,7 @@ open class Forger {
      * @return an long picked from a gaussian distribution (aka bell curve)
      */
     @JvmOverloads
-    fun aGaussianLong(mean: Long = 0L, standardDeviation: Long = 100L): Long {
+    fun aGaussianLong(mean: Long = 0L, standardDeviation: Long = DEFAULT_STDEV_INT.toLong()): Long {
         if (mean > MEAN_THRESHOLD_LONG) {
             preconditionException("Cannot use a mean greater than $MEAN_THRESHOLD_LONG due to distribution imprecision")
         }
@@ -239,7 +243,7 @@ open class Forger {
     }
 
     /**
-     * @return a long to be used as a timestamp, picked in a milliseconds range around today
+     * @return a long to be used as a timestamp, picked in the given range around now
      */
     fun aTimestamp(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECONDS): Long {
         if (range <= 0) {
@@ -250,6 +254,47 @@ open class Forger {
         val min = -rangeMs
         val now = System.currentTimeMillis()
         return now + aLong(min, rangeMs)
+    }
+
+    // endregion
+
+    // region Date
+
+    /**
+     * @return a date, picked in the given range around now
+     */
+    fun aDate(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECONDS): Date {
+        return Date(aTimestamp(range, unit))
+    }
+
+    /**
+     * @return a date, picked in the given range after now
+     */
+    fun aFuturDate(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECONDS): Date {
+        if (range <= 0) {
+            preconditionException("Time range ($range ms) must be strictly positive")
+        }
+
+        val rangeMs = unit.toMillis(range)
+        val now = System.currentTimeMillis()
+        val timestamp = now + aLong(1, rangeMs)
+
+        return Date(timestamp)
+    }
+
+    /**
+     * @return a date, picked in the given range before now
+     */
+    fun aPastDate(range: Long = ONE_YEAR, unit: TimeUnit = TimeUnit.MILLISECONDS): Date {
+        if (range <= 0) {
+            preconditionException("Time range ($range ms) must be strictly positive")
+        }
+
+        val rangeMs = unit.toMillis(range)
+        val now = System.currentTimeMillis()
+        val timestamp = now - aLong(1, rangeMs)
+
+        return Date(timestamp)
     }
 
     // endregion
@@ -286,7 +331,7 @@ open class Forger {
 
         val range = max - min
         if (range == Float.POSITIVE_INFINITY) {
-            return (rng.nextFloat() - 0.5f) * Float.MAX_VALUE * 2
+            return (rng.nextFloat() - HALF_PROBABILITY) * Float.MAX_VALUE * 2
         } else {
             return (rng.nextFloat() * range) + min
         }
@@ -368,7 +413,7 @@ open class Forger {
 
         val range = max - min
         if (range == Double.POSITIVE_INFINITY) {
-            return (rng.nextDouble() - 0.5f) * Double.MAX_VALUE * 2
+            return (rng.nextDouble() - HALF_PROBABILITY) * Double.MAX_VALUE * 2
         } else {
             return (rng.nextDouble() * range) + min
         }
@@ -433,20 +478,20 @@ open class Forger {
         var result: Char
 
         do {
-            when (constraint) {
-                CharConstraint.ANY -> result = aChar()
-                CharConstraint.HEXADECIMAL -> result = anHexadecimalChar(case)
-                CharConstraint.ASCII -> result = anAsciiChar()
-                CharConstraint.ASCII_EXTENDED -> result = anExtendedAsciiChar()
-                CharConstraint.ALPHA -> result = anAlphabeticalChar(case)
-                CharConstraint.ALPHA_NUM -> result = anAlphaNumericalChar(case)
-                CharConstraint.NUMERICAL -> result = aNumericalChar()
-                CharConstraint.WHITESPACE -> result = aWhitespaceChar()
-                CharConstraint.NON_HEXADECIMAL -> result = aNonHexadecimalChar()
-                CharConstraint.NON_ALPHA -> result = aNonAlphabeticalChar()
-                CharConstraint.NON_ALPHA_NUM -> result = aNonAlphaNumericalChar()
-                CharConstraint.NON_NUMERICAL -> result = aNonNumericalChar()
-                CharConstraint.NON_WHITESPACE -> result = aNonWhitespaceChar()
+            result = when (constraint) {
+                CharConstraint.ANY -> aChar()
+                CharConstraint.HEXADECIMAL -> anHexadecimalChar(case)
+                CharConstraint.ASCII -> anAsciiChar()
+                CharConstraint.ASCII_EXTENDED -> anExtendedAsciiChar()
+                CharConstraint.ALPHA -> anAlphabeticalChar(case)
+                CharConstraint.ALPHA_NUM -> anAlphaNumericalChar(case)
+                CharConstraint.NUMERICAL -> aNumericalChar()
+                CharConstraint.WHITESPACE -> aWhitespaceChar()
+                CharConstraint.NON_HEXADECIMAL -> aNonHexadecimalChar()
+                CharConstraint.NON_ALPHA -> aNonAlphabeticalChar()
+                CharConstraint.NON_ALPHA_NUM -> aNonAlphaNumericalChar()
+                CharConstraint.NON_NUMERICAL -> aNonNumericalChar()
+                CharConstraint.NON_WHITESPACE -> aNonWhitespaceChar()
             }
         } while (forbiddenChars != null && result in forbiddenChars)
 
@@ -687,27 +732,26 @@ open class Forger {
      */
     @JvmOverloads
     fun aSentence(case: Case = Case.ANY, size: Int = -1): String {
-        val resultSize: Int = if (size > 0) size else (aSmallInt() + 4)
+        val resultSize: Int = if (size > 0) size else (aSmallInt() + MIN_SENTENCE_SIZE)
 
-        // The only way to have a punctuated sentende. Kind of
+        // The only way to have a punctuated sentence of size 1. Kind of…
         if (resultSize == 1) return "‽"
 
         val builder = StringBuilder()
 
         while (builder.length < resultSize) {
-            val actualCase: Case
-            if (case == Case.CAPITALIZED_SENTENCE) {
-                actualCase = if (builder.isEmpty()) Case.CAPITALIZE else Case.LOWER
+            val actualCase = if (case == Case.CAPITALIZED_SENTENCE) {
+                if (builder.isEmpty()) Case.CAPITALIZE else Case.LOWER
             } else {
-                actualCase = case
+                case
             }
             val remainingSize = resultSize - builder.length
 
-            if (remainingSize < 7) {
+            if (remainingSize < AVERAGE_WORD_SIZE + 1) {
                 builder.append(aWord(actualCase, remainingSize - 1))
                 builder.append(".") // TODO maybe randomize the punctuation ?
             } else {
-                val wordSize = min(anInt(2, 10), remainingSize - 5)
+                val wordSize = min(anInt(MIN_SENTENCE_WORD_SIZE, MAX_SENTENCE_WORD_SIZE), remainingSize - AVERAGE_WORD_SIZE)
                 builder.append(aWord(actualCase, wordSize))
                 builder.append(" ")
             }
@@ -724,7 +768,7 @@ open class Forger {
     @JvmOverloads
     fun anHexadecimalString(case: Case = Case.LOWER, size: Int = -1): String {
         val resultSize = getWordSize(size)
-        return String(CharArray(resultSize, { anHexadecimalChar(case) }))
+        return String(CharArray(resultSize) { anHexadecimalChar(case) })
     }
 
     /**
@@ -772,10 +816,10 @@ open class Forger {
     @JvmOverloads
     fun aLinuxPath(absolute: Boolean? = null): String {
         val isAbsolute = absolute ?: aBool()
-        val ancestorRoot = Array(aTinyInt(), { ".." }).joinToString(UNIX_SEP.toString()) { it }
+        val ancestorRoot = Array(aTinyInt()) { ".." }.joinToString(UNIX_SEP.toString()) { it }
         val roots = if (isAbsolute) LINUX_ROOTS else listOf(".", ancestorRoot)
         val forbiddenChars = arrayOf(0.toChar(), UNIX_SEP).toCharArray()
-        return aPath(UNIX_SEP.toString(), roots, 1024, 128, forbiddenChars)
+        return aPath(UNIX_SEP.toString(), roots, MAX_PATH_SIZE, MAX_FILENAME_SIZE, forbiddenChars)
     }
 
     /**
@@ -787,7 +831,7 @@ open class Forger {
         val isAbsolute = absolute ?: aBool()
         val ancestorRoot = Array(aTinyInt(), { ".." }).joinToString(WINDOWS_SEP.toString()) { it }
         val roots = if (isAbsolute) WINDOWS_ROOTS else listOf(".", ancestorRoot)
-        return aPath(WINDOWS_SEP.toString(), roots, 1024, 128, WINDOWS_FORBIDDEN_CHARS, WINDOWS_RESERVED_FILENAMES)
+        return aPath(WINDOWS_SEP.toString(), roots, MAX_PATH_SIZE, MAX_FILENAME_SIZE, WINDOWS_FORBIDDEN_CHARS, WINDOWS_RESERVED_FILENAMES)
     }
 
     /**
@@ -800,7 +844,7 @@ open class Forger {
         val ancestorRoot = Array(aTinyInt(), { ".." }).joinToString(UNIX_SEP.toString()) { it }
         val roots = if (isAbsolute) MAC_ROOTS else listOf(".", ancestorRoot)
         val forbiddenChars = arrayOf(0.toChar(), UNIX_SEP).toCharArray()
-        return aPath(UNIX_SEP.toString(), roots, 1024, 128, forbiddenChars)
+        return aPath(UNIX_SEP.toString(), roots, MAX_PATH_SIZE, MAX_FILENAME_SIZE, forbiddenChars)
     }
 
     /**
@@ -827,7 +871,7 @@ open class Forger {
      * @return an email String
      */
     fun anEmail(rfc2822Compliant: Boolean = false): String {
-        val builder = StringBuilder(255)
+        val builder = StringBuilder(MAX_EMAIL_SIZE)
         if (rfc2822Compliant) {
             RFCDefinitions.RFC2822_buildEmail(this, builder)
         } else {
@@ -840,7 +884,7 @@ open class Forger {
      * @return an IP address (using the IPv4 format)
      */
     fun anIPv4Address(): String {
-        val builder = StringBuilder(16)
+        val builder = StringBuilder(MAX_IPv4_SIZE)
         RFCDefinitions.RFC791_buildIPv4Address(this, builder)
         return builder.toString()
     }
@@ -849,7 +893,7 @@ open class Forger {
      * @return an IP address (using the IPv6 format)
      */
     fun anIPv6Address(): String {
-        val builder = StringBuilder(48)
+        val builder = StringBuilder(MAX_IPv6_SIZE)
         RFCDefinitions.RFC4291_buildIPv6Address(this, builder)
         return builder.toString()
     }
@@ -864,11 +908,24 @@ open class Forger {
      * @return either the given value, or null (with the given probability)
      */
     @JvmOverloads
-    fun <T> aNullableFrom(value: T, nullProbability: Float = 0.5f): T? {
-        if (aBool(nullProbability)) {
-            return null
+    fun <T> aNullableFrom(value: T, nullProbability: Float = HALF_PROBABILITY): T? {
+        return if (aBool(nullProbability)) {
+            null
         } else {
-            return value
+            value
+        }
+    }
+
+    /**
+     * @param forging the lambda to forge a non null value
+     * @param probability the probability the result will be null (default 0.5f)
+     * @return either the given value, or null (with the given probability)
+     */
+    fun <T> aNullableFrom(nullProbability: Float = HALF_PROBABILITY, forging: Forger.() -> T): T? {
+        return if (aBool(nullProbability)) {
+            null
+        } else {
+            forging.invoke(this)
         }
     }
 
@@ -974,7 +1031,7 @@ open class Forger {
     @JvmOverloads
     fun anIntArray(constraint: IntConstraint, size: Int = -1): IntArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return IntArray(arraySize, { anInt(constraint) })
+        return IntArray(arraySize) { anInt(constraint) }
     }
 
     /**
@@ -986,7 +1043,7 @@ open class Forger {
     @JvmOverloads
     fun anIntArray(min: Int, max: Int, size: Int = -1): IntArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return IntArray(arraySize, { anInt(min, max) })
+        return IntArray(arraySize) { anInt(min, max) }
     }
 
     /**
@@ -996,9 +1053,9 @@ open class Forger {
      * @return an array of int with a gaussian distribution
      */
     @JvmOverloads
-    fun anIntArrayWithDistribution(mean: Int = 0, standardDeviation: Int = 100, size: Int = -1): IntArray {
+    fun anIntArrayWithDistribution(mean: Int = 0, standardDeviation: Int = DEFAULT_STDEV_INT, size: Int = -1): IntArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return IntArray(arraySize, { aGaussianInt(mean, standardDeviation) })
+        return IntArray(arraySize) { aGaussianInt(mean, standardDeviation) }
     }
 
     /**
@@ -1009,7 +1066,7 @@ open class Forger {
     @JvmOverloads
     fun aLongArray(constraint: LongConstraint, size: Int = -1): LongArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return LongArray(arraySize, { aLong(constraint) })
+        return LongArray(arraySize) { aLong(constraint) }
     }
 
     /**
@@ -1021,7 +1078,7 @@ open class Forger {
     @JvmOverloads
     fun aLongArray(min: Long, max: Long, size: Int = -1): LongArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return LongArray(arraySize, { aLong(min, max) })
+        return LongArray(arraySize) { aLong(min, max) }
     }
 
     /**
@@ -1031,9 +1088,9 @@ open class Forger {
      * @return an array of long with a gaussian distribution
      */
     @JvmOverloads
-    fun aLongArrayWithDistribution(mean: Long = 0, standardDeviation: Long = 100, size: Int = -1): LongArray {
+    fun aLongArrayWithDistribution(mean: Long = 0, standardDeviation: Long = DEFAULT_STDEV_INT.toLong(), size: Int = -1): LongArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return LongArray(arraySize, { aGaussianLong(mean, standardDeviation) })
+        return LongArray(arraySize) { aGaussianLong(mean, standardDeviation) }
     }
 
     /**
@@ -1044,7 +1101,7 @@ open class Forger {
     @JvmOverloads
     fun aFloatArray(constraint: FloatConstraint, size: Int = -1): FloatArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return FloatArray(arraySize, { aFloat(constraint) })
+        return FloatArray(arraySize) { aFloat(constraint) }
     }
 
     /**
@@ -1056,7 +1113,7 @@ open class Forger {
     @JvmOverloads
     fun aFloatArray(min: Float, max: Float, size: Int = -1): FloatArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return FloatArray(arraySize, { aFloat(min, max) })
+        return FloatArray(arraySize) { aFloat(min, max) }
     }
 
     /**
@@ -1068,7 +1125,7 @@ open class Forger {
     @JvmOverloads
     fun aFloatArrayWithDistribution(mean: Float = 0f, standardDeviation: Float = 1f, size: Int = -1): FloatArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return FloatArray(arraySize, { aGaussianFloat(mean, standardDeviation) })
+        return FloatArray(arraySize) { aGaussianFloat(mean, standardDeviation) }
     }
 
     /**
@@ -1079,7 +1136,7 @@ open class Forger {
     @JvmOverloads
     fun aDoubleArray(constraint: DoubleConstraint, size: Int = -1): DoubleArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return DoubleArray(arraySize, { aDouble(constraint) })
+        return DoubleArray(arraySize) { aDouble(constraint) }
     }
 
     /**
@@ -1091,7 +1148,7 @@ open class Forger {
     @JvmOverloads
     fun aDoubleArray(min: Double, max: Double, size: Int = -1): DoubleArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return DoubleArray(arraySize, { aDouble(min, max) })
+        return DoubleArray(arraySize) { aDouble(min, max) }
     }
 
     /**
@@ -1103,7 +1160,7 @@ open class Forger {
     @JvmOverloads
     fun aDoubleArrayWithDistribution(mean: Double = 0.0, standardDeviation: Double = 1.0, size: Int = -1): DoubleArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return DoubleArray(arraySize, { aGaussianDouble(mean, standardDeviation) })
+        return DoubleArray(arraySize) { aGaussianDouble(mean, standardDeviation) }
     }
 
     /**
@@ -1114,7 +1171,7 @@ open class Forger {
     @JvmOverloads
     fun aCharArray(constraint: CharConstraint, case: Case = Case.ANY, size: Int = -1): CharArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return CharArray(arraySize, { aChar(constraint, case) })
+        return CharArray(arraySize) { aChar(constraint, case) }
     }
 
     /**
@@ -1126,7 +1183,7 @@ open class Forger {
     @JvmOverloads
     fun aCharArray(min: Char, max: Char, size: Int = -1): CharArray {
         val arraySize = if (size < 0) aTinyInt() else size
-        return CharArray(arraySize, { aChar(min, max) })
+        return CharArray(arraySize) { aChar(min, max) }
     }
 
     /**
@@ -1137,7 +1194,7 @@ open class Forger {
     @JvmOverloads
     fun aStringArray(constraint: StringConstraint, case: Case = Case.ANY, size: Int = -1): Array<String> {
         val arraySize = if (size < 0) aTinyInt() else size
-        return Array(arraySize, { aString(constraint, case) })
+        return Array(arraySize) { aString(constraint, case) }
     }
 
     /**
@@ -1148,7 +1205,7 @@ open class Forger {
     @JvmOverloads
     fun aStringArray(constraint: CharConstraint, case: Case = Case.ANY, size: Int = -1): Array<String> {
         val arraySize = if (size < 0) aTinyInt() else size
-        return Array(arraySize, { aString(constraint, case) })
+        return Array(arraySize) { aString(constraint, case) }
     }
 
     /**
@@ -1159,7 +1216,7 @@ open class Forger {
     @JvmOverloads
     fun aStringArray(regex: String, size: Int = -1): Array<String> {
         val arraySize = if (size < 0) aTinyInt() else size
-        return Array(arraySize, { aStringMatching(regex) })
+        return Array(arraySize) { aStringMatching(regex) }
     }
 
     /**
@@ -1170,7 +1227,7 @@ open class Forger {
     @JvmOverloads
     fun aStringArray(regex: Regex, size: Int = -1): Array<String> {
         val arraySize = if (size < 0) aTinyInt() else size
-        return Array(arraySize, { aStringMatching(regex) })
+        return Array(arraySize) { aStringMatching(regex) }
     }
 
     /**
@@ -1190,7 +1247,6 @@ open class Forger {
 
         // fast exit : output <= 0
         if (outputSize <= 0) return emptyList()
-
 
         val inputSize = list.size
         val result = ArrayList<T>(outputSize)
@@ -1288,7 +1344,7 @@ open class Forger {
             result[j] = temp
         }
 
-        return listOf(*result)
+        return result.asList()
     }
 
     // endregion
@@ -1299,6 +1355,7 @@ open class Forger {
      * @param enumClass an Enum class
      * @return an element “randomly” picked in the enum values
      */
+    @Suppress("SpreadOperator")
     fun <E : Enum<E>> aValueFrom(enumClass: Class<E>): E {
         return anElementFrom(*enumClass.enumConstants)
     }
@@ -1307,7 +1364,7 @@ open class Forger {
 
     // region Internal
 
-    internal fun preconditionException(message: String): Nothing {
+    private fun preconditionException(message: String): Nothing {
         if (ignorePreconditionsErrors) {
             throw AssumptionViolatedException(message)
         } else {
@@ -1315,10 +1372,9 @@ open class Forger {
         }
     }
 
-    internal fun unsupportedFeature(message: String): Nothing {
+    private fun unsupportedFeature(message: String): Nothing {
         throw UnsupportedOperationException("$message. You can report an issue or submit a PR to https://github.com/xgouchet/Elmyr/")
     }
-
 
     /**
      * @param separator the char/string to use as separator. Defaults to the current platform's separator.
@@ -1328,12 +1384,14 @@ open class Forger {
      * @param forbiddenChars an array of reserved characters forbidden in a directory or file name
      * @return a String matching a standard path format
      */
-    internal fun aPath(separator: String = File.separator,
-                       roots: List<String>,
-                       maxPathSize: Int,
-                       maxFileSize: Int,
-                       forbiddenChars: CharArray? = null,
-                       reservedFilenames: List<String>? = null): String {
+    // TODO extract to separate class
+    @Suppress("LongParameterList", "MagicNumber")
+    private fun aPath(separator: String = File.separator,
+                      roots: List<String>,
+                      maxPathSize: Int,
+                      maxFileSize: Int,
+                      forbiddenChars: CharArray? = null,
+                      reservedFilenames: List<String>? = null): String {
         val builder = StringBuilder()
         var segments = 0
 
@@ -1344,7 +1402,7 @@ open class Forger {
         }
 
         val isFile = aBool()
-        val fileSize = if (isFile) anInt(3, maxFileSize) else 0
+        val fileSize = if (isFile) anInt(5, maxFileSize) else 0
         val maxSize = (maxPathSize - fileSize - separator.length)
         val reserved = reservedFilenames ?: emptyList()
 
@@ -1365,27 +1423,31 @@ open class Forger {
         }
 
         if (isFile) {
-
+            val baseName = aString(CharConstraint.ASCII, size = fileSize - 5, forbiddenChars = forbiddenChars)
+            val ext = aString(CharConstraint.ALPHA_NUM, size = 3)
+            builder.append(baseName)
+                    .append(".")
+                    .append(ext)
         }
 
         return builder.toString()
     }
 
-
     private fun getWordSize(size: Int): Int {
         return if (size > 0) size else aTinyInt()
     }
-
 
     // endregion
 
     companion object {
 
         // Int
-        const internal val TINY_THRESHOLD = 0x20
-        const internal val SMALL_THRESHOLD = 0x100
-        const internal val BIG_THRESHOLD = 0x10000
-        const internal val HUGE_THRESHOLD = 0x1000000
+        internal const val TINY_THRESHOLD = 0x20
+        internal const val SMALL_THRESHOLD = 0x100
+        internal const val BIG_THRESHOLD = 0x10000
+        internal const val HUGE_THRESHOLD = 0x1000000
+        private const val MAX_INT = 0xFFFFFFFFL
+        private const val DEFAULT_STDEV_INT = 100
 
         @JvmField internal val MEAN_THRESHOLD_INT = Math.round(Math.sqrt(Int.MAX_VALUE.toDouble())).toInt()
 
@@ -1395,21 +1457,35 @@ open class Forger {
 
         // FLOAT
         @JvmField internal val MEAN_THRESHOLD_FLOAT = Math.sqrt(Float.MAX_VALUE.toDouble()).toFloat()
+        internal const val HALF_PROBABILITY = 0.5f
 
         // DOUBLE
         @JvmField internal val MEAN_THRESHOLD_DOUBLE = Math.sqrt(Double.MAX_VALUE)
 
         // Char
-        const internal val MIN_PRINTABLE = 0x20.toChar()
-        const internal val MAX_ASCII = 0x7F.toChar()
-        const internal val MAX_ASCII_EXTENDED = 0xFF.toChar()
-        const internal val MAX_UTF8 = 0xD800.toChar()
+        internal const val MIN_PRINTABLE = 0x20.toChar()
+        internal const val MAX_ASCII = 0x7F.toChar()
+        internal const val MAX_ASCII_EXTENDED = 0xFF.toChar()
+        internal const val MAX_UTF8 = 0xD000.toChar()
+
+        private const val MIN_SENTENCE_SIZE = 4
+        private const val MIN_SENTENCE_WORD_SIZE = 1
+        private const val MAX_SENTENCE_WORD_SIZE = 12
+        private const val AVERAGE_WORD_SIZE = (MIN_SENTENCE_WORD_SIZE + MAX_SENTENCE_WORD_SIZE) / 2
+
+        // Path
+        private const val MAX_PATH_SIZE = 1024
+        private const val MAX_FILENAME_SIZE = 128
+        private const val MAX_EMAIL_SIZE = 256
+        private const val MAX_IPv4_SIZE = 16
+        private const val MAX_IPv6_SIZE = 64
 
         @JvmField internal val ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray()
         @JvmField internal val ALPHA_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
         @JvmField internal val ALPHA_LOWER = "abcdefghijklmnopqrstuvwxyz".toCharArray()
 
-        @JvmField internal val ALPHA_NUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
+        @JvmField
+        internal val ALPHA_NUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
         @JvmField internal val ALPHA_NUM_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789".toCharArray()
         @JvmField internal val ALPHA_NUM_LOWER = "abcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
 
@@ -1429,7 +1505,6 @@ open class Forger {
         @JvmField internal val DIGIT = "0123456789".toCharArray()
 
         @JvmField internal val WHITESPACE = "\t\n\r ".toCharArray()
-
 
     }
 

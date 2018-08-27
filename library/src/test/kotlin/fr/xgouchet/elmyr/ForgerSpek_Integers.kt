@@ -26,16 +26,12 @@ class ForgerSpek_Integers : Spek({
         context("forging booleans ") {
 
             it("forges random booleans (with 50% probability)") {
-                verifyProbability(testRepeatCountHuge,
-                        0.5,
-                        { forger.aBool() })
+                verifyProbability(testRepeatCountHuge, 0.5) { forger.aBool() }
             }
 
             it("forges random boolean with probability") {
                 val probability = forger.aFloat(0f, 1f)
-                verifyProbability(testRepeatCountHuge,
-                        probability.toDouble(),
-                        { forger.aBool(probability) })
+                verifyProbability(testRepeatCountHuge, probability.toDouble()) { forger.aBool(probability) }
             }
         }
 
@@ -329,56 +325,56 @@ class ForgerSpek_Integers : Spek({
 
                 assertThat(max).isGreaterThan(min)
 
-                repeat(16, {
+                repeat(16) {
                     val long = forger.aLong(min, max)
                     assertThat(long)
                             .isGreaterThanOrEqualTo(min)
                             .isLessThan(max)
-                })
+                }
             }
 
             it("forges an long in a small range") {
                 val min = forger.aLong()
                 val max = min + 3
 
-                repeat(16, {
+                repeat(16) {
                     val long = forger.aLong(min, max)
                     assertThat(long)
                             .isGreaterThanOrEqualTo(min)
                             .isLessThan(max)
-                })
+                }
             }
 
             it("forges a positive long") {
-                repeat(16, {
+                repeat(16) {
                     val long = forger.aPositiveLong(strict = false)
                     assertThat(long)
                             .isGreaterThanOrEqualTo(0)
-                })
+                }
             }
 
             it("forges a strictly positive long") {
-                repeat(16, {
+                repeat(16) {
                     val long = forger.aPositiveLong(strict = true)
                     assertThat(long)
                             .isGreaterThan(0)
-                })
+                }
             }
 
             it("forges a negative long") {
-                repeat(16, {
+                repeat(16) {
                     val long = forger.aNegativeLong(strict = false)
                     assertThat(long)
                             .isLessThanOrEqualTo(0)
-                })
+                }
             }
 
             it("forges a strictly negative long") {
-                repeat(16, {
+                repeat(16) {
                     val long = forger.aNegativeLong(strict = true)
                     assertThat(long)
                             .isLessThan(0)
-                })
+                }
             }
 
             it("forges a gaussian distributed long") {
@@ -388,68 +384,67 @@ class ForgerSpek_Integers : Spek({
                 verifyGaussianDistribution(
                         testRepeatCountHuge,
                         mean.toDouble(),
-                        stdev.toDouble(),
-                        { forger.aGaussianLong(mean, stdev).toDouble() }
-                )
+                        stdev.toDouble()
+                ) { forger.aGaussianLong(mean, stdev).toDouble() }
             }
 
             it("forges mean when standard deviation is 0") {
                 val mean = forger.aLong(-1000L, 1000L)
                 val stdev = 0L
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.aGaussianLong(mean, stdev)
                     assertThat(result).isEqualTo(mean)
-                })
+                }
             }
         }
 
         context("forging constrained longs") {
 
             it("forges a long …") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val long = forger.aLong(LongConstraint.ANY)
                     // How do you assert that an long is an long ... ?
-                })
+                }
             }
 
             it("forges a positive long") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val long = forger.aLong(LongConstraint.POSITIVE)
                     assertThat(long)
                             .isGreaterThanOrEqualTo(0)
-                })
+                }
             }
 
             it("forges a strictly positive long") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val long = forger.aLong(LongConstraint.POSITIVE_STRICT)
                     assertThat(long)
                             .isGreaterThan(0)
-                })
+                }
             }
 
             it("forges a negative long") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val long = forger.aLong(LongConstraint.NEGATIVE)
                     assertThat(long)
                             .isLessThanOrEqualTo(0)
-                })
+                }
             }
 
             it("forges a strictly negative long") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val long = forger.aLong(LongConstraint.NEGATIVE_STRICT)
                     assertThat(long)
                             .isLessThan(0)
-                })
+                }
             }
         }
 
         context("forging timestamps") {
 
             it("forges a timestamp within a range") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val range = forger.aLong(min = 1,
                             max = TimeUnit.DAYS.toMillis(10 * 365))
                     val timestamp = forger.aTimestamp(range)
@@ -457,11 +452,11 @@ class ForgerSpek_Integers : Spek({
                     System.nanoTime()
                     assertThat(Math.abs(timestamp - now))
                             .isLessThanOrEqualTo(range)
-                })
+                }
             }
 
             it("forges a timestamp within a range and big unit") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val range = forger.aLong(min = 1, max = 24)
                     val timestamp = forger.aTimestamp(range, TimeUnit.HOURS)
                     val now = System.currentTimeMillis()
@@ -470,11 +465,11 @@ class ForgerSpek_Integers : Spek({
                     System.nanoTime()
                     assertThat(Math.abs(timestamp - now))
                             .isLessThanOrEqualTo(rangeMs)
-                })
+                }
             }
 
             it("forges a timestamp within a range and small unit") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val range = forger.aPositiveLong(strict = true)
                     val timestamp = forger.aTimestamp(range, TimeUnit.NANOSECONDS)
                     val now = System.currentTimeMillis()
@@ -483,17 +478,17 @@ class ForgerSpek_Integers : Spek({
                     System.nanoTime()
                     assertThat(Math.abs(timestamp - now))
                             .isLessThanOrEqualTo(rangeMs)
-                })
+                }
             }
 
             it("fails when range < 0") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val range = -forger.aLong(min = 0,
                             max = TimeUnit.DAYS.toMillis(10 * 365))
                     throws<IllegalArgumentException> {
                         forger.aTimestamp(range)
                     }
-                })
+                }
             }
         }
 

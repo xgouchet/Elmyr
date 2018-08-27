@@ -73,7 +73,9 @@ object RFCDefinitions {
 
         do {
             if (started) {
-                builder.append('.')
+                if (remainingSize > 1) {
+                    builder.append('.')
+                }
                 remainingSize--
             }
             wordSize = min(forger.anInt(1, 64), remainingSize)

@@ -541,19 +541,27 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
 
 ### Forging a nullable value
 
-All the values forged by Elmyr are guaranteed to be non null. If you want to have the odd `null` value, you can call the `nullable` method.
+All the values forged by Elmyr are guaranteed to be non null. If you want to have the odd `null` value, you can call the
+`aNullableFrom` method, or the `orNull` extension.
  
  - **fun <T> aNullableFrom(value: T, nullProbability: Float = 0.5f): T?**
+ - **fun <T> aNullableFrom(nullProbability: Float = HALF_PROBABILITY, forging: Forger.() -> T): T?**
  
     Returns either the input value, or null. 
     
     - _value_ the value to use
     - _nullProbability_ the probability used to return `null` instead of `value`
 
-    You can use another method from Forger, eg: 
+    You can use any value, or a lambda using a Forger method, eg:
     
     ```kotlin
     val s = forger.aNullableFrom(forger.aString())
+    ```
+
+    or
+
+    ```kotlin
+    val s = forger.aNullableFrom() { aString() }
     ```
 
 
