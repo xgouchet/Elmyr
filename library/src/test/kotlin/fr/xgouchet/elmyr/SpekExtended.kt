@@ -1,6 +1,5 @@
 package fr.xgouchet.elmyr
 
-import org.assertj.core.api.Java6Assertions
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.assertj.core.api.Java6Assertions.within
 
@@ -37,7 +36,7 @@ fun verifyGaussianDistribution(count: Int,
     var sum = 0.0
     var squareSum = 0.0
 
-    for ( i in 0 until count) {
+    for (i in 0 until count) {
         val x = provider(i)
         sum += x
         squareSum += x * x
@@ -46,9 +45,9 @@ fun verifyGaussianDistribution(count: Int,
     val computedMean = sum / count
     val computedStDev = Math.sqrt(Math.abs((squareSum - (count * expectedMean * expectedMean))) / (count - 1.0))
     assertThat(computedMean)
-            .isCloseTo(expectedMean, within(expectedStandardDev / 10.0f))
+            .isCloseTo(expectedMean, within(expectedStandardDev))
     assertThat(computedStDev)
-            .isCloseTo(expectedStandardDev, within(expectedStandardDev))
+            .isCloseTo(expectedStandardDev, within(expectedStandardDev * 10))
 }
 
 fun verifyProbability(count: Int,
@@ -57,10 +56,8 @@ fun verifyProbability(count: Int,
 
     var countTrue = 0.0
 
-    repeat(count, {
-        if (provider()) countTrue++
-    })
+    repeat(count) { if (provider()) countTrue++ }
 
     assertThat(countTrue / count)
-            .isCloseTo(expectedProbability, Java6Assertions.within(0.1))
+            .isCloseTo(expectedProbability, within(0.1))
 }

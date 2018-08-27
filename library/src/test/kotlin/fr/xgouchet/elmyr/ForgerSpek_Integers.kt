@@ -84,56 +84,56 @@ class ForgerSpek_Integers : Spek({
 
                 assertThat(max).isGreaterThan(min)
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(min, max)
                     assertThat(int)
                             .isGreaterThanOrEqualTo(min)
                             .isLessThan(max)
-                })
+                }
             }
 
             it("forges an int in a small range") {
                 val min = forger.anInt()
                 val max = min + 3
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(min, max)
                     assertThat(int)
                             .isGreaterThanOrEqualTo(min)
                             .isLessThan(max)
-                })
+                }
             }
 
             it("forges a positive int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.aPositiveInt(strict = false)
                     assertThat(int)
                             .isGreaterThanOrEqualTo(0)
-                })
+                }
             }
 
             it("forges a strictly positive int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.aPositiveInt(strict = true)
                     assertThat(int)
                             .isGreaterThan(0)
-                })
+                }
             }
 
             it("forges a negative int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.aNegativeInt(strict = false)
                     assertThat(int)
                             .isLessThanOrEqualTo(0)
-                })
+                }
             }
 
             it("forges a strictly negative int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.aNegativeInt(strict = true)
                     assertThat(int)
                             .isLessThan(0)
-                })
+                }
             }
 
             it("forges a gaussian distributed int") {
@@ -143,95 +143,94 @@ class ForgerSpek_Integers : Spek({
                 verifyGaussianDistribution(
                         testRepeatCountHuge,
                         mean.toDouble(),
-                        stdev.toDouble(),
-                        { forger.aGaussianInt(mean, stdev).toDouble() }
-                )
+                        stdev.toDouble()
+                ) { forger.aGaussianInt(mean, stdev).toDouble() }
             }
 
             it("forges mean when standard deviation is 0") {
                 val mean = forger.anInt(-1000, 1000)
                 val stdev = 0
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.aGaussianInt(mean, stdev)
                     assertThat(result).isEqualTo(mean)
-                })
+                }
             }
         }
 
         context("forging constrained integers") {
 
             it("forges an int …") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.ANY)
                     // How do you assert that an int is an int ... ?
-                })
+                }
             }
 
             it("forges a positive int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.POSITIVE)
                     assertThat(int)
                             .isGreaterThanOrEqualTo(0)
-                })
+                }
             }
 
             it("forges a strictly positive int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.POSITIVE_STRICT)
                     assertThat(int)
                             .isGreaterThan(0)
-                })
+                }
             }
 
             it("forges a negative int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.NEGATIVE)
                     assertThat(int)
                             .isLessThanOrEqualTo(0)
-                })
+                }
             }
 
             it("forges a strictly negative int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.NEGATIVE_STRICT)
                     assertThat(int)
                             .isLessThan(0)
-                })
+                }
             }
 
             it("forges a tiny int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.TINY)
                     assertThat(int)
                             .isGreaterThan(0)
                             .isLessThan(Forger.TINY_THRESHOLD)
-                })
+                }
             }
 
             it("forges a small int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.SMALL)
                     assertThat(int)
                             .isGreaterThan(0)
                             .isLessThan(Forger.SMALL_THRESHOLD)
-                })
+                }
             }
 
             it("forges a big int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.BIG)
                     assertThat(int)
                             .isGreaterThanOrEqualTo(Forger.BIG_THRESHOLD)
-                })
+                }
             }
 
             it("forges a huge int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.anInt(IntConstraint.HUGE)
                     assertThat(int)
                             .isGreaterThanOrEqualTo(Forger.HUGE_THRESHOLD)
-                })
+                }
             }
 
         }
@@ -239,37 +238,37 @@ class ForgerSpek_Integers : Spek({
         context("forging meaningful integers ") {
 
             it("forges a tiny int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.aTinyInt()
                     assertThat(int)
                             .isGreaterThan(0)
                             .isLessThan(Forger.TINY_THRESHOLD)
-                })
+                }
             }
 
             it("forges a small int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.aSmallInt()
                     assertThat(int)
                             .isGreaterThan(0)
                             .isLessThan(Forger.SMALL_THRESHOLD)
-                })
+                }
             }
 
             it("forges a big int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.aBigInt()
                     assertThat(int)
                             .isGreaterThanOrEqualTo(Forger.BIG_THRESHOLD)
-                })
+                }
             }
 
             it("forges a huge int") {
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val int = forger.aHugeInt()
                     assertThat(int)
                             .isGreaterThanOrEqualTo(Forger.HUGE_THRESHOLD)
-                })
+                }
             }
 
         }

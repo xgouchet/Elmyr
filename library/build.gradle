@@ -33,6 +33,7 @@ dependencies {
 
     // Email validation
     testCompile "egulias:EmailValidator4J:1.0.0"
+    testCompile "com.github.bbottema:emailaddress-rfc2822:1.1.0"
 }
 
 // region Javadoc

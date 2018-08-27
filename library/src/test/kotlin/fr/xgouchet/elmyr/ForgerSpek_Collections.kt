@@ -1,11 +1,11 @@
 package fr.xgouchet.elmyr
 
-import org.assertj.core.api.Java6Assertions
-import org.assertj.core.api.KotlinAssertions.assertThat
+import org.assertj.core.api.Java6Assertions.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.assertj.core.api.KotlinAssertions.assertThat as assertThatK
 
 @Suppress("UsePropertyAccessSyntax")
 /**
@@ -30,83 +30,83 @@ class ForgerSpek_Collections : Spek({
             it("selects a Float from a float array") {
                 val data = FloatArray(arraySize) { (it * it * 3.14f) + (it * 1.618f) + 2.718f }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anElementFrom(data)
                     assertThat(data)
                             .contains(result)
-                })
+                }
             }
 
             it("selects a Double from a double array") {
                 val data = DoubleArray(arraySize) { (it * it * 3.14) + (it * 1.618) + 2.718 }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anElementFrom(data)
                     assertThat(data)
                             .contains(result)
-                })
+                }
             }
 
             it("selects a Bool from a bool array") {
                 val data = BooleanArray(arraySize) { forger.aBool() }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anElementFrom(data)
                     // How do you test a boolean ????
-                })
+                }
             }
 
             it("selects a Long from a long array") {
                 val data = LongArray(arraySize) { (it * it * 13L) + (it * 42L) + 69L }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anElementFrom(data)
                     assertThat(data)
                             .contains(result)
-                })
+                }
             }
 
             it("selects an Int from an Int array") {
                 val data = IntArray(arraySize) { (it * it * 13) + (it * 37) + 41 }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anElementFrom(data)
                     assertThat(data)
                             .contains(result)
-                })
+                }
             }
 
             it("selects a Char from a Char array") {
                 val data = CharArray(arraySize) { ((it * 13) + 21).toChar() }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anElementFrom(data)
-                    Java6Assertions.assertThat(data)
+                    assertThat(data)
                             .contains(result)
-                })
+                }
             }
 
             it("selects an Object from a vararg") {
                 val data: Array<String> = Array(arraySize) { "<$it> = ${Integer.toHexString(it)}" }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anElementFrom(*data)
-                    Java6Assertions.assertThat(data)
+                    assertThat(data)
                             .contains(result)
-                })
+                }
             }
 
             it("selects an Entry from a map") {
                 val data = HashMap<String, String>(arraySize)
                 for (i in 0 until arraySize) {
-                    data.put("$i-${forger.anInt()}", forger.aWord())
+                    data["$i-${forger.anInt()}"] = forger.aWord()
                 }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anEntryFrom(data)
                     assertThat(data)
                             .contains(result)
-                })
+                }
             }
 
             it("selects an Object from a Set") {
@@ -115,11 +115,11 @@ class ForgerSpek_Collections : Spek({
                     data.add(forger.aWord())
                 }
 
-                repeat(testRepeatCountSmall, {
+                repeat(testRepeatCountSmall) {
                     val result = forger.anElementFrom(data)
                     assertThat(data)
                             .contains(result)
-                })
+                }
             }
         }
 
@@ -130,7 +130,7 @@ class ForgerSpek_Collections : Spek({
 
                 assertThat(data)
                         .hasSize(arraySize)
-                data.forEach { assertThat(it).isGreaterThan(0).isLessThan(fr.xgouchet.elmyr.Forger.Companion.SMALL_THRESHOLD) }
+                data.forEach { assertThat(it).isGreaterThan(0).isLessThan(Forger.SMALL_THRESHOLD) }
             }
 
             it("forges an int array with min/max") {
@@ -154,7 +154,7 @@ class ForgerSpek_Collections : Spek({
                 assertThat(data)
                         .hasSize(arraySizeBig)
 
-                verifyGaussianDistribution(arraySizeBig, mean.toDouble(), stDev.toDouble(), { i -> data[i].toDouble() })
+                verifyGaussianDistribution(arraySizeBig, mean.toDouble(), stDev.toDouble()) { i -> data[i].toDouble() }
             }
 
             it("forges an long array") {
@@ -187,7 +187,7 @@ class ForgerSpek_Collections : Spek({
                 assertThat(data)
                         .hasSize(size)
 
-                verifyGaussianDistribution(size, mean.toDouble(), stDev.toDouble(), { i -> data[i].toDouble() })
+                verifyGaussianDistribution(size, mean.toDouble(), stDev.toDouble()) { i -> data[i].toDouble() }
             }
 
             it("forges a float array with constraint") {
@@ -220,7 +220,7 @@ class ForgerSpek_Collections : Spek({
                 assertThat(data)
                         .hasSize(size)
 
-                verifyGaussianDistribution(size, mean.toDouble(), stDev.toDouble(), { i -> data[i].toDouble() })
+                verifyGaussianDistribution(size, mean.toDouble(), stDev.toDouble()) { i -> data[i].toDouble() }
             }
 
             it("forges a double array with constraint") {
@@ -253,7 +253,7 @@ class ForgerSpek_Collections : Spek({
                 assertThat(data)
                         .hasSize(size)
 
-                verifyGaussianDistribution(size, mean, stDev, { i -> data[i] })
+                verifyGaussianDistribution(size, mean, stDev) { i -> data[i] }
             }
 
             it("forges an char array") {
@@ -261,7 +261,7 @@ class ForgerSpek_Collections : Spek({
                 val case = forger.aValueFrom(Case::class.java)
                 val data = forger.aCharArray(constraint, case, arraySize)
 
-                Java6Assertions.assertThat(data)
+                assertThat(data)
                         .hasSize(arraySize)
             }
 
@@ -270,9 +270,9 @@ class ForgerSpek_Collections : Spek({
                 val max = forger.aChar(min = min + 1)
                 val data = forger.aCharArray(min, max, arraySize)
 
-                Java6Assertions.assertThat(data)
+                assertThat(data)
                         .hasSize(arraySize)
-                data.forEach { Java6Assertions.assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
+                data.forEach { assertThat(it).isGreaterThanOrEqualTo(min).isLessThan(max) }
             }
 
             it("forges a String array with constraint") {
@@ -280,7 +280,7 @@ class ForgerSpek_Collections : Spek({
                 val case = forger.aValueFrom(Case::class.java)
                 val data = forger.aStringArray(constraint, case, arraySize)
 
-                Java6Assertions.assertThat(data)
+                assertThat(data)
                         .hasSize(arraySize)
             }
 
@@ -289,7 +289,7 @@ class ForgerSpek_Collections : Spek({
                 val case = forger.aValueFrom(Case::class.java)
                 val data = forger.aStringArray(constraint, case, arraySize)
 
-                Java6Assertions.assertThat(data)
+                assertThat(data)
                         .hasSize(arraySize)
             }
 
@@ -297,7 +297,7 @@ class ForgerSpek_Collections : Spek({
                 val regex = "[\\d]+-[A-Z]+"
                 val data = forger.aStringArray(regex, arraySize)
 
-                Java6Assertions.assertThat(data)
+                assertThat(data)
                         .hasSize(arraySize)
                 data.forEach { assertThat(it).matches(regex) }
             }
@@ -306,7 +306,7 @@ class ForgerSpek_Collections : Spek({
                 val regex = Regex("""[\d]+-[A-Z]+""")
                 val data = forger.aStringArray(regex, arraySize)
 
-                Java6Assertions.assertThat(data)
+                assertThat(data)
                         .hasSize(arraySize)
                 data.forEach { assertThat(it).matches(regex.pattern) }
             }
@@ -324,7 +324,7 @@ class ForgerSpek_Collections : Spek({
 
             it("forges a sublist of an empty list") {
                 val inputList = emptyList<String>()
-                val outputSize = forger.anInt(1, Forger.Companion.SMALL_THRESHOLD)
+                val outputSize = forger.anInt(1, Forger.SMALL_THRESHOLD)
 
                 val data = forger.aSubListOf(inputList, outputSize)
 
@@ -364,16 +364,14 @@ class ForgerSpek_Collections : Spek({
                     }
                 }
 
-                val outputSize = inputSize
-
-                val data = forger.aSubListOf(inputList, outputSize)
+                val data = forger.aSubListOf(inputList, inputSize)
 
                 assertThat(data)
                         // output is a new list, non null
                         .isNotNull()
                         .isNotSameAs(inputList)
                         // check the size
-                        .hasSize(outputSize)
+                        .hasSize(inputSize)
                         // no duplicates, no null
                         .doesNotHaveDuplicates()
                         .doesNotContainNull()
@@ -407,7 +405,7 @@ class ForgerSpek_Collections : Spek({
 
             it("forges a subset of an empty set") {
                 val inputSet = emptySet<String>()
-                val outputSize = forger.anInt(1, Forger.Companion.SMALL_THRESHOLD)
+                val outputSize = forger.anInt(1, Forger.SMALL_THRESHOLD)
 
                 val data = forger.aSubSetOf(inputSet, outputSize)
 
@@ -447,16 +445,14 @@ class ForgerSpek_Collections : Spek({
                     }
                 }
 
-                val outputSize = inputSize
-
-                val data = forger.aSubSetOf(inputSet, outputSize)
+                val data = forger.aSubSetOf(inputSet, inputSize)
 
                 assertThat(data)
                         // output is a new set, non null
                         .isNotNull()
                         .isNotSameAs(inputSet)
                         // check the size
-                        .hasSize(outputSize)
+                        .hasSize(inputSize)
                         // no duplicates, no null
                         .doesNotHaveDuplicates()
                         .doesNotContainNull()
@@ -501,10 +497,10 @@ class ForgerSpek_Collections : Spek({
                 val inputList = listOf(*forger.aStringArray(StringConstraint.WORD, size = size))
                 var previousList: List<String>? = null
 
-                repeat(testRepeatCountSmall) {
+                repeat(testRepeatCountSmall) { _ ->
                     val shuffled = forger.shuffle(inputList)
 
-                    assertThat(shuffled)
+                    assertThatK(shuffled)
                             .isNotSameAs(inputList)
                             .isNotNull()
                             .containsAll(inputList)

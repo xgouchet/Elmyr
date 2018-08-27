@@ -1,6 +1,6 @@
 package fr.xgouchet.elmyr
 
-import org.assertj.core.api.Java6Assertions
+import org.assertj.core.api.Java6Assertions.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
@@ -31,7 +31,7 @@ class ForgerSpek_Reproducibility : Spek({
 
                 val otherData = IntArray(arraySize) { otherForger.anInt(min = it) }
 
-                Java6Assertions.assertThat(otherData).containsExactly(*data)
+                assertThat(otherData).containsExactly(*data)
             }
 
             it("reproduces data with same forger reset with the same seed") {
@@ -39,7 +39,7 @@ class ForgerSpek_Reproducibility : Spek({
 
                 val otherData = IntArray(arraySize) { forger.anInt(min = it) }
 
-                Java6Assertions.assertThat(otherData)
+                assertThat(otherData)
                         .containsExactly(*data)
             }
 
@@ -48,14 +48,14 @@ class ForgerSpek_Reproducibility : Spek({
                 forger.reset(otherSeed)
                 val otherData = IntArray(arraySize) { forger.anInt(min = it) }
 
-                Java6Assertions.assertThat(otherData)
+                assertThat(otherData)
                         .isNotEqualTo(data)
             }
 
             it("keeps track of the current seed") {
                 val actualSeed = forger.seed
 
-                Java6Assertions.assertThat(actualSeed).isEqualTo(seed)
+                assertThat(actualSeed).isEqualTo(seed)
             }
         }
 
