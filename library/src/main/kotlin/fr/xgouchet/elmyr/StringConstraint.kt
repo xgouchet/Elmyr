@@ -8,6 +8,7 @@ enum class StringConstraint {
     WORD,
     LIPSUM,
     HEXADECIMAL,
+    NUMERICAL,
     URL,
     URI,
     EMAIL,

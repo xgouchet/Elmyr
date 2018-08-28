@@ -477,6 +477,16 @@ class ForgerSpek_Text : Spek({
                 }
             }
 
+            it("forges an hexadecimal string") {
+                repeat(testRepeatCountSmall) {
+                    val size = forger.aTinyInt()
+                    val word = forger.anHexadecimalString(Case.ANY, size)
+                    assertThat(word)
+                            .hasSize(size)
+                            .matches("[a-fA-F0-9]+")
+                }
+            }
+
             it("forges an uppercase hexadecimal string") {
                 repeat(testRepeatCountSmall) {
                     val size = forger.aTinyInt()
@@ -494,6 +504,16 @@ class ForgerSpek_Text : Spek({
                     assertThat(word)
                             .hasSize(size)
                             .matches("[a-f0-9]+")
+                }
+            }
+
+            it("forges a numerical string") {
+                repeat(testRepeatCountSmall) {
+                    val size = forger.aTinyInt()
+                    val word = forger.aNumericalString(size)
+                    assertThat(word)
+                            .hasSize(size)
+                            .matches("[0-9]+")
                 }
             }
 
@@ -576,6 +596,14 @@ class ForgerSpek_Text : Spek({
                     val hexa = forger.aString(StringConstraint.HEXADECIMAL)
                     assertThat(hexa)
                             .matches("[a-fA-F0-9]+")
+                }
+            }
+
+            it("forges an numerical string") {
+                repeat(testRepeatCountSmall) {
+                    val num = forger.aString(StringConstraint.NUMERICAL)
+                    assertThat(num)
+                            .matches("[0-9]+")
                 }
             }
 

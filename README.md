@@ -6,7 +6,7 @@
 [![Kotlin 1.2.10](https://img.shields.io/badge/Kotlin-1.2.10-blue.svg)](http://kotlinlang.org)
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
-[![Documentation Status](https://img.shields.io/badge/docs-0.7-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.7)
+[![Documentation Status](https://img.shields.io/badge/docs-0.7.2-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.7.2)
 [![Build Status](https://travis-ci.org/xgouchet/Elmyr.svg?branch=master)](https://travis-ci.org/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
@@ -27,7 +27,7 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        testCompile 'com.github.xgouchet:Elmyr:0.7'
+        testCompile 'com.github.xgouchet:Elmyr:0.7.2'
     }
 ```
 
@@ -67,7 +67,9 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 ### Last release : 0.7 (2018/08/23)
 
  - Add forgery to generate nullable with lambdas (`forger.aNullableFrom { aString() }` instead of `forger.aNullableFrom(forger.aString())`)
- - Add Forgery to generate Date (`forger.aDate()`, `forger.aPastDate()` and `forger.aFutureDate()`)
+ - Add forgery to generate Date (`forger.aDate()`, `forger.aPastDate()` and `forger.aFutureDate()`)
+ - Update forgery to generate list with lambda (`forger.aList { aString() }` instead of `forger.aList { it.aString() }`)
+ - Add forgery to generate a numerical String (`forger.aNumericalString()` and `forger.aString(StringConstraint.NUMERICAL)`) 
 
 For more information, read the [Changelog](CHANGELOG.md).
 

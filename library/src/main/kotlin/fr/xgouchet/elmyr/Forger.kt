@@ -552,10 +552,10 @@ open class Forger {
      */
     @JvmOverloads
     fun aVowelChar(case: Case = Case.ANY): Char {
-        when (case) {
-            Case.UPPER -> return anElementFrom(VOWEL_UPPER)
-            Case.LOWER -> return anElementFrom(VOWEL_LOWER)
-            else -> return anElementFrom(VOWEL)
+        return when (case) {
+            Case.UPPER -> anElementFrom(VOWEL_UPPER)
+            Case.LOWER -> anElementFrom(VOWEL_LOWER)
+            else -> anElementFrom(VOWEL)
         }
     }
 
@@ -565,10 +565,10 @@ open class Forger {
      */
     @JvmOverloads
     fun aConsonantChar(case: Case = Case.ANY): Char {
-        when (case) {
-            Case.UPPER -> return anElementFrom(CONSONANT_UPPER)
-            Case.LOWER -> return anElementFrom(CONSONANT_LOWER)
-            else -> return anElementFrom(CONSONANT)
+        return when (case) {
+            Case.UPPER -> anElementFrom(CONSONANT_UPPER)
+            Case.LOWER -> anElementFrom(CONSONANT_LOWER)
+            else -> anElementFrom(CONSONANT)
         }
     }
 
@@ -578,10 +578,10 @@ open class Forger {
      */
     @JvmOverloads
     fun anAlphaNumericalChar(case: Case = Case.ANY): Char {
-        when (case) {
-            Case.UPPER -> return anElementFrom(ALPHA_NUM_UPPER)
-            Case.LOWER -> return anElementFrom(ALPHA_NUM_LOWER)
-            else -> return anElementFrom(ALPHA_NUM)
+        return when (case) {
+            Case.UPPER -> anElementFrom(ALPHA_NUM_UPPER)
+            Case.LOWER -> anElementFrom(ALPHA_NUM_LOWER)
+            else -> anElementFrom(ALPHA_NUM)
         }
     }
 
@@ -602,9 +602,9 @@ open class Forger {
      */
     @JvmOverloads
     fun anHexadecimalChar(case: Case = Case.LOWER): Char {
-        when (case) {
-            Case.UPPER -> return anElementFrom(HEXA_UPPER)
-            else -> return anElementFrom(HEXA_LOWER)
+        return when (case) {
+            Case.UPPER -> anElementFrom(HEXA_UPPER)
+            else -> anElementFrom(HEXA_LOWER)
         }
     }
 
@@ -669,10 +669,11 @@ open class Forger {
                 case: Case = Case.ANY,
                 size: Int = -1): String {
         when (constraint) {
-            StringConstraint.ANY -> return String(CharArray(getWordSize(size), { aChar(CharConstraint.ANY, Case.ANY) }))
+            StringConstraint.ANY -> return String(CharArray(getWordSize(size)) { aChar(CharConstraint.ANY, Case.ANY) })
             StringConstraint.WORD -> return aWord(case, size)
             StringConstraint.LIPSUM -> return aSentence(case, size)
             StringConstraint.HEXADECIMAL -> return anHexadecimalString(case, size)
+            StringConstraint.NUMERICAL -> return aNumericalString(size)
             StringConstraint.URL -> return aUrl()
             StringConstraint.URI -> return aUri()
             StringConstraint.EMAIL -> return anEmail()
@@ -772,6 +773,17 @@ open class Forger {
     }
 
     /**
+     * @param case the case to use (supports Case.UPPER, Case.LOWER , anything else falls back to Case.LOWER)
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return an hexadecimal string
+     */
+    @JvmOverloads
+    fun aNumericalString(size: Int = -1): String {
+        val resultSize = getWordSize(size)
+        return String(CharArray(resultSize) { aNumericalChar() })
+    }
+
+    /**
      * @param regex a regular expression to drive the generation. Note that parsing the regex can take some time depending
      * on the regex complexity. Also not all regex feature are supported.
      *
@@ -817,7 +829,7 @@ open class Forger {
     fun aLinuxPath(absolute: Boolean? = null): String {
         val isAbsolute = absolute ?: aBool()
         val ancestorRoot = Array(aTinyInt()) { ".." }.joinToString(UNIX_SEP.toString()) { it }
-        val roots = if (isAbsolute) LINUX_ROOTS else listOf(".", ancestorRoot)
+        val roots = if (isAbsolute) LINUX_ROOTS else listOf(".", "..", ancestorRoot)
         val forbiddenChars = arrayOf(0.toChar(), UNIX_SEP).toCharArray()
         return aPath(UNIX_SEP.toString(), roots, MAX_PATH_SIZE, MAX_FILENAME_SIZE, forbiddenChars)
     }
@@ -829,8 +841,8 @@ open class Forger {
     @JvmOverloads
     fun aWindowsPath(absolute: Boolean? = null): String {
         val isAbsolute = absolute ?: aBool()
-        val ancestorRoot = Array(aTinyInt(), { ".." }).joinToString(WINDOWS_SEP.toString()) { it }
-        val roots = if (isAbsolute) WINDOWS_ROOTS else listOf(".", ancestorRoot)
+        val ancestorRoot = Array(aTinyInt()) { ".." }.joinToString(WINDOWS_SEP.toString()) { it }
+        val roots = if (isAbsolute) WINDOWS_ROOTS else listOf(".", "..", ancestorRoot)
         return aPath(WINDOWS_SEP.toString(), roots, MAX_PATH_SIZE, MAX_FILENAME_SIZE, WINDOWS_FORBIDDEN_CHARS, WINDOWS_RESERVED_FILENAMES)
     }
 
@@ -841,8 +853,8 @@ open class Forger {
     @JvmOverloads
     fun aMacOsPath(absolute: Boolean? = null): String {
         val isAbsolute = absolute ?: aBool()
-        val ancestorRoot = Array(aTinyInt(), { ".." }).joinToString(UNIX_SEP.toString()) { it }
-        val roots = if (isAbsolute) MAC_ROOTS else listOf(".", ancestorRoot)
+        val ancestorRoot = Array(aTinyInt()) { ".." }.joinToString(UNIX_SEP.toString()) { it }
+        val roots = if (isAbsolute) MAC_ROOTS else listOf(".", "..", ancestorRoot)
         val forbiddenChars = arrayOf(0.toChar(), UNIX_SEP).toCharArray()
         return aPath(UNIX_SEP.toString(), roots, MAX_PATH_SIZE, MAX_FILENAME_SIZE, forbiddenChars)
     }
@@ -1314,12 +1326,12 @@ open class Forger {
     /**
      * Creates a random sized list
      */
-    fun <T> aList(size: Int = -1, creator: (Forger) -> T): List<T> {
+    fun <T> aList(size: Int = -1, forging: Forger.() -> T): List<T> {
         val listSize = if (size < 0) aTinyInt() else size
         val list = ArrayList<T>(listSize)
 
         for (i in 0 until listSize) {
-            list.add(creator(this))
+            list.add(forging(this))
         }
 
         return list

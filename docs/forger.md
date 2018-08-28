@@ -295,9 +295,14 @@ With Elmyr, you can forge text values (eg: `“foo”`, `“spam”`, `“kamoul
 
     Returns a random string, using only hexadecimal characters.
 
-    - _case_: the case to use (UPPER or LOWER only).
+    - _case_: the case to use (UPPER, LOWER or ANY only).
     - _size_: the desired size of the string, or -1 for a random sized string.
 
+ - **fun aNumericalString(size: Int = -1): String**
+ 
+    Returns a random string, using only numerical characters.
+
+    - _size_: the desired size of the string, or -1 for a random sized string.
 
  - **fun aStringMatching(regex: String): String**
  - **fun aStringMatching(regex: Regex): String**
@@ -531,12 +536,18 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
 
 ### Forging collections
 
-   - **fun <T> aList(size: Int = -1, creator: (Forger) -> T): List<T>**
+   - **fun <T> aList(size: Int = -1, forging: Forger.() -> T): List<T>**
    
         Returns a list with elements generated from the given lambda
         
         - _size_: the size of the array, or -1 for a random size.
         - _creator_ : a lambda invoked for each element in the list to populate it  
+        
+        eg : 
+        
+        ```kotlin
+        val data = forger.aList { anHexadecimalString() }
+        ```
         
    - **fun <T> aSubListOf(list: List<T>, outputSize: Int): List<T>**
    - **fun <T> aSubSetOf(set: Set<T>, outputSize: Int): Set<T>**

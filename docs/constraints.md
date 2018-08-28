@@ -50,11 +50,10 @@ Most of those are self explanatory
  - **WORD** : returns a word-like string;
  - **LIPSUM** : returns a _Lorem Ipsum_ kind of sentence;
  - **HEXADECIMAL** : returns an hexadecimal string;
+ - **NUMERICAL** : returns a numerical string;
  - **URL** : returns an URL-like string;
  - **EMAIL** : returns an e-mail-like string;
-
-
-
-
-
-
+ - **PATH** : returns a path string, matching the current platform format;
+ - **PATH_LINUX** : returns a path string, matching the Linux platform format;
+ - **PATH_WINDOWS** : returns a path string, matching the Windows platform format;
+ - **PATH_MACOS** : returns a path string, matching the MacOs platform format;
