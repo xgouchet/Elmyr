@@ -25,8 +25,8 @@ class JUnitForger :
         }
 
         override fun failed(e: Throwable, description: Description) {
-            val message = "‘%s’ failed with fake seed = 0x%x"
-            System.err.println(message.format(Locale.US, description.methodName, forger.seed))
+            val message = "<%s.%s()> failed with fake seed 0x%x\nAdd the following line at the beginning of your test or setUp method to reproduce :\n\n\tforger.reset(0x%xL)\n"
+            System.err.println(message.format(Locale.US, description.testClass.simpleName, description.methodName, forger.seed, forger.seed))
         }
     }
 

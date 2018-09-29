@@ -4,8 +4,6 @@ import fr.xgouchet.elmyr.Case;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.concurrent.TimeUnit;
-
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 /**
@@ -13,7 +11,8 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
  */
 public class JUnitForgerTest {
 
-    @Rule public JUnitForger forger = new JUnitForger();
+    @Rule
+    public JUnitForger forger = new JUnitForger();
 
     @Test
     public void forgeString() {
