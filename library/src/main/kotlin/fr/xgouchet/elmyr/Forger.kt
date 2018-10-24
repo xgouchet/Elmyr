@@ -3,12 +3,12 @@ package fr.xgouchet.elmyr
 import fr.xgouchet.elmyr.regex.RegexBuilder
 import org.junit.AssumptionViolatedException
 import java.io.File
-import java.lang.Integer.min
 import java.lang.Math.round
 import java.util.ArrayList
 import java.util.Date
 import java.util.Random
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 /**
  * @author Xavier F. Gouchet
