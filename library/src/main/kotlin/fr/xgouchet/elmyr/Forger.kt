@@ -955,6 +955,22 @@ open class Forger {
     }
 
     /**
+     * @param map a non empty map
+     * @return a key randomly picked in the map
+     */
+    fun <K, V> aKeyFrom(map: Map<K, V>): K {
+        return anEntryFrom(map).key
+    }
+
+    /**
+     * @param map a non empty map
+     * @return a key randomly picked in the map
+     */
+    fun <K, V> aValueFrom(map: Map<K, V>): V {
+        return anEntryFrom(map).value
+    }
+
+    /**
      * @param set a non empty Set
      * @return an element “randomly” picked in the set
      */
@@ -1028,7 +1044,7 @@ open class Forger {
 
     /**
      * @param array a non empty DoubleArray
-     * @return an element “randomly” picked in the
+     * @return an element “randomly” picked in the array
      */
     fun anElementFrom(array: DoubleArray): Double {
         val index = anInt(0, array.size)

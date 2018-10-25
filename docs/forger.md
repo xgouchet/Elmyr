@@ -379,6 +379,8 @@ With Elmyr, you can pick random data within a vararg / arrays / list / set / map
  - **fun <T> anElementFrom(list: List<T>): T**
  - **fun <T> anElementFrom(set: Set<T>): T**
  - **fun <K,V> anElementFrom(map: Map<K,V>): Map.Entry<K,V>**
+ - **fun <K, V> aValueFrom(map: Map<K, V>): V**
+ - **fun <K, V> aKeyFrom(map: Map<K, V>): K**
 
     Returns an element picked from the input collection.
 

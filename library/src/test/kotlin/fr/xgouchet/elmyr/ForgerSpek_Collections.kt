@@ -109,6 +109,32 @@ class ForgerSpek_Collections : Spek({
                 }
             }
 
+            it("selects an key from a map") {
+                val data = HashMap<String, String>(arraySize)
+                for (i in 0 until arraySize) {
+                    data["$i-${forger.anInt()}"] = forger.aWord()
+                }
+
+                repeat(testRepeatCountSmall) {
+                    val result = forger.aKeyFrom(data)
+                    assertThat(data)
+                            .containsKey(result)
+                }
+            }
+
+            it("selects an value from a map") {
+                val data = HashMap<String, String>(arraySize)
+                for (i in 0 until arraySize) {
+                    data["$i-${forger.anInt()}"] = forger.aWord()
+                }
+
+                repeat(testRepeatCountSmall) {
+                    val result = forger.aValueFrom(data)
+                    assertThat(data)
+                            .containsValue(result)
+                }
+            }
+
             it("selects an Object from a Set") {
                 val data = HashSet<String>(arraySize)
                 for (i in 0 until arraySize) {
