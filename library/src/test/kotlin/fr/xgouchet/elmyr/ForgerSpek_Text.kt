@@ -674,6 +674,15 @@ class ForgerSpek_Text : Spek({
                     // How to test that ?
                 }
             }
+
+            it("forges a MacOS Path string") {
+                repeat(testRepeatCountSmall) {
+                    val path = forger.aString(StringConstraint.PATH_MACOS)
+                    // How to test that ?
+                }
+            }
+
+
         }
 
         context("forging char-constrained strings") {

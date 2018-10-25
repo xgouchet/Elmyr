@@ -1,7 +1,7 @@
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.2.61"
     id 'com.github.ben-manes.versions' version '0.20.0'
-     id "io.gitlab.arturbosch.detekt" version "1.0.0.RC8"
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC8"
 }
 apply plugin: 'java'
 apply plugin: 'maven'
@@ -36,7 +36,14 @@ dependencies {
     testCompile "com.github.bbottema:emailaddress-rfc2822:1.1.0"
 }
 
-// region Javadoc
+// region Publish Sources & Javadoc Jars
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier = 'source'
+    archiveName = 'sources.jar'
+}
+
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
     outputFormat = 'javadoc'
     outputDirectory = javadoc.destinationDir
@@ -47,6 +54,12 @@ task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     classifier = 'javadoc'
     archiveName = 'javadoc.jar'
     from javadoc.destinationDir
+}
+
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
 
 // endregion
@@ -75,7 +88,7 @@ project.afterEvaluate {
             {
                 sourceSets sourceSets.main
                 sourceDirectories = files(project.sourceSets.main.allSource.srcDirs)
-                classDirectories =  files(project.sourceSets.main.output)
+                classDirectories = files(project.sourceSets.main.output)
                 executionData junitPlatformTestTask
 
                 reports {
@@ -87,6 +100,8 @@ project.afterEvaluate {
             })
 
     project.tasks.getByName('check').dependsOn jacocoTask
+
+    project.tasks.getByName('install').dependsOn sourcesJar
 
     project.tasks.getByName('install').dependsOn javadocJar
 }
