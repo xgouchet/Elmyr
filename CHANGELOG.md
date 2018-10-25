@@ -1,5 +1,12 @@
 # Changelog
 
+### 0.8 (2018/10/25)
+
+ - Add forgery to pick a key / value from a map (`forger.aKeyFrom(myMap)` and `forger.aValueFrom(myMap)`)
+ - Sources are available from the IDE
+ - Make use of kotlin.min instead of Java's Integer.min, to be compatible with all Android versions
+ - Better error message in the JUnitForgerRule
+
 ### 0.7 (2018/08/23)
 
  - Add forgery to generate nullable with lambdas (`forger.aNullableFrom { aString() }` instead of `forger.aNullableFrom(forger.aString())`)

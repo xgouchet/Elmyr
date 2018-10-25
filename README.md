@@ -64,13 +64,13 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Last release : 0.7 (2018/08/23)
+### Last Release: 0.8 (2018/10/25)
 
- - Add forgery to generate nullable with lambdas (`forger.aNullableFrom { aString() }` instead of `forger.aNullableFrom(forger.aString())`)
- - Add forgery to generate Date (`forger.aDate()`, `forger.aPastDate()` and `forger.aFutureDate()`)
- - Update forgery to generate list with lambda (`forger.aList { aString() }` instead of `forger.aList { it.aString() }`)
- - Add forgery to generate a numerical String (`forger.aNumericalString()` and `forger.aString(StringConstraint.NUMERICAL)`) 
-
+ - Add forgery to pick a key / value from a map (`forger.aKeyFrom(myMap)` and `forger.aValueFrom(myMap)`)
+ - Sources are available from the IDE
+ - Make use of kotlin.min instead of Java's Integer.min, to be compatible with all Android versions
+ - Better error message in the JUnitForgerRule
+ 
 For more information, read the [Changelog](CHANGELOG.md).
 
 
