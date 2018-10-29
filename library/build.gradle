@@ -40,7 +40,7 @@ dependencies {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
-    classifier = 'source'
+    classifier = 'sources'
     archiveName = 'sources.jar'
 }
 
