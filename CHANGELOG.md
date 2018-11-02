@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.9 (2018/11/02)
+
+ - Add forgery to create a map (`forger.aMap { aWord() to aPositiveInt()`)
+
 ### 0.8 (2018/10/25)
 
  - Add forgery to pick a key / value from a map (`forger.aKeyFrom(myMap)` and `forger.aValueFrom(myMap)`)
