@@ -1340,7 +1340,9 @@ open class Forger {
     }
 
     /**
-     * Creates a random sized list
+     * Creates a random list
+     * @param size the size of the list, or -1 for a random size
+     * @param forging a lambda generating values that will fill the list
      */
     fun <T> aList(size: Int = -1, forging: Forger.() -> T): List<T> {
         val listSize = if (size < 0) aTinyInt() else size
@@ -1351,6 +1353,27 @@ open class Forger {
         }
 
         return list
+    }
+
+    /**
+     * Returns a map with elements generated from the given lambda.
+     *
+     * Note that the resulting map size might be smaller than the requested one if the forging
+     * lambda generates conflicting keys
+     * @param size the size of the map, or -1 for a random size
+     * @param forging a lambda generating a pair of key-value that will fill the map
+     */
+    fun <K, V> aMap(size: Int = -1, forging: Forger.() -> Pair<K, V>): Map<K, V> {
+        val mapSize = if (size < 0) aTinyInt() else size
+
+        val map = mutableMapOf<K, V>()
+
+        for (i in 0 until mapSize) {
+            val mapEntry = forging()
+            map[mapEntry.first] = mapEntry.second
+        }
+
+        return map
     }
 
     /**

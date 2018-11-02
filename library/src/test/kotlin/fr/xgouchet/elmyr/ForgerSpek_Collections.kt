@@ -345,6 +345,21 @@ class ForgerSpek_Collections : Spek({
                 assertThat(data).containsExactly(*expectedData)
             }
 
+
+            it("forges a map of whatever") {
+                var i = 0
+                val values = forger.aList { aWord() }
+                val data = forger.aMap(size = values.size) { i to values[i++] }
+                val expectedData = mutableMapOf<Int, String>()
+                for (i in 0 until data.size){
+                    expectedData[i] = values[i]
+                }
+
+                assertThat(data)
+                        .contains(*expectedData.entries.toTypedArray())
+
+            }
+
         }
 
         context("forging sublist") {

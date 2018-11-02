@@ -543,12 +543,28 @@ With Elmyr, you can forge arrays of primitives / Strings based on constraints.
         Returns a list with elements generated from the given lambda
         
         - _size_: the size of the array, or -1 for a random size.
-        - _creator_ : a lambda invoked for each element in the list to populate it  
+        - _forging_ : a lambda invoked for each element in the list to populate it  
         
         eg : 
         
         ```kotlin
         val data = forger.aList { anHexadecimalString() }
+        ```
+        
+   - **fun <K, V> aMap(size: Int = -1, forging: Forger.() -> Pair<K, V>): Map<K, V>**
+   
+        Returns a map with elements generated from the given lambda.
+        
+        Note that the resulting map size might be smaller than the requested one if the forging
+        lambda generates conflicting keys
+        
+        - _size_: the size of the array, or -1 for a random size.
+        - _forging_ : a lambda invoked for each entry in the map to populate it  
+        
+        eg : 
+        
+        ```kotlin
+        val data = forger.aMap { aWord() to aPositiveInt()}
         ```
         
    - **fun <T> aSubListOf(list: List<T>, outputSize: Int): List<T>**
