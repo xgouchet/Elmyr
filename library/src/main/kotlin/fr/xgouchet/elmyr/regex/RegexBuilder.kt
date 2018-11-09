@@ -60,7 +60,7 @@ class RegexBuilder(regex: String) {
             '*' -> ongoingNode.updateLastElementQuantfier(Quantifier.Companion.ZERO_OR_MORE)
             '+' -> ongoingNode.updateLastElementQuantfier(Quantifier.Companion.ONE_OR_MORE)
             '[' -> {
-                val choice = RegexChoiceNode(ongoingNode)
+                val choice = RegexCharacterSet(ongoingNode)
                 ongoingNode.add(choice)
                 ongoingNode = choice
             }

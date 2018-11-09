@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.9.1 (2018/11/09)
+
+ - Handle negated character set in regex (eg : `aStringMatching("[^a-f]")`)
+
 ### 0.9 (2018/11/02)
 
  - Add forgery to create a map (`forger.aMap { aWord() to aPositiveInt()`)

@@ -902,7 +902,10 @@ class ForgerSpek_Text : Spek({
                         // Or
                         "abc|xyz",
                         "foo|ba[rz]|spam|bacon",
-                        "test(foo|bar)"
+                        "test(foo|bar)",
+
+                        // negative choice
+                        "[^a-z]+"
                 )
 
                 regexes.forEach {

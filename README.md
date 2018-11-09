@@ -64,9 +64,9 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Last Release: 0.9 (2018/11/02)
+### Last Release: 0.9.1 (2018/11/09)
 
- - Add forgery to create a map (`forger.aMap { aWord() to aPositiveInt()`)
+ - Handle negated character set in regex (eg : `aStringMatching("[^a-f]")`)
  
 For more information, read the [Changelog](CHANGELOG.md).
 

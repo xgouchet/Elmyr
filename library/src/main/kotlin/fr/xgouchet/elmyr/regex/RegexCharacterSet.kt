@@ -3,25 +3,41 @@ package fr.xgouchet.elmyr.regex
 import fr.xgouchet.elmyr.Forger
 
 /**
- * Represents a choice
+ * Represents a character set, eg [a-f]
  * @author Xavier F. Gouchet
  */
-internal class RegexChoiceNode(parent: RegexParentNode? = null)
+internal class RegexCharacterSet(parent: RegexParentNode? = null)
     : RegexParentNode(parent) {
 
     private var ongoingRange: Boolean = false
+    private var isNegated: Boolean = false
+
+    private var negatedRegex: String = ""
 
     override fun handle(c: Char): Boolean {
-        return when (c) {
-            '*', '.', '+', '?' -> {
-                add(RawChar(c, this))
-                true
+        return if (isNegated) {
+            negatedRegex += c
+            true
+        } else {
+            when (c) {
+                '^' -> {
+                    if (children.isEmpty()) {
+                        isNegated = true
+                        true
+                    } else {
+                        false
+                    }
+                }
+                '*', '.', '+', '?' -> {
+                    add(RawChar(c, this))
+                    true
+                }
+                '-' -> {
+                    ongoingRange = true
+                    true
+                }
+                else -> false
             }
-            '-' -> {
-                ongoingRange = true
-                true
-            }
-            else -> false
         }
     }
 
@@ -46,8 +62,17 @@ internal class RegexChoiceNode(parent: RegexParentNode? = null)
     }
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
-        val node = forger.anElementFrom(children)
-        node.buildIteration(forger, builder)
+        if (isNegated) {
+            val regex = Regex("[$negatedRegex]")
+            var char: Char
+            do {
+                char = forger.aChar()
+            } while (regex.matches("$char"))
+            builder.append(char)
+        } else {
+            val node = forger.anElementFrom(children)
+            node.buildIteration(forger, builder)
+        }
     }
 
     // TODO cleanup this method !
