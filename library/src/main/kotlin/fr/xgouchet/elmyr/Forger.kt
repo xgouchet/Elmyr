@@ -1537,8 +1537,8 @@ open class Forger {
 
         @JvmField
         internal val ALPHA_NUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
-        @JvmField internal val ALPHA_NUM_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789".toCharArray()
-        @JvmField internal val ALPHA_NUM_LOWER = "abcdefghijklmnopqrstuvwxyz_0123456789".toCharArray()
+        @JvmField internal val ALPHA_NUM_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
+        @JvmField internal val ALPHA_NUM_LOWER = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray()
 
         @JvmField internal val HEXA = "abcdefABCDEF0123456789".toCharArray()
         @JvmField internal val HEXA_UPPER = "ABCDEF0123456789".toCharArray()
