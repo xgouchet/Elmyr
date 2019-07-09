@@ -517,6 +517,26 @@ class ForgerSpek_Text : Spek({
                 }
             }
 
+            it("forges an upper alpha-numerical string") {
+                repeat(testRepeatCountSmall) {
+                    val size = forger.aTinyInt()
+                    val word = forger.anAlphaNumericalString(Case.UPPER, size)
+                    assertThat(word)
+                            .hasSize(size)
+                            .matches("[0-9A-Z]+")
+                }
+            }
+
+            it("forges a lower alpha-numerical string") {
+                repeat(testRepeatCountSmall) {
+                    val size = forger.aTinyInt()
+                    val word = forger.anAlphaNumericalString(Case.LOWER, size)
+                    assertThat(word)
+                            .hasSize(size)
+                            .matches("[0-9a-z]+")
+                }
+            }
+
             it("forges a uri string") {
                 repeat(testRepeatCountSmall) {
                     val uri = forger.aUri()

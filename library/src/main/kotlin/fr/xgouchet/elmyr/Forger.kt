@@ -784,7 +784,6 @@ open class Forger {
     }
 
     /**
-     * @param case the case to use (supports Case.UPPER, Case.LOWER , anything else falls back to Case.LOWER)
      * @param size the size of the string (or -1 for a random sized String)
      * @return an hexadecimal string
      */
@@ -792,6 +791,17 @@ open class Forger {
     fun aNumericalString(size: Int = -1): String {
         val resultSize = getWordSize(size)
         return String(CharArray(resultSize) { aNumericalChar() })
+    }
+
+    /**
+     * @param case the case to use (supports Case.UPPER, Case.LOWER , anything else falls back to Case.LOWER)
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return an hexadecimal string
+     */
+    @JvmOverloads
+    fun anAlphaNumericalString(case: Case = Case.LOWER, size: Int = -1): String {
+        val resultSize = getWordSize(size)
+        return String(CharArray(resultSize) { anAlphaNumericalChar(case) })
     }
 
     /**
