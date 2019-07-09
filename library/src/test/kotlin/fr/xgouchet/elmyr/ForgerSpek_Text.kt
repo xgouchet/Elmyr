@@ -690,7 +690,6 @@ class ForgerSpek_Text : Spek({
                 }
             }
 
-
         }
 
         context("forging char-constrained strings") {
@@ -931,6 +930,23 @@ class ForgerSpek_Text : Spek({
             }
         }
 
+        context("modifying strings") {
+
+            it("randomizes a string case") {
+                repeat(testRepeatCountSmall) {
+                    val string = forger.aSentence(Case.LOWER)
+
+                    val randomized = forger.randomizeCase { string }
+
+                    var upper = randomized.toCharArray().count { it.isUpperCase() }
+                    var lower = randomized.toCharArray().count { it.isLowerCase() }
+
+                    assertThat(upper).isGreaterThan(0)
+                    assertThat(lower).isGreaterThan(0)
+                    assertThat(randomized).isEqualToIgnoringCase(string)
+                }
+            }
+        }
         // endregion
     }
 })

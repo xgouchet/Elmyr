@@ -913,6 +913,27 @@ open class Forger {
         return builder.toString()
     }
 
+    /**
+     * Randomizes the case of a String
+     * @param string the string to randomize
+     * @return a new String with the same content, but any letter in it has a random case
+     */
+    fun randomizeCase(string: String): String {
+        return string.toCharArray().map {
+            val s = it.toString()
+            if (aBool()) s.toLowerCase() else s.toUpperCase()
+        }.joinToString("")
+    }
+
+    /**
+     * Randomizes the case of a String
+     * @param forging a lambda generating a String that will be randomized
+     * @return a new String with the same content, but any letter in it has a random case
+     */
+    fun randomizeCase(forging: Forger.() -> String): String {
+        return randomizeCase(this.forging())
+    }
+
     // endregion
 
     // region Nullable
