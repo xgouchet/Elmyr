@@ -869,12 +869,14 @@ open class Forger {
     }
 
     /**
+     * @param scheme the scheme to use in the forged url (by default, the scheme generated will be compliant with the java.net.URL validation)
      * @return a String matching a standard URL according to RFC 3986
      * (Although the RFC itself doesn't give a clear definition of which URI are proper URL, we use a relatively broad definition)
      */
-    fun aUrl(): String {
+    @JvmOverloads
+    fun aUrl(scheme: String? = null): String {
         val builder = StringBuilder()
-        RFCDefinitions.RFC3986_buildURL(this, builder)
+        RFCDefinitions.RFC3986_buildURL(this, builder, scheme)
         return builder.toString()
     }
 
@@ -882,6 +884,7 @@ open class Forger {
      * @param rfc2822Compliant if true, it will return an email compliant with the RFC2822 broader format
      * @return an email String
      */
+    @JvmOverloads
     fun anEmail(rfc2822Compliant: Boolean = false): String {
         val builder = StringBuilder(MAX_EMAIL_SIZE)
         if (rfc2822Compliant) {

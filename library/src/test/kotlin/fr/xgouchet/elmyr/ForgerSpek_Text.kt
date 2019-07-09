@@ -531,6 +531,14 @@ class ForgerSpek_Text : Spek({
                 }
             }
 
+            it("forges a url string with set scheme") {
+                repeat(testRepeatCountSmall) {
+                    val scheme = forger.aWord(Case.LOWER)
+                    val url = forger.aUrl(scheme)
+                    assertThat(url).startsWith(scheme)
+                }
+            }
+
             it("forges an RFC822 email string") {
                 repeat(testRepeatCountSmall) {
                     val email = forger.anEmail(false)

@@ -13,7 +13,7 @@ object RFCDefinitions {
 
     // <domain> ::= <subdomain> | " "
     internal fun RFC1035_buildDomain(forger: Forger, builder: StringBuilder, size: Int? = null) {
-        val resultSize = size ?: forger.anInt(0, MAX_DOMAIN_LENGTH)+1
+        val resultSize = size ?: forger.anInt(0, MAX_DOMAIN_LENGTH) + 1
 
         RFC1035_buildSubdomain(forger, builder, resultSize)
     }
@@ -316,9 +316,13 @@ object RFCDefinitions {
     }
 
     //  URL         = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
-    internal fun RFC3986_buildURL(forger: Forger, builder: StringBuilder) {
+    internal fun RFC3986_buildURL(forger: Forger, builder: StringBuilder, scheme: String? = null) {
 
-        builder.append(forger.anElementFrom(KNOWN_URL_SCHEMES))
+        if (scheme.isNullOrBlank()) {
+            builder.append(forger.anElementFrom(KNOWN_URL_SCHEMES))
+        } else {
+            builder.append(scheme)
+        }
 
         builder.append(":")
 

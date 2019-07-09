@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Elmyr.iml" filepath="$PROJECT_DIR$/.idea/modules/Elmyr.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Elmyr.iml" filepath="$PROJECT_DIR$/.idea/modules/Elmyr.iml" group="Elmyr" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/library.iml" group="Elmyr/library" />
     </modules>
   </component>
 </project>
