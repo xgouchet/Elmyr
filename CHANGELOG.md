@@ -1,5 +1,14 @@
 # Changelog
 
+
+### 0.10 (2019/07/09)
+
+ - Allow custom schem in Url forgery (eg: `aUrl(scheme = "wss")`)
+ - Add forgery to create an Alpha Numerical string (`anAlphaNumericalString()`)
+ - Add forgery to create a java.io.File Object (`aFile()`)
+ - Add forgery to randomize a String's case (`randomizeCase("hello world")`)
+
+ 
 ### 0.9.1 (2018/11/09)
 
  - Handle negated character set in regex (eg : `aStringMatching("[^a-f]")`)

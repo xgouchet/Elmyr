@@ -6,7 +6,7 @@
 [![Kotlin 1.2.10](https://img.shields.io/badge/Kotlin-1.3.0-blue.svg)](http://kotlinlang.org)
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
-[![Documentation Status](https://img.shields.io/badge/docs-0.9-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.9)
+[![Documentation Status](https://img.shields.io/badge/docs-0.10-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.10)
 [![Build Status](https://travis-ci.org/xgouchet/Elmyr.svg?branch=master)](https://travis-ci.org/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
@@ -27,7 +27,7 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        testCompile 'com.github.xgouchet:Elmyr:0.9'
+        testCompile 'com.github.xgouchet:Elmyr:0.10'
     }
 ```
 
@@ -64,9 +64,12 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Last Release: 0.9.1 (2018/11/09)
-
- - Handle negated character set in regex (eg : `aStringMatching("[^a-f]")`)
+### Last Release: 0.10 (2019/07/09)
+                      
+ - Allow custom schem in Url forgery (eg: `aUrl(scheme = "wss")`)
+ - Add forgery to create an Alpha Numerical string (`anAlphaNumericalString()`)
+ - Add forgery to create a java.io.File Object (`aFile()`)
+ - Add forgery to randomize a String's case (`randomizeCase("hello world")`)
  
 For more information, read the [Changelog](CHANGELOG.md).
 
