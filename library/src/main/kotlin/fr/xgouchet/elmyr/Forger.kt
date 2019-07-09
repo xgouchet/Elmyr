@@ -258,6 +258,17 @@ open class Forger {
 
     // endregion
 
+    // region File
+
+    /**
+     * @return a File object
+     */
+    fun aFile(): File {
+        return File(aLocalPath())
+    }
+
+    // endregion
+
     // region Date
 
     /**

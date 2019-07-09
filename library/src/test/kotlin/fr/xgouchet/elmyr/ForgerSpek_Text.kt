@@ -947,6 +947,7 @@ class ForgerSpek_Text : Spek({
                 }
             }
         }
+
         // endregion
     }
 })
