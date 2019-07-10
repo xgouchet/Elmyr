@@ -9,7 +9,7 @@ buildscript {
         detekt_version = '1.0.0.M13'
         assertj_version = '0.2.1'
         mockito_kotlin_version = '1.6.0'
-        dokka_version = '0.9.17'
+        dokka_version = '0.9.18'
         pitest_version = '0.0.9'
     }
 
@@ -34,6 +34,6 @@ task clean(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+    gradleVersion = '4.9'
     distributionType = Wrapper.DistributionType.ALL
 }

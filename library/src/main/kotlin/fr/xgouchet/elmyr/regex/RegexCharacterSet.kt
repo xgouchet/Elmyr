@@ -16,8 +16,12 @@ internal class RegexCharacterSet(parent: RegexParentNode? = null)
 
     override fun handle(c: Char): Boolean {
         return if (isNegated) {
-            negatedRegex += c
-            true
+            if (c != ']') {
+                negatedRegex += c
+                true
+            } else {
+                false
+            }
         } else {
             when (c) {
                 '^' -> {

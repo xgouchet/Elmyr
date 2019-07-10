@@ -272,7 +272,7 @@ object RFCDefinitions {
     // region RFC 3986 (URI)
 
     // Known URL schemes
-    internal val KNOWN_URL_SCHEMES = listOf("file", "ftp", "http", "https", "mailto", "netdoc")
+    internal val KNOWN_URL_SCHEMES = listOf("file", "ftp", "http", "https", "mailto")
 
     // scheme      = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
     private val RFC3986_SCHEME_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789+-.".toCharArray()

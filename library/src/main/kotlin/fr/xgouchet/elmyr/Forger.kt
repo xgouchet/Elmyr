@@ -516,7 +516,11 @@ open class Forger {
      */
     @JvmOverloads
     fun aChar(min: Char = MIN_PRINTABLE, max: Char = MAX_UTF8): Char {
-        return anInt(min.toInt(), max.toInt()).toChar()
+        var c: Char
+        do {
+            c = anInt(min.toInt(), max.toInt()).toChar()
+        } while (c in ILLEGAL_UTF8_CHARS)
+        return c
     }
 
     /**
@@ -1563,6 +1567,8 @@ open class Forger {
         internal const val MAX_ASCII = 0x7F.toChar()
         internal const val MAX_ASCII_EXTENDED = 0xFF.toChar()
         internal const val MAX_UTF8 = 0xD000.toChar()
+
+        internal val ILLEGAL_UTF8_CHARS = arrayOf('\u0085', '\u2028', '\u2029')
 
         private const val MIN_SENTENCE_SIZE = 4
         private const val MIN_SENTENCE_WORD_SIZE = 1
