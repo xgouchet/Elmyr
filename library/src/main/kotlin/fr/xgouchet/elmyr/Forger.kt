@@ -834,7 +834,7 @@ open class Forger {
      */
     @JvmOverloads
     fun aLocalPath(absolute: Boolean? = null): String {
-        val osName = System.getProperty("os.name")
+        val osName = System.getProperty("os.name").toLowerCase()
         if (osName.contains("win")) {
             return aWindowsPath(absolute)
         } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) {

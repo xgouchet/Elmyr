@@ -44,20 +44,20 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     archiveName = 'sources.jar'
 }
 
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    jdkVersion = 9
-    noJdkLink = true
-    noStdlibLink = true
-    outputFormat = 'javadoc'
-    outputDirectory = javadoc.destinationDir
-    inputs.dir 'src/main/kotlin'
-}
-
-task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-    classifier = 'javadoc'
-    archiveName = 'javadoc.jar'
-    from javadoc.destinationDir
-}
+//task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+//    jdkVersion = 9
+//    noJdkLink = true
+//    noStdlibLink = true
+//    outputFormat = 'javadoc'
+//    outputDirectory = javadoc.destinationDir
+//    inputs.dir 'src/main/kotlin'
+//}
+//
+//task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+//    classifier = 'javadoc'
+//    archiveName = 'javadoc.jar'
+//    from javadoc.destinationDir
+//}
 
 
 artifacts {
@@ -106,7 +106,7 @@ project.afterEvaluate {
 
     project.tasks.getByName('install').dependsOn sourcesJar
 
-    project.tasks.getByName('install').dependsOn javadocJar
+//    project.tasks.getByName('install').dependsOn javadocJar
 }
 
 // endregion

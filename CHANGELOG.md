@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.10.1 (2019/07/15)
+
+ - Fix bug when detecting the OS to generate a path
+ - Fix bugs in Regex generation
 
 ### 0.10 (2019/07/09)
 
