@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.11 (2019/07/18)
+
+ - Add forgery to create a random substring of a String (eg: `aSubstring("Hello world")`)
+
 ### 0.10.1 (2019/07/15)
 
  - Fix bug when detecting the OS to generate a path

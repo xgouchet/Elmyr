@@ -6,7 +6,7 @@
 [![Kotlin 1.2.10](https://img.shields.io/badge/Kotlin-1.3.0-blue.svg)](http://kotlinlang.org)
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
-[![Documentation Status](https://img.shields.io/badge/docs-0.10-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.10)
+[![Documentation Status](https://img.shields.io/badge/docs-0.11-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.11)
 [![Build Status](https://travis-ci.org/xgouchet/Elmyr.svg?branch=master)](https://travis-ci.org/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
@@ -27,7 +27,7 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        testCompile 'com.github.xgouchet:Elmyr:0.10'
+        testCompile 'com.github.xgouchet:Elmyr:0.11'
     }
 ```
 
@@ -54,7 +54,7 @@ public class FooTest {
 
 The full documentation can be read on [ReadTheDocs](http://elmyr.readthedocs.io/en/latest/).
 
-## Contributing
+## Contributing 
 
 Contribution is fully welcome. Before submitting a Pull Request, please verify you comply with the following checklist :
 
@@ -64,12 +64,10 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Last Release: 0.10 (2019/07/09)
-                      
- - Allow custom schem in Url forgery (eg: `aUrl(scheme = "wss")`)
- - Add forgery to create an Alpha Numerical string (`anAlphaNumericalString()`)
- - Add forgery to create a java.io.File Object (`aFile()`)
- - Add forgery to randomize a String's case (`randomizeCase("hello world")`)
+
+### Latest Release : 0.11 (2019/07/18)
+
+ - Add forgery to create a random substring of a String (eg: `aSubstring("Hello world")`)
  
 For more information, read the [Changelog](CHANGELOG.md).
 
