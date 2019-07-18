@@ -958,14 +958,26 @@ class ForgerSpek_Text : Spek({
 
                     val randomized = forger.randomizeCase { string }
 
-                    var upper = randomized.toCharArray().count { it.isUpperCase() }
-                    var lower = randomized.toCharArray().count { it.isLowerCase() }
+                    val upper = randomized.toCharArray().count { it.isUpperCase() }
+                    val lower = randomized.toCharArray().count { it.isLowerCase() }
 
                     assertThat(upper).isGreaterThan(0)
                     assertThat(lower).isGreaterThan(0)
                     assertThat(randomized).isEqualToIgnoringCase(string)
                 }
             }
+
+            it("creates a sub string") {
+                repeat(testRepeatCountSmall) {
+                    val string = forger.aSentence(Case.LOWER)
+
+                    val substring = forger.aSubStringOf { string }
+
+                    assertThat(substring).isSubstringOf(string)
+                }
+            }
+
+
         }
 
         // endregion

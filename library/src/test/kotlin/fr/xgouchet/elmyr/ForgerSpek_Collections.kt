@@ -522,6 +522,25 @@ class ForgerSpek_Collections : Spek({
                         .doesNotHaveDuplicates()
                         .doesNotContainNull()
             }
+
+            it("forges a subset of a non empty set, with random size") {
+                val inputSize = forger.anInt(forger.aSmallInt(), 1000)
+                val inputSet = HashSet<String>(inputSize).apply {
+                    for (i in 0 until inputSize) {
+                        add("${i}_${forger.aWord()}")
+                    }
+                }
+
+                val data = forger.aSubSetOf(inputSet)
+
+                assertThat(data)
+                        // output is a new set, non null
+                        .isNotNull()
+                        .isNotSameAs(inputSet)
+                        // no duplicates, no null
+                        .doesNotHaveDuplicates()
+                        .doesNotContainNull()
+            }
         }
         context("shuffling a list") {
             it("shuffles an empty list") {

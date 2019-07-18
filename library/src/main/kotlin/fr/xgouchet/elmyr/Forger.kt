@@ -959,6 +959,33 @@ open class Forger {
         return randomizeCase(this.forging())
     }
 
+    /**
+     * @param string the string from which a substring will be taken
+     * @return a random sub string
+     */
+    fun aSubStringOf(string: String, outputSize: Int = -1): String {
+        val size = if (outputSize >= 0) outputSize else anInt(0, string.length)
+
+        // fast exit : input too short -> return full string
+        if (string.length <= outputSize) return string
+
+        // fast exit : output == 0
+        if (size <= 0) return ""
+
+        val startIndex = anInt(0, string.length - size)
+        val endIndex = startIndex + size
+
+        return string.substring(startIndex, endIndex)
+    }
+
+    /**
+     * @param forging a lambda generating a String from which a substring will be taken
+     * @return a random sub string
+     */
+    fun aSubStringOf(forging: Forger.() -> String): String {
+        return aSubStringOf(this.forging())
+    }
+
     // endregion
 
     // region Nullable
@@ -1353,24 +1380,26 @@ open class Forger {
      *
      * @param set       the set to choose from
      * @param outputSize the size of the sublist. If the input set is smaller than the given size,
-     * the result will have the size of the input set.
+     * the result will have the size of the input set. If set to -1 (default) a random size is picked.
      * @param <T>        The type of elements in the set
      * @return a non null set, with elements picked at random in the input, without duplicates.
      */
-    fun <T> aSubSetOf(set: Set<T>, outputSize: Int): Set<T> {
-        // fast exit : input too short
-        if (set.size <= outputSize) return HashSet(set)
+    fun <T> aSubSetOf(set: Set<T>, outputSize: Int = -1): Set<T> {
+        val size = if (outputSize >= 0) outputSize else anInt(0, set.size)
 
-        // fast exit : output <= 0
-        if (outputSize <= 0) return emptySet()
+        // fast exit : input too short -> return all
+        if (set.size <= size) return HashSet(set)
+
+        // fast exit : output == 0
+        if (size == 0) return emptySet()
 
         val setList = set.toList()
         val inputSize = set.size
-        val result = HashSet<T>(outputSize)
+        val result = HashSet<T>(size)
         val rng = Random()
 
         var numberOfItemsToChooseFrom: Int
-        var numberOfItemsToSelect = outputSize
+        var numberOfItemsToSelect = size
 
         var i = 0
         while (i < inputSize && numberOfItemsToSelect > 0) {
