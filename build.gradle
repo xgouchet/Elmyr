@@ -10,7 +10,7 @@ buildscript {
         assertj_version = '0.2.1'
         mockito_kotlin_version = '1.6.0'
         dokka_version = '0.9.18'
-        pitest_version = '0.0.9'
+        pitest_version = '0.2.1'
     }
 
     repositories {
