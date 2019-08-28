@@ -906,6 +906,15 @@ open class Forger {
     }
 
     /**
+     * @return a String matching the Android Patterns.WEB_URL pattern
+     */
+    fun aWebUrl(): String {
+        val builder = StringBuilder()
+        AndroidDefinitions.Android_buildWebUrl(this, builder)
+        return builder.toString()
+    }
+
+    /**
      * @param rfc2822Compliant if true, it will return an email compliant with the RFC2822 broader format
      * @return an email String
      */

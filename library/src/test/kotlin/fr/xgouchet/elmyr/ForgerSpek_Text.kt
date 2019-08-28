@@ -1,5 +1,6 @@
 package fr.xgouchet.elmyr
 
+import android.util.Patterns
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator
@@ -556,6 +557,15 @@ class ForgerSpek_Text : Spek({
                     val scheme = forger.aWord(Case.LOWER)
                     val url = forger.aUrl(scheme)
                     assertThat(url).startsWith(scheme)
+                }
+            }
+
+            it("forges an Android web url string") {
+                repeat(testRepeatCountSmall) {
+                    val url = forger.aWebUrl()
+                    println(url)
+                    assertThat(url).matches(Patterns.WEB_URL)
+                    assertThat(url).matches(Patterns.AUTOLINK_WEB_URL)
                 }
             }
 

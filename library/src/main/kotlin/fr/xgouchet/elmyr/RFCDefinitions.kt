@@ -1,10 +1,8 @@
-@file:Suppress("FunctionName")
-
 package fr.xgouchet.elmyr
 
 import java.lang.Math.min
 
-@Suppress("LargeClass", "TooManyFunctions", "ComplexMethod", "MagicNumber")
+@Suppress("LargeClass", "TooManyFunctions", "ComplexMethod", "MagicNumber", "FunctionName")
 object RFCDefinitions {
 
     // region RFC 1035 (domain names)
