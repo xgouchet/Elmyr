@@ -2,7 +2,7 @@ package fr.xgouchet.elmyr
 
 import java.lang.Math.min
 
-@Suppress("LargeClass", "TooManyFunctions", "ComplexMethod", "MagicNumber", "FunctionName")
+@Suppress("LargeClass", "TooManyFunctions", "ComplexMethod", "MagicNumber", "LongMethod", "FunctionName")
 object RFCDefinitions {
 
     // region RFC 1035 (domain names)

@@ -14,6 +14,7 @@ internal class RegexCharacterSet(parent: RegexParentNode? = null)
 
     private var negatedRegex: String = ""
 
+    @Suppress("LongMethod", "ComplexMethod")
     override fun handle(c: Char): Boolean {
         return if (isNegated) {
             if (c != ']') {

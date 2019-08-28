@@ -50,7 +50,7 @@ class RegexBuilder(regex: String) {
         }
     }
 
-    @Suppress("ThrowsCount")
+    @Suppress("ThrowsCount", "LongMethod")
     private fun handleCharacter(c: Char) {
         if (ongoingNode.handle(c)) return
 

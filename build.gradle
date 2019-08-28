@@ -6,7 +6,6 @@ buildscript {
         junit_platform_version = '1.0.0'
         junit_vintage_version = '5.5.1'
         junit4_version = '4.12'
-        detekt_version = '1.0.0.M13'
         assertj_version = '0.2.1'
         mockito_kotlin_version = '1.6.0'
         dokka_version = '0.9.18'
@@ -33,7 +32,3 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.9'
-    distributionType = Wrapper.DistributionType.ALL
-}

@@ -13,7 +13,7 @@ import kotlin.math.min
 /**
  * @author Xavier F. Gouchet
  */
-@Suppress("LargeClass", "TooManyFunctions", "ComplexMethod", "ReturnCount")
+@Suppress("LargeClass", "TooManyFunctions", "ComplexMethod", "ReturnCount", "LongMethod")
 open class Forger {
 
     // TODO cleanup complext methods
@@ -894,7 +894,8 @@ open class Forger {
     }
 
     /**
-     * @param scheme the scheme to use in the forged url (by default, the scheme generated will be compliant with the java.net.URL validation)
+     * @param scheme the scheme to use in the forged url
+     *  (by default, the scheme generated will be compliant with the java.net.URL validation)
      * @return a String matching a standard URL according to RFC 3986
      * (Although the RFC itself doesn't give a clear definition of which URI are proper URL, we use a relatively broad definition)
      */
