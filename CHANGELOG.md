@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.12 (2019/09/10)
+
+ - Add forgery to create an Android Web URL string (eg: `aWebUrl()`)
+ - Add parameter to exclude enum values in `aValueFrom(MyEnum::class, exclude = listOf(MyEnum.Foo))` 
+
 ### 0.11 (2019/07/18)
 
  - Add forgery to create a random substring of a String (eg: `aSubstring("Hello world")`)
