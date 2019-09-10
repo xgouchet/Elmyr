@@ -20,7 +20,7 @@ Then, add the dependency in your app's build.gradle :
 
 ```groovy
 dependencies {
-    testCompile 'com.github.xgouchet:Elmyr:0.11'
+    testCompile 'com.github.xgouchet:Elmyr:0.12'
 }
 ```
 
@@ -46,7 +46,7 @@ Then, add the dependency :
 	    <scope>test</scope>
 	    <groupId>com.github.xgouchet</groupId>
 	    <artifactId>Elmyr</artifactId>
-	    <version>0.11</version>
+	    <version>0.12</version>
 	</dependency>
 ```
 
