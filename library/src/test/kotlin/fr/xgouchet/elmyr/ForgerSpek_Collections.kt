@@ -25,7 +25,6 @@ class ForgerSpek_Collections : Spek({
             forger.reset(seed)
         }
 
-
         context("forging elements from a collection") {
             it("selects a Float from a float array") {
                 val data = FloatArray(arraySize) { (it * it * 3.14f) + (it * 1.618f) + 2.718f }
@@ -351,7 +350,7 @@ class ForgerSpek_Collections : Spek({
                 val values = forger.aList { aWord() }
                 val data = forger.aMap(size = values.size) { i to values[i++] }
                 val expectedData = mutableMapOf<Int, String>()
-                for (i in 0 until data.size){
+                for (i in 0 until data.size) {
                     expectedData[i] = values[i]
                 }
 
@@ -542,6 +541,7 @@ class ForgerSpek_Collections : Spek({
                         .doesNotContainNull()
             }
         }
+
         context("shuffling a list") {
             it("shuffles an empty list") {
                 val inputList = emptyList<String>()
@@ -578,6 +578,28 @@ class ForgerSpek_Collections : Spek({
                     }
 
                     previousList = shuffled
+                }
+            }
+
+        }
+
+        context("forging value from an enum") {
+            it("selects a value from an enum class") {
+                repeat(testRepeatCountSmall) {
+                    val value = forger.aValueFrom(Month::class.java)
+
+                    assertThat(value).isInstanceOf(Month::class.java)
+                }
+            }
+
+            it("selects a value from an enum class with excluded values") {
+                repeat(testRepeatCountSmall) {
+                    val excluded = forger.aList(3) { aValueFrom(Month::class.java) }
+                    val value = forger.aValueFrom(Month::class.java,excluded)
+
+                    assertThat(value)
+                            .isInstanceOf(Month::class.java)
+                            .isNotIn(excluded)
                 }
             }
 

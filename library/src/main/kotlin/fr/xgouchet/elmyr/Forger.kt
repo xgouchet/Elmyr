@@ -1492,11 +1492,20 @@ open class Forger {
 
     /**
      * @param enumClass an Enum class
+     * @param exclude a list of enum constants to exclude from the pickable values
      * @return an element “randomly” picked in the enum values
      */
     @Suppress("SpreadOperator")
-    fun <E : Enum<E>> aValueFrom(enumClass: Class<E>): E {
-        return anElementFrom(*enumClass.enumConstants)
+    @JvmOverloads
+    fun <E : Enum<E>> aValueFrom(
+            enumClass: Class<E>,
+            exclude: Collection<E> = emptyList()): E {
+        val chooseFrom = if (exclude.isNotEmpty()) {
+            enumClass.enumConstants.subtract(exclude).toList()
+        } else {
+            enumClass.enumConstants.toList()
+        }
+        return anElementFrom(chooseFrom)
     }
 
     // endregion
