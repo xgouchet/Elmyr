@@ -1,1 +1,21 @@
-include  ':library'
+import fr.xgouchet.buildsrc.Dependencies
+
+pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace == Dependencies.PluginNamespaces.Kotlin) {
+                useVersion Dependencies.Versions.Kotlin
+            } else if (requested.id.namespace == Dependencies.PluginNamespaces.Detetk) {
+                useVersion Dependencies.Versions.Detekt
+            } else if (requested.id.namespace == Dependencies.PluginNamespaces.DependencyVersion) {
+                useVersion Dependencies.Versions.DependencyVersion
+            }
+        }
+    }
+}
+
+// deprecated
+//include ':library'
+
+// new structure
+include ':core'

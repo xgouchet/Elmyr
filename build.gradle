@@ -1,24 +1,15 @@
+import fr.xgouchet.buildsrc.Dependencies
+
 buildscript {
-
-    ext {
-        kotlin_version = '1.3.50'
-        spek_version = '1.2.1'
-        junit_platform_version = '1.0.0'
-        junit_vintage_version = '5.5.2'
-        junit4_version = '4.12'
-        assertj_version = '0.2.1'
-        mockito_kotlin_version = '1.6.0'
-        dokka_version = '0.9.18'
-        pitest_version = '0.0.9'
-    }
-
     repositories {
+        google()
+        mavenCentral()
+        maven { url Dependencies.Repositories.Fabric }
+        maven { url Dependencies.Repositories.Gradle }
         jcenter()
     }
+    
     dependencies {
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$junit_platform_version"
-        classpath "pl.droidsonroids.gradle:gradle-pitest-plugin:$pitest_version"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
     }
 }
 
