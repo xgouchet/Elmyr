@@ -18,6 +18,7 @@ object Dependencies {
 
         // Tools
         const val Detekt = "1.0.0-RC16"
+        const val KtLint = "8.2.0"
         const val DependencyVersion = "0.21.0"
     }
 
@@ -49,7 +50,7 @@ object Dependencies {
 
     object ClassPaths {
         const val Kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
-
+        const val KtLint = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.KtLint}"
         const val JUnitPlatform = "org.junit.platform:junit-platform-gradle-plugin:${Versions.JUnitPlatform}"
     }
 
@@ -62,6 +63,7 @@ object Dependencies {
 
     object PluginNamespaces {
         const val Detetk = "io.gitlab.arturbosch"
+        const val KtLint = "org.jlleitschuh.gradle"
         const val DependencyVersion = "com.github.ben-manes"
         const val Kotlin = "org.jetbrains.kotlin"
     }

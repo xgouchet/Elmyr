@@ -55,29 +55,26 @@ class ForgeFactorySpek : Spek({
                 whenever(mockBaconFactory.getForgery(any())) doReturn fakeBacon
                 val food: Food = forge.getForgery()
 
-                assertThat(food).isIn(fakeBacon, fakeBacon)
+                assertThat(food).isIn(fakeEgg, fakeBacon)
             }
-
         }
-
     }
-
 })
 
 class Foo(
-        val b: Boolean
+    val b: Boolean
 )
 
 class Bar(
-        val b: Boolean
+    val b: Boolean
 )
 
 open class Food
 
 class Egg(
-        val b: Boolean
+    val b: Boolean
 ) : Food()
 
 class Bacon(
-        val b: Boolean
+    val b: Boolean
 ) : Food()

@@ -4,10 +4,8 @@ plugins {
     id "org.jetbrains.kotlin.jvm"
     id "com.github.ben-manes.versions"
     id "io.gitlab.arturbosch.detekt"
+    id 'org.jlleitschuh.gradle.ktlint'
 }
-
-apply plugin: 'java'
-apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -38,22 +36,6 @@ test {
 
 // endregion
 
-// region Detekt
-
-detekt {
-    version = "1.0.1"
-
-    input = files("$projectDir/src/main/kotlin")
-    config = files("$project.rootDir/detekt-config.yml")
-    reports {
-        xml {
-            enabled = true
-            destination = file("build/reports/detekt.xml")
-        }
-    }
-}
-
-check.dependsOn("detekt")
-
-// endregion
+apply from: "$project.rootDir/script/gradle/detekt.gradle"
+apply from: "$project.rootDir/script/gradle/ktlint.gradle"
 

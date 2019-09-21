@@ -2,6 +2,11 @@ package fr.xgouchet.elmyr
 
 import java.util.Random
 
+/**
+ * The base class to generate forgeries.
+ *
+ * TODO include examples of all that's possible
+ */
 open class Forge {
 
     private val rng = Random()
@@ -20,18 +25,38 @@ open class Forge {
 
     // region Factory
 
+    /**
+     * Adds a factory to the forge. This is the best way to extend a forge and provides means to create custom forgeries.
+     * @param T the type the [ForgeryFactory] will be able to forge
+     */
     inline fun <reified T : Any> addFactory(forgeryFactory: ForgeryFactory<T>) {
         addFactory(T::class.java, forgeryFactory)
     }
 
+    /**
+     * Adds a factory to the forge. This is the best way to extend a forge and provides means to create custom forgeries.
+     * @param T the type the [ForgeryFactory] will be able to forge
+     * @param clazz the class of type T
+     */
     fun <T : Any> addFactory(clazz: Class<T>, forgeryFactory: ForgeryFactory<T>) {
         factories[clazz] = forgeryFactory
     }
 
+    /**
+     * @param T the type of the instance to be forged
+     * @return a new instance of type T, randomly forged with available factories
+     * @throws [IllegalArgumentException] if no compatible factory exists
+     */
     inline fun <reified T : Any> getForgery(): T {
         return getForgery(T::class.java)
     }
 
+    /**
+     * @param T the type of the instance to be forged
+     * @param clazz the class of type T
+     * @return a new instance of type T, randomly forged with available factories
+     * @throws [IllegalArgumentException] if no compatible factory exists
+     */
     fun <T : Any> getForgery(clazz: Class<T>): T {
 
         @Suppress("UNCHECKED_CAST")
@@ -46,16 +71,13 @@ open class Forge {
             clazz.isAssignableFrom(it)
         }.values
 
-
-
-        if (matches.isEmpty()) {
-            throw IllegalArgumentException("Cannot create forgery for type ${clazz.canonicalName}.\n" +
-                    "Make sure you provide a factory for this type.")
-        } else {
-            val factory = if (aBool()) matches.first() else matches.last()
-            @Suppress("UNCHECKED_CAST")
-            return (factory as ForgeryFactory<T>).getForgery(this)
+        require(!matches.isEmpty()) {
+            "Cannot create forgery for type ${clazz.canonicalName}.\n" +
+                    "Make sure you provide a factory for this type."
         }
+        val factory = if (aBool()) matches.first() else matches.last()
+        @Suppress("UNCHECKED_CAST")
+        return (factory as ForgeryFactory<T>).getForgery(this)
     }
 
     // endregion
@@ -77,5 +99,4 @@ open class Forge {
 
         internal const val HALF_PROBABILITY = 0.5f
     }
-
 }

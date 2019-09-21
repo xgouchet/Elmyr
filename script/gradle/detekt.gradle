@@ -1,0 +1,14 @@
+detekt {
+    version = "1.0.1"
+
+    input = files("$projectDir/src/main/kotlin")
+    config = files("$project.rootDir/script/config/detekt.yml")
+    reports {
+        xml {
+            enabled = true
+            destination = file("build/reports/detekt.xml")
+        }
+    }
+}
+
+check.dependsOn("detekt")

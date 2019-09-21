@@ -9,6 +9,10 @@ pluginManagement {
                 useVersion Dependencies.Versions.Detekt
             } else if (requested.id.namespace == Dependencies.PluginNamespaces.DependencyVersion) {
                 useVersion Dependencies.Versions.DependencyVersion
+            } else if (requested.id.namespace == Dependencies.PluginNamespaces.KtLint) {
+                useVersion Dependencies.Versions.KtLint
+            } else {
+                println("⋄⋄⋄ namespace ${requested.id.namespace}")
             }
         }
     }
