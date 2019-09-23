@@ -41,7 +41,7 @@ class ForgeFactorySpek : Spek({
 
             it("fails on unknown classes") {
                 try {
-                    val bar: Bar = forge.getForgery()
+                    forge.getForgery<Bar>()
                     throw AssertionError("Should fail here")
                 } catch (e: IllegalArgumentException) {
                     // Nothing to do here
@@ -60,21 +60,3 @@ class ForgeFactorySpek : Spek({
         }
     }
 })
-
-class Foo(
-    val b: Boolean
-)
-
-class Bar(
-    val b: Boolean
-)
-
-open class Food
-
-class Egg(
-    val b: Boolean
-) : Food()
-
-class Bacon(
-    val b: Boolean
-) : Food()

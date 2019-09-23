@@ -12,7 +12,7 @@ pluginManagement {
             } else if (requested.id.namespace == Dependencies.PluginNamespaces.KtLint) {
                 useVersion Dependencies.Versions.KtLint
             } else {
-                println("⋄⋄⋄ namespace ${requested.id.namespace}")
+                println("⋄⋄⋄ namespace:${requested.id.namespace} / name:${requested.id.name}")
             }
         }
     }

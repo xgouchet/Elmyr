@@ -11,8 +11,8 @@ import kotlin.properties.ReadOnlyProperty
  * @param probability the probability the instance will be null (default 0.5f)
  */
 class NullableProperty<T : Any>(
-    val delegate: ForgeryProperty<T>,
-    val probability: Float = Forge.HALF_PROBABILITY
+    private val delegate: ForgeryProperty<T>,
+    private val probability: Float = Forge.HALF_PROBABILITY
 ) : ForgeryProperty<T?>() {
 
     override fun getForgery(forge: Forge): T? {

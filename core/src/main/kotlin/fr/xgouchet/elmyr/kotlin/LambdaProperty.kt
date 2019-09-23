@@ -9,7 +9,7 @@ import kotlin.properties.ReadOnlyProperty
  * @param lambda the lambda that will forge a non-null random object of the desired type
  */
 class LambdaProperty<T : Any>(
-    val lambda: Forge.() -> T
+    private val lambda: Forge.() -> T
 ) : ForgeryProperty<T>() {
 
     override fun getForgery(forge: Forge): T {

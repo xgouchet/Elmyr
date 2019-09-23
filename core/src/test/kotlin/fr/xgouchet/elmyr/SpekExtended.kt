@@ -63,6 +63,15 @@ fun verifyGaussianDistribution(
  * @param operation an operation returning a boolean
  */
 fun verifyProbability(
+    expectedProbability: Float,
+    operation: () -> Boolean
+) = verifyProbability(expectedProbability.toDouble(), operation)
+
+/**
+ * @param expectedProbability the expected probability that the operation returns true
+ * @param operation an operation returning a boolean
+ */
+fun verifyProbability(
     expectedProbability: Double,
     operation: () -> Boolean
 ) {

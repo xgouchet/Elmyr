@@ -10,7 +10,7 @@ import kotlin.properties.ReadOnlyProperty
  * @param clazz the class of the type to be forged
  */
 class FactoryProperty<T : Any>(
-    val clazz: Class<T>
+    private val clazz: Class<T>
 ) : ForgeryProperty<T>() {
 
     override fun getForgery(forge: Forge): T {

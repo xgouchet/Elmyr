@@ -1,0 +1,30 @@
+
+import fr.xgouchet.buildsrc.Dependencies
+
+jacoco {
+    toolVersion = Dependencies.Versions.Jacoco
+    reportsDir = file("$buildDir/jacoco") // Jacoco's output root.
+}
+
+jacocoTestReport {
+    reports {
+        csv.enabled = false
+        xml.enabled = false
+        html.enabled = true
+        html.destination file("$buildDir/jacoco/html")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.9
+            }
+        }
+    }
+}
+
+
+check.dependsOn("jacocoTestReport")
+check.dependsOn("jacocoTestCoverageVerification")

@@ -15,6 +15,7 @@ object Dependencies {
         const val Spek = "1.2.1"
         const val AssertJ = "0.2.1"
         const val Mockito = "1.6.0"
+        const val Jacoco = "0.8.4"
 
         // Tools
         const val Detekt = "1.0.0-RC16"
@@ -67,4 +68,5 @@ object Dependencies {
         const val DependencyVersion = "com.github.ben-manes"
         const val Kotlin = "org.jetbrains.kotlin"
     }
+
 }
