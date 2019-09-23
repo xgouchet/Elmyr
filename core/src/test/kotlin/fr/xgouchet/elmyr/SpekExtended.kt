@@ -56,6 +56,22 @@ fun verifyGaussianDistribution(
  * @param provider the operation returning a value
  */
 fun verifyGaussianDistribution(
+    expectedMean: Long,
+    expectedStandardDev: Long,
+    provider: (Int) -> Long
+) = verifyGaussianDistribution(
+        expectedMean.toDouble(),
+        expectedStandardDev.toDouble()
+) {
+    provider(it).toDouble()
+}
+
+/**
+ * @param expectedMean the expected mean of the gaussian distribution
+ * @param expectedStandardDev the expected standard deviation of the distribution
+ * @param provider the operation returning a value
+ */
+fun verifyGaussianDistribution(
     expectedMean: Float,
     expectedStandardDev: Float,
     provider: (Int) -> Float

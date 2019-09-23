@@ -4,6 +4,7 @@ import java.util.Random
 import kotlin.math.abs
 import kotlin.math.round
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 import kotlin.math.sqrt
 
 /**
@@ -201,6 +202,69 @@ open class Forge {
 
     // endregion
 
+    // region Long
+
+    /**
+     * @param min the minimum value (inclusive), default = [Long.MIN_VALUE]
+     * @param max the maximum value (exclusive), default = [Long.MAX_VALUE]
+     * @return a long between min and max
+     * @throws [IllegalArgumentException] if min >= max
+     */
+    @JvmOverloads
+    fun aLong(min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE): Long {
+        require(min < max) {
+            "The ‘min’ boundary ($min) of the range should be less than the ‘max’ boundary ($max)"
+        }
+
+        val range = max - min
+
+        return (abs(rng.nextLong()) % range) + min
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 long (default : false)
+     * @return a positive long
+     */
+    @JvmOverloads
+    fun aPositiveLong(strict: Boolean = false): Long {
+        return aLong(min = if (strict) 1 else 0)
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 long (default : true)
+     * @return a negative long
+     */
+    @JvmOverloads
+    fun aNegativeLong(strict: Boolean = true): Long {
+        return aLong(min = Long.MIN_VALUE, max = if (strict) -1 else 0)
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0)
+     * @param standardDeviation the standard deviation value of the distribution (default : 100)
+     * @return an long picked from a gaussian distribution (aka bell curve)
+     */
+    @JvmOverloads
+    fun aGaussianLong(mean: Long = 0L, standardDeviation: Long = DEFAULT_STDEV_INT.toLong()): Long {
+        require(mean <= MEAN_THRESHOLD_LONG) {
+            "Cannot use a mean greater than $MEAN_THRESHOLD_LONG due to distribution imprecision"
+        }
+        require(mean >= -MEAN_THRESHOLD_LONG) {
+            "Cannot use a mean less than -$MEAN_THRESHOLD_LONG due to distribution imprecision"
+        }
+        require(standardDeviation >= 0) {
+            "Standard deviation ($standardDeviation) must be a positive (or null) value"
+        }
+
+        return if (standardDeviation == 0L) {
+            mean
+        } else {
+            (rng.nextGaussian() * standardDeviation).roundToLong() + mean
+        }
+    }
+
+    // endregion
+
     // region Float
 
     /**
@@ -286,6 +350,7 @@ open class Forge {
 
         // Gaussians
         @JvmField internal val MEAN_THRESHOLD_INT = sqrt(Int.MAX_VALUE.toDouble()).roundToInt()
+        @JvmField internal val MEAN_THRESHOLD_LONG = sqrt(Long.MAX_VALUE.toDouble()).roundToLong()
         @JvmField internal val MEAN_THRESHOLD_FLOAT = sqrt(Float.MAX_VALUE.toDouble()).toFloat()
     }
 }
