@@ -4,6 +4,8 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import fr.xgouchet.elmyr.dummy.Bar
+import fr.xgouchet.elmyr.dummy.Foo
 import fr.xgouchet.elmyr.kotlin.booleanForgery
 import fr.xgouchet.elmyr.kotlin.factoryForgery
 import fr.xgouchet.elmyr.kotlin.nullableForgery
@@ -85,7 +87,7 @@ class ForgeDelegateSpek : Spek({
             forge.addFactory(mockFooFactory)
 
             it("forges an instance") {
-                val fakeFoo = Foo(forge.aBool())
+                val fakeFoo = Foo(forge.anInt())
                 whenever(mockFooFactory.getForgery(any())) doReturn fakeFoo
 
                 val temp = WithFactory(forge)

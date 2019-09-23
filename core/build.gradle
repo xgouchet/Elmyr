@@ -15,9 +15,6 @@ dependencies {
 
     compile Dependencies.Libraries.Kotlin
 
-
-    compileOnly Dependencies.Libraries.JUnit4
-
     testCompile Dependencies.Libraries.JUnit5
     testCompile Dependencies.Libraries.Spek
     testCompile Dependencies.Libraries.TestTools

@@ -35,6 +35,7 @@ open class Forge {
      * Adds a factory to the forge. This is the best way to extend a forge and provides means to
      * create custom forgeries.
      * @param T the type the [ForgeryFactory] will be able to forge
+     * @param forgeryFactory the factory to be used
      */
     inline fun <reified T : Any> addFactory(forgeryFactory: ForgeryFactory<T>) {
         addFactory(T::class.java, forgeryFactory)
@@ -45,6 +46,7 @@ open class Forge {
      * create custom forgeries.
      * @param T the type the [ForgeryFactory] will be able to forge
      * @param clazz the class of type T
+     * @param forgeryFactory the factory to be used
      */
     fun <T : Any> addFactory(clazz: Class<T>, forgeryFactory: ForgeryFactory<T>) {
         factories[clazz] = forgeryFactory

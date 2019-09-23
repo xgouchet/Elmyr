@@ -103,13 +103,39 @@ fun verifyGaussianDistribution(
     }
 
     val computedMean = sum / count
-    val d = squareSum - (count * expectedMean * expectedMean)
-    val computedStDev = sqrt(abs(d) / (count - 1.0))
     assertThat(computedMean)
             .isCloseTo(expectedMean, within(expectedStandardDev))
+
+    val d = squareSum - (count * computedMean * computedMean)
+    val computedStDev = sqrt(abs(d) / (count - 1.0))
+
     assertThat(computedStDev)
             .isGreaterThanOrEqualTo(0.0)
-            .isBetween(expectedStandardDev / 2.0, expectedStandardDev * 3.0)
+
+    if (expectedStandardDev <= 1.0) {
+        assertThat(computedStDev)
+                .overridingErrorMessage(
+                        "Expected a standard deviation of " +
+                                "<$expectedStandardDev> but was <$computedStDev>"
+                )
+                .isLessThanOrEqualTo(expectedStandardDev * 3.0)
+    } else if (expectedStandardDev <= 3.0) {
+        assertThat(computedStDev)
+                .overridingErrorMessage(
+                        "Expected a standard deviation of " +
+                                "<$expectedStandardDev> but was <$computedStDev>"
+                )
+                .isGreaterThan(expectedStandardDev / 2.0)
+                .isLessThanOrEqualTo(expectedStandardDev * 5.0)
+    } else {
+        assertThat(computedStDev)
+                .overridingErrorMessage(
+                        "Expected a standard deviation of " +
+                                "<$expectedStandardDev> but was <$computedStDev>"
+                )
+                .isGreaterThan(sqrt(expectedStandardDev))
+                .isLessThanOrEqualTo(expectedStandardDev * 8.0)
+    }
 }
 
 /**

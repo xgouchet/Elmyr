@@ -4,6 +4,9 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import fr.xgouchet.elmyr.dummy.Bar
+import fr.xgouchet.elmyr.dummy.Foo
+import fr.xgouchet.elmyr.dummy.Food
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
@@ -23,15 +26,15 @@ class ForgeFactorySpek : Spek({
 
         context("with a factory") {
             val mockFooFactory: ForgeryFactory<Foo> = mock()
-            val mockEggFactory: ForgeryFactory<Egg> = mock()
-            val mockBaconFactory: ForgeryFactory<Bacon> = mock()
+            val mockEggFactory: ForgeryFactory<Food.Egg> = mock()
+            val mockBaconFactory: ForgeryFactory<Food.Bacon> = mock()
 
             forge.addFactory(mockFooFactory)
             forge.addFactory(mockEggFactory)
             forge.addFactory(mockBaconFactory)
 
             it("forges an instance") {
-                val fakeFoo = Foo(forge.aBool())
+                val fakeFoo = Foo(forge.anInt())
                 whenever(mockFooFactory.getForgery(any())) doReturn fakeFoo
 
                 val foo: Foo = forge.getForgery()
@@ -49,8 +52,8 @@ class ForgeFactorySpek : Spek({
             }
 
             it("falls back on subclasses") {
-                val fakeEgg = Egg(forge.aBool())
-                val fakeBacon = Bacon(forge.aBool())
+                val fakeEgg = Food.Egg(forge.aBool())
+                val fakeBacon = Food.Bacon(forge.aBool())
                 whenever(mockEggFactory.getForgery(any())) doReturn fakeEgg
                 whenever(mockBaconFactory.getForgery(any())) doReturn fakeBacon
                 val food: Food = forge.getForgery()

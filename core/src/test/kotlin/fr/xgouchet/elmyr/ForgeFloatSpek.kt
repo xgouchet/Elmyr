@@ -32,8 +32,8 @@ class ForgeFloatSpek : Spek({
             }
 
             it("forges an float in a specified range") {
-                val min = forge.aNegativeFloat(strict = true)
-                val max = forge.aPositiveFloat(strict = true)
+                val min = forge.aFloat(-Forge.MEAN_THRESHOLD_FLOAT, 0f)
+                val max = forge.aFloat(0f, Forge.MEAN_THRESHOLD_FLOAT)
 
                 assertThat(max).isGreaterThan(min)
 
