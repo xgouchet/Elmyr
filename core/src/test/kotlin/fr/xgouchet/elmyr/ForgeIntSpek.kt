@@ -13,7 +13,6 @@ class ForgeIntSpek : Spek({
         var seed: Long
 
         val testRepeatCountSmall = 16
-        val testRepeatCountHuge = 1024
 
         beforeEachTest {
             seed = System.nanoTime()
@@ -39,30 +38,6 @@ class ForgeIntSpek : Spek({
                 }
             }
 
-            it("fails if standard deviation < 0") {
-                val mean = forge.aSmallInt()
-                val stDev = forge.aNegativeInt(true)
-                throws<IllegalArgumentException> {
-                    forge.aGaussianInt(mean, stDev)
-                }
-            }
-
-            it("fails if mean > MAX_VALUE/2") {
-                val mean = forge.anInt(min = Int.MAX_VALUE / 2)
-                val stDev = forge.anInt(1, 10)
-                throws<IllegalArgumentException> {
-                    forge.aGaussianInt(mean, stDev)
-                }
-            }
-
-            it("fails if mean < -MAX_VALUE/2") {
-                val mean = forge.anInt(max = -Int.MAX_VALUE / 2)
-                val stDev = forge.anInt(1, 10)
-                throws<IllegalArgumentException> {
-                    forge.aGaussianInt(mean, stDev)
-                }
-            }
-
             it("forges an int in a specified range") {
                 val min = forge.anInt()
                 val max = forge.anInt(min = min + 1)
@@ -75,7 +50,7 @@ class ForgeIntSpek : Spek({
                 }
             }
 
-            it("forges an int in a range of 1") {
+            it("forges an int in minimal range") {
                 val min = forge.anInt()
                 val max = min + 1
 
@@ -110,7 +85,7 @@ class ForgeIntSpek : Spek({
 
         // endregion
 
-        // region Integer in Range
+        // region Integer with sign
 
         context("forging integers with sign") {
 
@@ -149,19 +124,42 @@ class ForgeIntSpek : Spek({
 
         // endregion
 
-        // region Integer in Range
+        // region Integer in Gaussian distribution
 
         context("forging integers with gaussian") {
+
+            it("fails if standard deviation < 0") {
+                val mean = forge.aSmallInt()
+                val stDev = forge.aNegativeInt(true)
+                throws<IllegalArgumentException> {
+                    forge.aGaussianInt(mean, stDev)
+                }
+            }
+
+            it("fails if mean > MAX_VALUE/2") {
+                val mean = forge.anInt(min = Int.MAX_VALUE / 2)
+                val stDev = forge.anInt(1, 10)
+                throws<IllegalArgumentException> {
+                    forge.aGaussianInt(mean, stDev)
+                }
+            }
+
+            it("fails if mean < -MAX_VALUE/2") {
+                val mean = forge.anInt(max = -Int.MAX_VALUE / 2)
+                val stDev = forge.anInt(1, 10)
+                throws<IllegalArgumentException> {
+                    forge.aGaussianInt(mean, stDev)
+                }
+            }
 
             it("forges a gaussian distributed int with defaults") {
                 val mean = 0
                 val stdev = 100
 
                 verifyGaussianDistribution(
-                        testRepeatCountHuge,
-                        mean.toDouble(),
-                        stdev.toDouble()
-                ) { forge.aGaussianInt().toDouble() }
+                        mean,
+                        stdev
+                ) { forge.aGaussianInt() }
             }
 
             it("forges a gaussian distributed int with defaults stdev") {
@@ -169,10 +167,9 @@ class ForgeIntSpek : Spek({
                 val stdev = 100
 
                 verifyGaussianDistribution(
-                        testRepeatCountHuge,
-                        mean.toDouble(),
-                        stdev.toDouble()
-                ) { forge.aGaussianInt(mean).toDouble() }
+                        mean,
+                        stdev
+                ) { forge.aGaussianInt(mean) }
             }
 
             it("forges a gaussian distributed int with defaults mean") {
@@ -180,10 +177,9 @@ class ForgeIntSpek : Spek({
                 val stdev = forge.anInt(10, 500)
 
                 verifyGaussianDistribution(
-                        testRepeatCountHuge,
-                        mean.toDouble(),
-                        stdev.toDouble()
-                ) { forge.aGaussianInt(standardDeviation = stdev).toDouble() }
+                        mean,
+                        stdev
+                ) { forge.aGaussianInt(standardDeviation = stdev) }
             }
 
             it("forges a gaussian distributed int") {
@@ -191,10 +187,9 @@ class ForgeIntSpek : Spek({
                 val stdev = forge.anInt(10, 500)
 
                 verifyGaussianDistribution(
-                        testRepeatCountHuge,
-                        mean.toDouble(),
-                        stdev.toDouble()
-                ) { forge.aGaussianInt(mean, stdev).toDouble() }
+                        mean,
+                        stdev
+                ) { forge.aGaussianInt(mean, stdev) }
             }
 
             it("forges mean when standard deviation is 0") {

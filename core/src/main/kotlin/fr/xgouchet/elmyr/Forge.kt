@@ -31,7 +31,8 @@ open class Forge {
     // region Factory
 
     /**
-     * Adds a factory to the forge. This is the best way to extend a forge and provides means to create custom forgeries.
+     * Adds a factory to the forge. This is the best way to extend a forge and provides means to
+     * create custom forgeries.
      * @param T the type the [ForgeryFactory] will be able to forge
      */
     inline fun <reified T : Any> addFactory(forgeryFactory: ForgeryFactory<T>) {
@@ -39,7 +40,8 @@ open class Forge {
     }
 
     /**
-     * Adds a factory to the forge. This is the best way to extend a forge and provides means to create custom forgeries.
+     * Adds a factory to the forge. This is the best way to extend a forge and provides means to
+     * create custom forgeries.
      * @param T the type the [ForgeryFactory] will be able to forge
      * @param clazz the class of type T
      */
@@ -175,6 +177,8 @@ open class Forge {
      * @param mean the mean value of the distribution (default : 0)
      * @param standardDeviation the standard deviation value of the distribution (default : 100)
      * @return an int picked from a gaussian distribution (aka bell curve)
+     * @throws [IllegalArgumentException] if the mean is outside of the range -46340..46340
+     * (to avoid distribution imprecision); or if the standard deviation is negative
      */
     @JvmOverloads
     fun aGaussianInt(mean: Int = 0, standardDeviation: Int = DEFAULT_STDEV_INT): Int {
@@ -197,6 +201,76 @@ open class Forge {
 
     // endregion
 
+    // region Float
+
+    /**
+     * @param min the minimum value (inclusive), default = -Float#MAX_VALUE
+     * @param max the maximum value (exclusive), default = Float#MAX_VALUE
+     * @return a float between min and max
+     * @throws [IllegalArgumentException] if min > max
+     */
+    @JvmOverloads
+    fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float {
+        require(min <= max) {
+            "The ‘min’ boundary ($min) of the range should be less than (or equal to) " +
+                    "the ‘max’ boundary ($max)"
+        }
+
+        val range = max - min
+        return if (range == Float.POSITIVE_INFINITY) {
+            (rng.nextFloat() - HALF_PROBABILITY) * Float.MAX_VALUE * 2
+        } else {
+            (rng.nextFloat() * range) + min
+        }
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 int (default : false)
+     * @return a positive float
+     */
+    @JvmOverloads
+    fun aPositiveFloat(strict: Boolean = false): Float {
+        return aFloat(min = if (strict) Float.MIN_VALUE else 0.0f)
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 int (default : true)
+     * @return a negative float
+     */
+    @JvmOverloads
+    fun aNegativeFloat(strict: Boolean = true): Float {
+        return -aPositiveFloat(strict)
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0.0f)
+     * @param standardDeviation the standard deviation value of the distribution (default : 1.0f)
+     * @return a float picked from a gaussian distribution (aka bell curve)
+     * @throws [IllegalArgumentException] if the mean is outside of the range -1.8446743E19..1.8446743E19
+     * (to avoid distribution imprecision); or if the standard deviation is negative
+     */
+    @JvmOverloads
+    fun aGaussianFloat(mean: Float = 0f, standardDeviation: Float = 1f): Float {
+
+        require(mean <= MEAN_THRESHOLD_FLOAT) {
+            "Cannot use a mean greater than $MEAN_THRESHOLD_FLOAT due to distribution imprecision"
+        }
+        require(mean >= -MEAN_THRESHOLD_FLOAT) {
+            "Cannot use a mean less than -$MEAN_THRESHOLD_FLOAT due to distribution imprecision"
+        }
+        require(standardDeviation >= 0) {
+            "Standard deviation ($standardDeviation) must be a positive (or null) value"
+        }
+
+        return if (standardDeviation == 0f) {
+            mean
+        } else {
+            (rng.nextGaussian().toFloat() * standardDeviation) + mean
+        }
+    }
+
+    // endregion
+
     companion object {
 
         // Boolean
@@ -210,6 +284,8 @@ open class Forge {
         private const val MAX_INT = 0xFFFFFFFFL
         private const val DEFAULT_STDEV_INT = 100
 
+        // Gaussians
         @JvmField internal val MEAN_THRESHOLD_INT = sqrt(Int.MAX_VALUE.toDouble()).roundToInt()
+        @JvmField internal val MEAN_THRESHOLD_FLOAT = sqrt(Float.MAX_VALUE.toDouble()).toFloat()
     }
 }

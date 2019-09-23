@@ -34,12 +34,49 @@ inline fun <reified T : Throwable> throws(block: () -> Unit) {
     }
 }
 
+/**
+ * @param expectedMean the expected mean of the gaussian distribution
+ * @param expectedStandardDev the expected standard deviation of the distribution
+ * @param provider the operation returning a value
+ */
 fun verifyGaussianDistribution(
-    count: Int,
+    expectedMean: Int,
+    expectedStandardDev: Int,
+    provider: (Int) -> Int
+) = verifyGaussianDistribution(
+        expectedMean.toDouble(),
+        expectedStandardDev.toDouble()
+) {
+    provider(it).toDouble()
+}
+
+/**
+ * @param expectedMean the expected mean of the gaussian distribution
+ * @param expectedStandardDev the expected standard deviation of the distribution
+ * @param provider the operation returning a value
+ */
+fun verifyGaussianDistribution(
+    expectedMean: Float,
+    expectedStandardDev: Float,
+    provider: (Int) -> Float
+) = verifyGaussianDistribution(
+        expectedMean.toDouble(),
+        expectedStandardDev.toDouble()
+) {
+    provider(it).toDouble()
+}
+
+/**
+ * @param expectedMean the expected mean of the gaussian distribution
+ * @param expectedStandardDev the expected standard deviation of the distribution
+ * @param provider the operation returning a value
+ */
+fun verifyGaussianDistribution(
     expectedMean: Double,
     expectedStandardDev: Double,
     provider: (Int) -> Double
 ) {
+    val count = 2048
     var sum = 0.0
     var squareSum = 0.0
 
@@ -55,7 +92,8 @@ fun verifyGaussianDistribution(
     assertThat(computedMean)
             .isCloseTo(expectedMean, within(expectedStandardDev))
     assertThat(computedStDev)
-            .isCloseTo(expectedStandardDev, within(expectedStandardDev * 10))
+            .isGreaterThanOrEqualTo(0.0)
+            .isBetween(expectedStandardDev / 2.0, expectedStandardDev * 3.0)
 }
 
 /**
