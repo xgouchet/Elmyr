@@ -1,0 +1,25 @@
+def isNonStable = { String version ->
+    def unstableKeywords = ['apha', 'beta'].any { it ->
+        version.toLowerCase().contains(it)
+    }
+
+    def stableKeyword = ['release', 'final', 'ga'].any { it ->
+        version.toLowerCase().contains(it)
+    }
+
+    def regex = /^[0-9,.v-]+$/
+
+    return unstableKeywords || (!stableKeyword && !(version ==~ regex))
+}
+
+dependencyUpdates {
+    resolutionStrategy {
+        componentSelection {
+            all {
+                if (isNonStable(candidate.version)) {
+                    reject('Unstable version')
+                }
+            }
+        }
+    }
+}

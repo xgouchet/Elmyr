@@ -34,7 +34,7 @@ internal class InternalForgeStatement(
             performQuietly(errors) { skipped() }
         } catch (e: Throwable) {
             errors.add(e)
-            performQuietly(errors) { failed(e) }
+            performQuietly(errors) { failed() }
         } finally {
             performQuietly(errors) { finished() }
         }
@@ -68,8 +68,8 @@ internal class InternalForgeStatement(
     @Suppress("EmptyFunctionBlock")
     private fun skipped() {}
 
-    private fun failed(e: Throwable) {
-        val message = "<%s.%s()> failed with forge seed 0x%x\n" +
+    private fun failed() {
+        val message = "<%s.%s()> failed with Forge seed 0x%x\n" +
                 "Add the following line in your @Before method to reproduce :\n\n" +
                 "\tforger.resetSeed(0x%xL)\n"
         System.err.println(

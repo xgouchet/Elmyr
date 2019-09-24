@@ -1,7 +1,7 @@
 package fr.xgouchet.elmyr.junit4.internal
 
-import com.nhaarman.mockito_kotlin.doThrow
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.whenever
 import fr.xgouchet.elmyr.junit4.JUnitForge
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.AssumptionViolatedException
@@ -58,7 +58,7 @@ class InternalForgeStatementTest {
         assertThat(errStreamContent.toString())
                 .isEqualTo(
                         "<${mockTarget.javaClass.simpleName}.${mockMethod.name}()> failed " +
-                                "with forge seed 0x${forge.seed.toString(16)}\n" +
+                                "with Forge seed 0x${forge.seed.toString(16)}\n" +
                                 "Add the following line in your @Before method to reproduce :\n" +
                                 "\n" +
                                 "\tforger.resetSeed(0x${forge.seed.toString(16)}L)\n" +

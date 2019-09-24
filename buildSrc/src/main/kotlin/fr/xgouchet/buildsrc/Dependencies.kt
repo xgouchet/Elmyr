@@ -14,13 +14,13 @@ object Dependencies {
 
         const val Spek = "1.2.1"
         const val AssertJ = "0.2.1"
-        const val Mockito = "1.6.0"
+        const val MockitoKotlin = "2.1.0"
         const val Jacoco = "0.8.4"
 
         // Tools
-        const val Detekt = "1.0.0-RC16"
+        const val Detekt = "1.0.1"
         const val KtLint = "8.2.0"
-        const val DependencyVersion = "0.21.0"
+        const val DependencyVersion = "0.25.0"
     }
 
     object Libraries {
@@ -45,7 +45,7 @@ object Dependencies {
 
         @JvmField val TestTools = arrayOf(
                 "net.wuerl.kotlin:assertj-core-kotlin:${Versions.AssertJ}",
-                "com.nhaarman:mockito-kotlin:${Versions.Mockito}"
+                "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.MockitoKotlin}"
         )
 
     }
