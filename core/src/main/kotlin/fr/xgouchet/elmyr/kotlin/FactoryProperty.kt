@@ -13,6 +13,7 @@ class FactoryProperty<T : Any>(
     private val clazz: Class<T>
 ) : ForgeryProperty<T>() {
 
+    /** @inheritdoc */
     override fun getForgery(forge: Forge): T {
         return forge.getForgery(clazz)
     }

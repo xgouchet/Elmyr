@@ -12,6 +12,7 @@ class BooleanProperty(
     private val probability: Float = Forge.HALF_PROBABILITY
 ) : ForgeryProperty<Boolean>() {
 
+    /** @inheritdoc */
     override fun getForgery(forge: Forge): Boolean {
         return forge.aBool(probability)
     }

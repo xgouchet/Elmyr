@@ -1,24 +1,25 @@
-package fr.xgouchet.elmyr.junit4.internal
+package fr.xgouchet.elmyr.junit4
 
 import fr.xgouchet.elmyr.Forge
-import fr.xgouchet.elmyr.junit4.ForgeAnnotationEngine
-import fr.xgouchet.elmyr.junit4.internal.engine.CombinedAnnotationEngine
+import fr.xgouchet.elmyr.inject.CombinedForgeryInjector
+import fr.xgouchet.elmyr.inject.ForgeryInjector
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.MultipleFailureException
 import org.junit.runners.model.Statement
 import java.util.Locale
 
-internal class InternalForgeStatement(
+internal class ForgeStatement(
     private val base: Statement,
     private val method: FrameworkMethod,
     private val target: Any,
     private val forge: Forge
 ) : Statement() {
 
-    private val injector: ForgeAnnotationEngine = CombinedAnnotationEngine(forge)
+    private val injector: ForgeryInjector = CombinedForgeryInjector()
 
     // region Statement
 
+    /** @inheritdoc */
     @Suppress("TooGenericExceptionCaught")
     override fun evaluate() {
         val errors = mutableListOf<Throwable>()
@@ -26,7 +27,7 @@ internal class InternalForgeStatement(
         performQuietly(errors) { starting() }
 
         try {
-            injector.process(target)
+            injector.inject(forge, target)
             base.evaluate()
             performQuietly(errors) { succeeded() }
         } catch (e: org.junit.internal.AssumptionViolatedException) {
@@ -63,10 +64,12 @@ internal class InternalForgeStatement(
     }
 
     @Suppress("EmptyFunctionBlock")
-    private fun succeeded() {}
+    private fun succeeded() {
+    }
 
     @Suppress("EmptyFunctionBlock")
-    private fun skipped() {}
+    private fun skipped() {
+    }
 
     private fun failed() {
         val message = "<%s.%s()> failed with Forge seed 0x%x\n" +
@@ -84,7 +87,8 @@ internal class InternalForgeStatement(
     }
 
     @Suppress("EmptyFunctionBlock")
-    private fun finished() {}
+    private fun finished() {
+    }
 
     private fun resetSeed() {
         val seed = (System.nanoTime() and SEED_MASK)

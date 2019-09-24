@@ -15,6 +15,7 @@ class NullableProperty<T : Any>(
     private val probability: Float = Forge.HALF_PROBABILITY
 ) : ForgeryProperty<T?>() {
 
+    /** @inheritdoc */
     override fun getForgery(forge: Forge): T? {
         val isNull = forge.aBool(probability)
         return if (isNull) null else delegate.getForgery(forge)

@@ -1,6 +1,5 @@
-package fr.xgouchet.elmyr.junit4.internal.reflect
+package fr.xgouchet.elmyr.inject.reflect
 
-import java.lang.IllegalStateException
 import java.lang.reflect.Method
 
 @Suppress("TooGenericExceptionCaught", "SwallowedException")

@@ -17,6 +17,7 @@ abstract class ForgeryProperty<T> :
     private var lastSeed: Long = 0
     private var memoizedValue: T? = null
 
+    /** @inheritdoc */
     final override fun getValue(thisRef: ForgeryAware, property: KProperty<*>): T {
         val forge = thisRef.forge
         val lastValue = memoizedValue

@@ -21,6 +21,9 @@ object Dependencies {
         const val Detekt = "1.0.1"
         const val KtLint = "8.2.0"
         const val DependencyVersion = "0.25.0"
+
+        const val SystemRules = "1.19.0"
+        const val MockitoExt = "2.23.0"
     }
 
     object Libraries {
@@ -48,6 +51,13 @@ object Dependencies {
                 "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.MockitoKotlin}"
         )
 
+        @JvmField val JUnit4Rules = arrayOf(
+                "com.github.stefanbirkner:system-rules:${Versions.SystemRules}"
+        )
+
+        @JvmField val JUnit5Extensions = arrayOf(
+                "org.mockito:mockito-junit-jupiter:2.23.0"
+        )
     }
 
     object ClassPaths {

@@ -5,7 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Elmyr.iml" filepath="$PROJECT_DIR$/.idea/modules/Elmyr.iml" group="Elmyr" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Elmyr_buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/Elmyr_buildSrc.iml" group="Elmyr/Elmyr_buildSrc" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/core.iml" group="Elmyr/core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/inject/inject.iml" filepath="$PROJECT_DIR$/.idea/modules/inject/inject.iml" group="Elmyr/inject" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/junit4/junit4.iml" filepath="$PROJECT_DIR$/.idea/modules/junit4/junit4.iml" group="Elmyr/junit4" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/junit5/junit5.iml" filepath="$PROJECT_DIR$/.idea/modules/junit5/junit5.iml" group="Elmyr/junit5" />
     </modules>
   </component>
 </project>

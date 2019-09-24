@@ -12,6 +12,7 @@ class LambdaProperty<T : Any>(
     private val lambda: Forge.() -> T
 ) : ForgeryProperty<T>() {
 
+    /** @inheritdoc */
     override fun getForgery(forge: Forge): T {
         return forge.lambda()
     }

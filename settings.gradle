@@ -22,5 +22,5 @@ pluginManagement {
 //include ':library'
 
 // new structure
-include ':core'
-include ':junit4'
+include ':core', ':inject'
+include ':junit4', ':junit5'

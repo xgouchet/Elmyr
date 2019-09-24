@@ -14,16 +14,13 @@ targetCompatibility = 1.8
 dependencies {
 
     compile project(":core")
-    compile project(":inject")
-
     compile Dependencies.Libraries.Kotlin
+    implementation Dependencies.Libraries.KotlinReflect
 
-    compileOnly Dependencies.Libraries.JUnit4
-
+    testCompile Dependencies.Libraries.JUnit4
     testCompile Dependencies.Libraries.JUnit5
     testCompile Dependencies.Libraries.Spek
     testCompile Dependencies.Libraries.TestTools
-    testCompile Dependencies.Libraries.JUnit4Rules
 }
 
 // region JUnit

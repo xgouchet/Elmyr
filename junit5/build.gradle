@@ -15,15 +15,14 @@ dependencies {
 
     compile project(":core")
     compile project(":inject")
-
     compile Dependencies.Libraries.Kotlin
 
-    compileOnly Dependencies.Libraries.JUnit4
+    compileOnly Dependencies.Libraries.JUnit5
 
     testCompile Dependencies.Libraries.JUnit5
     testCompile Dependencies.Libraries.Spek
     testCompile Dependencies.Libraries.TestTools
-    testCompile Dependencies.Libraries.JUnit4Rules
+    testCompile Dependencies.Libraries.JUnit5Extensions
 }
 
 // region JUnit

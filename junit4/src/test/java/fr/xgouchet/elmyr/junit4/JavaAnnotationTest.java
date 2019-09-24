@@ -1,5 +1,6 @@
 package fr.xgouchet.elmyr.junit4;
 
+import fr.xgouchet.elmyr.annotation.Forgery;
 import fr.xgouchet.elmyr.junit4.dummy.Foo;
 import fr.xgouchet.elmyr.junit4.dummy.FooFactory;
 import org.junit.Before;
@@ -14,7 +15,7 @@ public class JavaAnnotationTest {
     private static Foo memoizedFoo = null;
 
     @Rule
-    public JUnitForge forge = new JUnitForge().withFactory(Foo.class, new FooFactory());
+    public ForgeRule forge = new ForgeRule().withFactory(Foo.class, new FooFactory());
 
     @Forgery
     private Foo fakeFoo = null;
@@ -43,6 +44,7 @@ public class JavaAnnotationTest {
 
     private void checkForgeryInjected() {
         Foo previousFoo = memoizedFoo;
+        assertThat(fakeFoo).isNotNull();
         if (previousFoo != null) {
             assertThat(fakeFoo).isNotEqualTo(previousFoo);
         }
