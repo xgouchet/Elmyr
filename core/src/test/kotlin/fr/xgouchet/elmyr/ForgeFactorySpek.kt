@@ -46,7 +46,7 @@ class ForgeFactorySpek : Spek({
                 try {
                     forge.getForgery<Bar>()
                     throw AssertionError("Should fail here")
-                } catch (e: IllegalArgumentException) {
+                } catch (e: ForgeryException) {
                     // Nothing to do here
                 }
             }

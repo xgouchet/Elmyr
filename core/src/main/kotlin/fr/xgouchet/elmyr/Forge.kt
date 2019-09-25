@@ -86,9 +86,8 @@ open class Forge {
             clazz.isAssignableFrom(it)
         }.values
 
-        require(!matches.isEmpty()) {
-            "Cannot create forgery for type ${clazz.canonicalName}.\n" +
-                    "Make sure you provide a factory for this type."
+        if (matches.isEmpty()) {
+            throw ForgeryFactoryMissingException(clazz = clazz)
         }
         val factory = if (aBool()) matches.first() else matches.last()
         @Suppress("UNCHECKED_CAST")

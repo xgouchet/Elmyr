@@ -1,0 +1,6 @@
+
+test {
+    useJUnitPlatform {
+        includeEngines 'spek', 'junit-jupiter', 'junit-vintage'
+    }
+}

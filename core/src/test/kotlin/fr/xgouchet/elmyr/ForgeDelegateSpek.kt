@@ -96,7 +96,7 @@ class ForgeDelegateSpek : Spek({
 
             it("fails when factory not available") {
                 val temp = WithFactory(forge)
-                throws<IllegalArgumentException> {
+                throws<ForgeryException> {
                     @Suppress("UNUSED_VARIABLE")
                     val b = temp.forgedBar
                 }

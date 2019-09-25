@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr.junit5
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeryFactory
 import fr.xgouchet.elmyr.annotation.Forgery
-import fr.xgouchet.elmyr.inject.CombinedForgeryInjector
+import fr.xgouchet.elmyr.inject.DefaultForgeryInjector
 import fr.xgouchet.elmyr.inject.ForgeryInjector
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
@@ -31,7 +31,7 @@ class ForgeExtension :
         ParameterResolver {
 
     internal val instanceForge: Forge = Forge()
-    private val injector: ForgeryInjector = CombinedForgeryInjector()
+    private val injector: ForgeryInjector = DefaultForgeryInjector()
 
     // region Java/Factory
 

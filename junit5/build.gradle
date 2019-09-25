@@ -8,9 +8,6 @@ plugins {
     id 'jacoco'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 dependencies {
 
     compile project(":core")
@@ -25,16 +22,8 @@ dependencies {
     testCompile Dependencies.Libraries.JUnit5Extensions
 }
 
-// region JUnit
-
-test {
-    useJUnitPlatform {
-        includeEngines 'spek', 'junit-jupiter', 'junit-vintage'
-    }
-}
-
-// endregion
-
+apply from: "$project.rootDir/script/gradle/junit.gradle"
+apply from: "$project.rootDir/script/gradle/kotlin.gradle"
 apply from: "$project.rootDir/script/gradle/detekt.gradle"
 apply from: "$project.rootDir/script/gradle/ktlint.gradle"
 apply from: "$project.rootDir/script/gradle/jacoco.gradle"

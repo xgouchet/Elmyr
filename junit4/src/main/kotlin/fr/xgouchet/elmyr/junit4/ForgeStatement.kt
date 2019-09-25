@@ -1,7 +1,7 @@
 package fr.xgouchet.elmyr.junit4
 
 import fr.xgouchet.elmyr.Forge
-import fr.xgouchet.elmyr.inject.CombinedForgeryInjector
+import fr.xgouchet.elmyr.inject.DefaultForgeryInjector
 import fr.xgouchet.elmyr.inject.ForgeryInjector
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.MultipleFailureException
@@ -15,7 +15,7 @@ internal class ForgeStatement(
     private val forge: Forge
 ) : Statement() {
 
-    private val injector: ForgeryInjector = CombinedForgeryInjector()
+    private val injector: ForgeryInjector = DefaultForgeryInjector()
 
     // region Statement
 

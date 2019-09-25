@@ -4,7 +4,7 @@ import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.Forgery
 
 /**
- * Defines an class capable of injecting forgeries on an object with [Forgery] annotated fields or
+ * Defines a class capable of injecting forgeries on an object with [Forgery] annotated fields or
  * properties.
  */
 interface ForgeryInjector {
