@@ -12,7 +12,7 @@ import kotlin.math.sqrt
  *
  * TODO include examples of all that's possible
  */
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "MethodOverloading")
 open class Forge {
 
     private val rng = Random()
@@ -89,7 +89,7 @@ open class Forge {
         if (matches.isEmpty()) {
             throw ForgeryFactoryMissingException(clazz = clazz)
         }
-        val factory = if (aBool()) matches.first() else matches.last()
+        val factory = anElementFrom(matches.toList())
         @Suppress("UNCHECKED_CAST")
         return (factory as ForgeryFactory<T>).getForgery(this)
     }
@@ -402,6 +402,127 @@ open class Forge {
         } else {
             (rng.nextGaussian() * standardDeviation) + mean
         }
+    }
+
+    // endregion
+
+    // region String
+
+    /**
+     * a String !
+     */
+    fun aString(): String {
+        return "${anInt()}" // TODO
+    }
+
+    // endregion
+
+    // region Element from …
+
+    /**
+     * @param set a non empty Set
+     * @return an element “randomly” picked in the set
+     */
+    fun <T> anElementFrom(set: Set<T>): T {
+        val index = anInt(0, set.size)
+        return set.elementAt(index)
+    }
+
+    /**
+     * @param list a non empty List
+     * @return an element “randomly” picked in the list
+     */
+    fun <T> anElementFrom(list: List<T>): T {
+        val index = anInt(0, list.size)
+        return list[index]
+    }
+
+    /**
+     * @param array a non empty Array
+     * @return an element “randomly” picked in the array
+     */
+    fun <T> anElementFrom(vararg array: T): T {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param array a non empty BooleanArray
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: BooleanArray): Boolean {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param array a non empty CharArray
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: CharArray): Char {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param array a non empty IntArray
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: IntArray): Int {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param array a non empty LongArray
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: LongArray): Long {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param array a non empty FloatArray
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: FloatArray): Float {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param array a non empty DoubleArray
+     * @return an element “randomly” picked in the array
+     */
+    fun anElementFrom(array: DoubleArray): Double {
+        val index = anInt(0, array.size)
+        return array[index]
+    }
+
+    /**
+     * @param map a non empty Map
+     * @return an element “randomly” picked in the set
+     */
+    fun <K, V> anEntryFrom(map: Map<K, V>): Map.Entry<K, V> {
+        val index = anInt(0, map.size)
+        return map.entries.elementAt(index)
+    }
+
+    /**
+     * @param map a non empty map
+     * @return a key randomly picked in the map
+     */
+    fun <K, V> aKeyFrom(map: Map<K, V>): K {
+        return anEntryFrom(map).key
+    }
+
+    /**
+     * @param map a non empty map
+     * @return a key randomly picked in the map
+     */
+    fun <K, V> aValueFrom(map: Map<K, V>): V {
+        return anEntryFrom(map).value
     }
 
     // endregion
