@@ -527,6 +527,164 @@ open class Forge {
 
     // endregion
 
+    // region Collection manipulation
+
+    /**
+     * Creates a sub list of the given list, with random elements selected from the input. The order
+     * of items in the result is not changed.
+     *
+     * @param list the list to choose from
+     * @param outputSize the size of the sublist. If the input set is smaller than the given size,
+     * the result will have the size of the input set. If set to -1 (default) a random size is picked.
+     * @param T The type of elements in the list
+     * @return a non null list, with elements picked at random in the input, without duplicates.
+     * Note that if the input list contains duplicates, some might appear in the output.
+     * The order in the output matches the input order
+     */
+    fun <T> aSubListOf(list: List<T>, outputSize: Int = -1): List<T> {
+        val size = if (outputSize >= 0) outputSize else anInt(0, list.size)
+
+        // fast exit : input too short
+        if (list.size <= size) return ArrayList(list)
+
+        // fast exit : output <= 0
+        if (size <= 0) return emptyList()
+
+        val inputSize = list.size
+        val result = ArrayList<T>(size)
+        val rng = Random()
+
+        var numberOfItemsToChooseFrom: Int
+        var numberOfItemsToSelect = size
+
+        var i = 0
+        while (i < inputSize && numberOfItemsToSelect > 0) {
+
+            numberOfItemsToChooseFrom = inputSize - i
+            val probabilityToSelectCurrent =
+                    numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
+            val randomProbability = rng.nextDouble()
+
+            if (randomProbability < probabilityToSelectCurrent) {
+                numberOfItemsToSelect--
+                result.add(list[i])
+            }
+            i++
+        }
+        return result
+    }
+
+    /**
+     * Creates a sub set of the given set, with random elements selected from the input.
+     *
+     * @param set the set to choose from
+     * @param outputSize the size of the subset. If the input set is smaller than the given size,
+     * the result will have the size of the input set. If set to -1 (default) a random size is picked.
+     * @param T The type of elements in the set
+     * @return a non null set, with elements picked at random in the input, without duplicates.
+     */
+    fun <T> aSubSetOf(set: Set<T>, outputSize: Int = -1): Set<T> {
+        val size = if (outputSize >= 0) outputSize else anInt(0, set.size)
+
+        // fast exit : input too short -> return all
+        if (set.size <= size) return HashSet(set)
+
+        // fast exit : output == 0
+        if (size == 0) return emptySet()
+
+        val setList = set.toList()
+        val inputSize = set.size
+        val result = HashSet<T>(size)
+        val rng = Random()
+
+        var numberOfItemsToChooseFrom: Int
+        var numberOfItemsToSelect = size
+
+        var i = 0
+        while (i < inputSize && numberOfItemsToSelect > 0) {
+
+            numberOfItemsToChooseFrom = inputSize - i
+            val probabilityToSelectCurrent =
+                    numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
+            val randomProbability = rng.nextDouble()
+
+            if (randomProbability < probabilityToSelectCurrent) {
+                numberOfItemsToSelect--
+                result.add(setList[i])
+            }
+            i++
+        }
+        return result
+    }
+
+    /**
+     * Shuffles the order if the elements in a list (like shuffling a deck of card).
+     * @param list the list to shuffle
+     * @return a new list with the same elements as the input, but in a random order
+     */
+    fun <T> shuffle(list: List<T>): List<T> {
+        // fast exit : input is empty
+        if (list.isEmpty()) return emptyList()
+
+        val result = Array<Any?>(list.size) { list[it] }
+
+        for (i in 0..(list.size - 2)) {
+            val j = anInt(i, list.size)
+            val temp = result[i]
+            result[i] = result[j]
+            result[j] = temp
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        return result.asList() as List<T>
+    }
+
+    // endregion
+
+    // region Collection generation
+
+    /**
+     * Creates a random list.
+     * @param size the size of the list, or -1 for a random size
+     * @param forging a lambda generating values that will fill the list
+     * @param T The type of elements in the list
+     */
+    fun <T> aList(size: Int = -1, forging: Forge.() -> T): List<T> {
+        val listSize = if (size < 0) aTinyInt() else size
+        val list = ArrayList<T>(listSize)
+
+        for (i in 0 until listSize) {
+            list.add(forging(this))
+        }
+
+        return list
+    }
+
+    /**
+     * Returns a map with elements generated from the given lambda.
+     *
+     * Note that the resulting map size might be smaller than the requested one if the forging
+     * lambda generates conflicting keys
+     * @param size the size of the map, or -1 for a random size
+     * @param forging a lambda generating a pair of key-value that will fill the map
+     * @param K The type of keys in the map
+     * @param V The type of values in the map
+     */
+    fun <K, V> aMap(size: Int = -1, forging: Forge.() -> Pair<K, V>): Map<K, V> {
+        val mapSize = if (size < 0) aTinyInt() else size
+
+        val map = mutableMapOf<K, V>()
+
+        for (i in 0 until mapSize) {
+            val mapEntry = forging()
+            map[mapEntry.first] = mapEntry.second
+        }
+
+        return map
+    }
+
+    // endregion
+
     companion object {
 
         // Boolean
