@@ -336,6 +336,76 @@ open class Forge {
 
     // endregion
 
+    // region Double
+
+    /**
+     * @param min the minimum value (inclusive), default = -Double#MAX_VALUE
+     * @param max the maximum value (exclusive), default = Double#MAX_VALUE
+     * @return a double between min and max
+     * @throws [IllegalArgumentException] if min > max
+     */
+    @JvmOverloads
+    fun aDouble(min: Double = -Double.MAX_VALUE, max: Double = Double.MAX_VALUE): Double {
+        require(min <= max) {
+            "The ‘min’ boundary ($min) of the range should be less than (or equal to) " +
+                    "the ‘max’ boundary ($max)"
+        }
+
+        val range = max - min
+        return if (range == Double.POSITIVE_INFINITY) {
+            (rng.nextDouble() - HALF_PROBABILITY) * Double.MAX_VALUE * 2
+        } else {
+            (rng.nextDouble() * range) + min
+        }
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 int (default : false)
+     * @return a positive double
+     */
+    @JvmOverloads
+    fun aPositiveDouble(strict: Boolean = false): Double {
+        return aDouble(min = if (strict) Double.MIN_VALUE else 0.0)
+    }
+
+    /**
+     * @param strict if true, then it will return a non 0 int (default : true)
+     * @return a negative double
+     */
+    @JvmOverloads
+    fun aNegativeDouble(strict: Boolean = true): Double {
+        return -aPositiveDouble(strict)
+    }
+
+    /**
+     * @param mean the mean value of the distribution (default : 0.0)
+     * @param standardDeviation the standard deviation value of the distribution (default : 1.0)
+     * @return a double picked from a gaussian distribution (aka bell curve)
+     * @throws [IllegalArgumentException] if the mean is outside of the range -1.8446743E19..1.8446743E19
+     * (to avoid distribution imprecision); or if the standard deviation is negative
+     */
+    @JvmOverloads
+    fun aGaussianDouble(mean: Double = 0.0, standardDeviation: Double = 1.0): Double {
+
+        require(mean <= MEAN_THRESHOLD_DOUBLE) {
+            "Cannot use a mean greater than $MEAN_THRESHOLD_DOUBLE due to distribution imprecision"
+        }
+        require(mean >= -MEAN_THRESHOLD_DOUBLE) {
+            "Cannot use a mean less than -$MEAN_THRESHOLD_DOUBLE due to distribution imprecision"
+        }
+        require(standardDeviation >= 0) {
+            "Standard deviation ($standardDeviation) must be a positive (or null) value"
+        }
+
+        return if (standardDeviation == 0.0) {
+            mean
+        } else {
+            (rng.nextGaussian() * standardDeviation) + mean
+        }
+    }
+
+    // endregion
+
     companion object {
 
         // Boolean
@@ -353,5 +423,6 @@ open class Forge {
         @JvmField internal val MEAN_THRESHOLD_INT = sqrt(Int.MAX_VALUE.toDouble()).roundToInt()
         @JvmField internal val MEAN_THRESHOLD_LONG = sqrt(Long.MAX_VALUE.toDouble()).roundToLong()
         @JvmField internal val MEAN_THRESHOLD_FLOAT = sqrt(Float.MAX_VALUE.toDouble()).toFloat()
+        @JvmField internal val MEAN_THRESHOLD_DOUBLE = sqrt(Double.MAX_VALUE)
     }
 }

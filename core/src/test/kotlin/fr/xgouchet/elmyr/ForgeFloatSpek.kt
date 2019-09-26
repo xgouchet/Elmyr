@@ -31,7 +31,7 @@ class ForgeFloatSpek : Spek({
                 }
             }
 
-            it("forges an float in a specified range") {
+            it("forges a float in a specified range") {
                 val min = forge.aFloat(-Forge.MEAN_THRESHOLD_FLOAT, 0f)
                 val max = forge.aFloat(0f, Forge.MEAN_THRESHOLD_FLOAT)
 
@@ -45,7 +45,7 @@ class ForgeFloatSpek : Spek({
                 }
             }
 
-            it("forges an float in minimal range") {
+            it("forges a float in minimal range") {
                 val min = forge.aFloat(-100000f, 100000f)
                 val max = min
 
@@ -57,11 +57,31 @@ class ForgeFloatSpek : Spek({
                 }
             }
 
-            it("forges an float in whole range") {
+            it("forges a float in whole range") {
                 repeat(16) {
                     val float = forge.aFloat()
                     assertThat(float)
                             .isNotIn(Float.NEGATIVE_INFINITY, Float.NaN, Float.POSITIVE_INFINITY)
+                }
+            }
+
+            it("forges a float above a min") {
+                val min = forge.aFloat(-100000f, 100000f)
+
+                repeat(testRepeatCountSmall) {
+                    val float = forge.aFloat(min = min)
+                    assertThat(float)
+                            .isGreaterThanOrEqualTo(min)
+                }
+            }
+
+            it("forges a float below a max") {
+                val max = forge.aFloat(-100000f, 100000f)
+
+                repeat(testRepeatCountSmall) {
+                    val float = forge.aFloat(max = max)
+                    assertThat(float)
+                            .isLessThan(max)
                 }
             }
         }

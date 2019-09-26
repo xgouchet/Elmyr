@@ -38,7 +38,7 @@ class ForgeLongSpek : Spek({
                 }
             }
 
-            it("forges an long in a specified range") {
+            it("forges a long in a specified range") {
                 val min = forge.aLong()
                 val max = forge.aLong(min = min + 1)
 
@@ -50,7 +50,7 @@ class ForgeLongSpek : Spek({
                 }
             }
 
-            it("forges an long in minimal range") {
+            it("forges a long in minimal range") {
                 val min = forge.aLong()
                 val max = min + 1
 
@@ -62,7 +62,7 @@ class ForgeLongSpek : Spek({
                 }
             }
 
-            it("forges an long above a min") {
+            it("forges a long above a min") {
                 val min = forge.aNegativeLong()
 
                 repeat(testRepeatCountSmall) {
@@ -72,7 +72,7 @@ class ForgeLongSpek : Spek({
                 }
             }
 
-            it("forges an long below a max") {
+            it("forges a long below a max") {
                 val max = forge.aPositiveLong()
 
                 repeat(testRepeatCountSmall) {
