@@ -1,6 +1,7 @@
 import fr.xgouchet.buildsrc.Dependencies
 import fr.xgouchet.buildsrc.testCompile
 import fr.xgouchet.buildsrc.compileOnly
+import fr.xgouchet.buildsrc.settings.commonConfig
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -24,8 +25,4 @@ dependencies {
     testCompile(Dependencies.Libraries.JUnit5Extensions)
 }
 
-apply(from = "${project.rootDir}/script/gradle/junit.settings.gradle")
-apply(from = "${project.rootDir}/script/gradle/kotlin.settings.gradle")
-apply(from = "${project.rootDir}/script/gradle/detekt.settings.gradle")
-apply(from = "${project.rootDir}/script/gradle/ktlint.settings.gradle")
-apply(from = "${project.rootDir}/script/gradle/jacoco.settings.gradle")
+commonConfig()
