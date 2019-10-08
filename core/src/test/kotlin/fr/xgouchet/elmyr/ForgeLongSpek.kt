@@ -12,7 +12,7 @@ class ForgeLongSpek : Spek({
         val forge = Forge()
         var seed: Long
 
-        val testRepeatCountSmall = 16
+        val testRepeatCountSmall = 1024
 
         beforeEachTest {
             seed = System.nanoTime()

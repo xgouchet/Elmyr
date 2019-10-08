@@ -7,9 +7,6 @@ inline fun <reified T : Any> Project.extensionConfig(
         crossinline configure: T.() -> Unit
 ) {
 
-    apply {
-        val ext: T? = extensions.findByType(T::class)
-
-        ext?.configure()
-    }
+    val ext: T? = extensions.findByType(T::class)
+    ext?.configure()
 }

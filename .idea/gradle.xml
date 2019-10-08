@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/inject" />
             <option value="$PROJECT_DIR$/junit4" />
             <option value="$PROJECT_DIR$/junit5" />
+            <option value="$PROJECT_DIR$/jvm" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
