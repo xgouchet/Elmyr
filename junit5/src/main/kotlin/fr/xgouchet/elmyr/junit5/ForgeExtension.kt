@@ -36,6 +36,16 @@ class ForgeExtension :
     // region Java/Factory
 
     /**
+     * Allows you to configure the [Forge] instance used by this [ForgeExtension].
+     * @param configure the lambda that will be applied to the [Forge] instance backing this extension.
+     * @return the same [ForgeExtension] instance, perfect to chain calls
+     */
+    fun configure(configure: Forge.() -> Unit): ForgeExtension {
+        instanceForge.configure()
+        return this
+    }
+
+    /**
      * Adds a factory to the forge. This is the best way to extend a forge and provides means to
      * create custom forgeries.
      * @param T the type the [ForgeryFactory] will be able to forge

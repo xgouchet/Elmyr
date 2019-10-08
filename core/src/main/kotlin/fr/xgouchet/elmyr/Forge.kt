@@ -218,8 +218,12 @@ open class Forge {
         }
 
         val range = max - min
-
-        return (abs(rng.nextLong()) % range) + min
+        return if (range < 0) {
+            val halfRange = (max / 2) - (min / 2)
+            ((abs(rng.nextLong()) % halfRange) * 2) + min
+        } else {
+            (abs(rng.nextLong()) % range) + min
+        }
     }
 
     /**
