@@ -1,5 +1,6 @@
 package fr.xgouchet.elmyr
 
+import fr.xgouchet.elmyr.kotlin.ForgedSequence
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.round
@@ -662,6 +663,17 @@ open class Forge {
         }
 
         return list
+    }
+
+    /**
+     * Creates a random sequence.
+     * @param size the size of the sequence, or -1 for a random size
+     * @param forging a lambda generating values that will fill the list
+     * @param T The type of elements in the list
+     */
+    fun <T> aSequence(size: Int = -1, forging: Forge.() -> T): Sequence<T> {
+        val sequenceSize = if (size < 0) aTinyInt() else size
+        return ForgedSequence(sequenceSize) { this@Forge.forging() }
     }
 
     /**
