@@ -491,7 +491,7 @@ class ForgeCollectionSpek : Spek({
 
         // endregion
 
-        // region Generate a list
+        // region Generate a collection
 
         context("forging collections ") {
 
@@ -536,6 +536,31 @@ class ForgeCollectionSpek : Spek({
 
                 assertThat(data)
                         .contains(*expectedData.entries.toTypedArray())
+            }
+        }
+        // endregion
+
+        // region Generate a sequence
+
+        context("forging sequences ") {
+
+            it("forges a sequence of whatever") {
+                var i = 0
+                val data = forge.aSequence { anElementFrom(i++) }
+                val asList = data.toList()
+                val expectedData = IntArray(asList.size) { it }.toTypedArray()
+
+                assertThat(asList).containsExactly(*expectedData)
+            }
+
+            it("forges a sequence of whatever with fixed size") {
+                val size = forge.aTinyInt() + 3
+                var i = 0
+                val data = forge.aSequence(size) { anElementFrom(i++) }
+                val asList = data.toList()
+                val expectedData = IntArray(size) { it }.toTypedArray()
+
+                assertThat(asList).containsExactly(*expectedData)
             }
         }
         // endregion
