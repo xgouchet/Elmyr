@@ -5,13 +5,17 @@ import fr.xgouchet.elmyr.junit5.ForgeExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.Period
 import java.util.Calendar
 import java.util.Currency
 import java.util.Date
 import java.util.Locale
 import java.util.Random
 import java.util.TimeZone
-import java.util.UUID
 
 class JvmFactoryTest {
 
@@ -52,7 +56,31 @@ class JvmFactoryTest {
     }
 
     @Test
-    fun `forges a Uuid`(@Forgery uuid: UUID) {
+    fun `forges a Uuid`(@Forgery uuid: Duration) {
+        assertThat(uuid)
+                .isNotNull()
+    }
+
+    @Test
+    fun `forges a Uuid`(@Forgery uuid: Period) {
+        assertThat(uuid)
+                .isNotNull()
+    }
+
+    @Test
+    fun `forges a Uuid`(@Forgery uuid: LocalTime) {
+        assertThat(uuid)
+                .isNotNull()
+    }
+
+    @Test
+    fun `forges a Uuid`(@Forgery uuid: LocalDate) {
+        assertThat(uuid)
+                .isNotNull()
+    }
+
+    @Test
+    fun `forges a Uuid`(@Forgery uuid: LocalDateTime) {
         assertThat(uuid)
                 .isNotNull()
     }
