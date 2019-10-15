@@ -411,13 +411,172 @@ open class Forge {
 
     // endregion
 
+    // region Char
+
+    /**
+     * @param min the min char code to use (inclusive, default = 0x20 == space)
+     * @param max the max char code to use (exclusive, default = 0xD800)
+     * @return a Char within the given range
+     */
+    @JvmOverloads
+    fun aChar(min: Char = MIN_PRINTABLE, max: Char = MAX_UTF8): Char {
+        var c: Char
+        do {
+            c = anInt(min.toInt(), max.toInt()).toChar()
+        } while (c in ILLEGAL_UTF8_CHARS)
+        return c
+    }
+
+    /**
+     * @return a Char within the standard ASCII printable characters
+     */
+    fun anAsciiChar(): Char {
+        return aChar(MIN_PRINTABLE, MAX_ASCII)
+    }
+
+    /**
+     * @return a Char within the extended ASCII printable characters
+     */
+    fun anExtendedAsciiChar(): Char {
+        return aChar(MIN_PRINTABLE, MAX_ASCII_EXTENDED)
+    }
+
+    /**
+     * @param case the case to use
+     * @return an alpha character (from the roman alphabet), in the given case
+     */
+    @JvmOverloads
+    fun anAlphabeticalChar(case: Case = Case.ANY): Char {
+        return when (case) {
+            Case.UPPER -> aChar('A', 'Z')
+            Case.LOWER -> aChar('a', 'z')
+            Case.ANY -> anElementFrom(aChar('a', 'z'), aChar('A', 'Z'))
+        }
+    }
+
+    /**
+     * @param case the case to use
+     * @return an alphabetical or digit character, in the given case
+     */
+    @JvmOverloads
+    fun anAlphaNumericalChar(case: Case = Case.ANY): Char {
+        return when (case) {
+            Case.UPPER -> anElementFrom(aChar('A', 'Z'), aChar('0', '9'))
+            Case.LOWER -> anElementFrom(aChar('a', 'z'), aChar('0', '9'))
+            Case.ANY -> anElementFrom(aChar('a', 'z'), aChar('A', 'Z'), aChar('0', '9'))
+        }
+    }
+
+    /**
+     * @param case the case to use
+     * @return a digit (0 to F)
+     */
+    @JvmOverloads
+    fun anHexadecimalChar(case: Case = Case.LOWER): Char {
+        return when (case) {
+            Case.UPPER -> anElementFrom(aChar('A', 'F'), aChar('0', '9'))
+            Case.LOWER -> anElementFrom(aChar('a', 'f'), aChar('0', '9'))
+            Case.ANY -> anElementFrom(aChar('a', 'f'), aChar('A', 'F'), aChar('0', '9'))
+        }
+    }
+
+    /**
+     * @return a numerical (0 to 9)
+     */
+    fun aNumericalChar(): Char {
+        return aChar('0', '9')
+    }
+
+    /**
+     * @return a whitespace character
+     */
+    fun aWhitespaceChar(): Char {
+        // HTab=0x09, LF=0x0A, VTab=0x0B, FF=0x0C, CR=0x0D, SPACE=0x20
+        return anElementFrom('\u0009', '\u000A', '\u000B', '\u000C', '\u000D', '\u0020')
+    }
+
+    // endregion
+
     // region String
 
     /**
-     * a String !
+     * Creates a random String.
+     * @param size the size of the String, or -1 for a random size
+     * @param forging a lambda generating chars that will fill the String
      */
-    fun aString(): String {
-        return "${anInt()}" // TODO
+    @JvmOverloads
+    fun aString(
+        size: Int = -1,
+        forging: Forge.() -> Char = { aChar() }
+    ): String {
+        val stringSize = if (size < 0) aTinyInt() else size
+        return String(CharArray(stringSize) { forging() })
+    }
+
+    /**
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return a string containing only ASCII printable characters
+     */
+    @JvmOverloads
+    fun anAsciiString(size: Int = -1): String {
+        return aString(size) { anAsciiChar() }
+    }
+
+    /**
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return a string containing only extended ASCII printable characters
+     */
+    @JvmOverloads
+    fun anExtendedAsciiString(size: Int = -1): String {
+        return aString(size) { anExtendedAsciiChar() }
+    }
+
+    /**
+     * @param case the case to use
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return an alphabetical string
+     */
+    @JvmOverloads
+    fun anAlphabeticalString(case: Case = Case.LOWER, size: Int = -1): String {
+        return aString(size) { anAlphabeticalChar(case) }
+    }
+
+    /**
+     * @param case the case to use
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return an alpha-numerical string
+     */
+    @JvmOverloads
+    fun anAlphaNumericalString(case: Case = Case.LOWER, size: Int = -1): String {
+        return aString(size) { anAlphaNumericalChar(case) }
+    }
+
+    /**
+     * @param case the case to use
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return an hexadecimal string
+     */
+    @JvmOverloads
+    fun anHexadecimalString(case: Case = Case.LOWER, size: Int = -1): String {
+        return aString(size) { anHexadecimalChar(case) }
+    }
+
+    /**
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return a numerical string
+     */
+    @JvmOverloads
+    fun aNumericalString(size: Int = -1): String {
+        return aString(size) { aNumericalChar() }
+    }
+
+    /**
+     * @param size the size of the string (or -1 for a random sized String)
+     * @return a string containing only whitespaces
+     */
+    @JvmOverloads
+    fun aWhitespaceString(size: Int = -1): String {
+        return aString(size) { aWhitespaceChar() }
     }
 
     // endregion
@@ -539,28 +698,28 @@ open class Forge {
      * of items in the result is not changed.
      *
      * @param list the list to choose from
-     * @param outputSize the size of the sublist. If the input set is smaller than the given size,
+     * @param size the size of the result sublist. If the input set is smaller than the given size,
      * the result will have the size of the input set. If set to -1 (default) a random size is picked.
      * @param T The type of elements in the list
      * @return a non null list, with elements picked at random in the input, without duplicates.
      * Note that if the input list contains duplicates, some might appear in the output.
      * The order in the output matches the input order
      */
-    fun <T> aSubListOf(list: List<T>, outputSize: Int = -1): List<T> {
-        val size = if (outputSize >= 0) outputSize else anInt(0, list.size)
+    fun <T> aSubListOf(list: List<T>, size: Int = -1): List<T> {
+        val listSize = if (size >= 0) size else anInt(0, list.size)
 
         // fast exit : input too short
-        if (list.size <= size) return ArrayList(list)
+        if (list.size <= listSize) return ArrayList(list)
 
         // fast exit : output <= 0
-        if (size <= 0) return emptyList()
+        if (listSize <= 0) return emptyList()
 
         val inputSize = list.size
-        val result = ArrayList<T>(size)
+        val result = ArrayList<T>(listSize)
         val rng = Random()
 
         var numberOfItemsToChooseFrom: Int
-        var numberOfItemsToSelect = size
+        var numberOfItemsToSelect = listSize
 
         var i = 0
         while (i < inputSize && numberOfItemsToSelect > 0) {
@@ -583,27 +742,27 @@ open class Forge {
      * Creates a sub set of the given set, with random elements selected from the input.
      *
      * @param set the set to choose from
-     * @param outputSize the size of the subset. If the input set is smaller than the given size,
+     * @param size the size of the result subset. If the input set is smaller than the given size,
      * the result will have the size of the input set. If set to -1 (default) a random size is picked.
      * @param T The type of elements in the set
      * @return a non null set, with elements picked at random in the input, without duplicates.
      */
-    fun <T> aSubSetOf(set: Set<T>, outputSize: Int = -1): Set<T> {
-        val size = if (outputSize >= 0) outputSize else anInt(0, set.size)
+    fun <T> aSubSetOf(set: Set<T>, size: Int = -1): Set<T> {
+        val setSize = if (size >= 0) size else anInt(0, set.size)
 
         // fast exit : input too short -> return all
-        if (set.size <= size) return HashSet(set)
+        if (set.size <= setSize) return HashSet(set)
 
         // fast exit : output == 0
-        if (size == 0) return emptySet()
+        if (setSize == 0) return emptySet()
 
         val setList = set.toList()
         val inputSize = set.size
-        val result = HashSet<T>(size)
+        val result = HashSet<T>(setSize)
         val rng = Random()
 
         var numberOfItemsToChooseFrom: Int
-        var numberOfItemsToSelect = size
+        var numberOfItemsToSelect = setSize
 
         var i = 0
         while (i < inputSize && numberOfItemsToSelect > 0) {
@@ -719,5 +878,12 @@ open class Forge {
         @JvmField internal val MEAN_THRESHOLD_LONG = sqrt(Long.MAX_VALUE.toDouble()).roundToLong()
         @JvmField internal val MEAN_THRESHOLD_FLOAT = sqrt(Float.MAX_VALUE.toDouble()).toFloat()
         @JvmField internal val MEAN_THRESHOLD_DOUBLE = sqrt(Double.MAX_VALUE)
+
+        // Char
+        internal const val MIN_PRINTABLE = 0x20.toChar()
+        internal const val MAX_ASCII = 0x7F.toChar()
+        internal const val MAX_ASCII_EXTENDED = 0xFF.toChar()
+        internal const val MAX_UTF8 = 0xD000.toChar()
+        internal val ILLEGAL_UTF8_CHARS = arrayOf('\u0085', '\u2028', '\u2029')
     }
 }
