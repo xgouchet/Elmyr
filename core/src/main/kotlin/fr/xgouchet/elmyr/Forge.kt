@@ -1,6 +1,7 @@
 package fr.xgouchet.elmyr
 
 import fr.xgouchet.elmyr.kotlin.ForgedSequence
+import fr.xgouchet.elmyr.regex.RegexParser
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.round
@@ -510,7 +511,7 @@ open class Forge {
         forging: Forge.() -> Char = { aChar() }
     ): String {
         val stringSize = if (size < 0) aTinyInt() else size
-        return String(CharArray(stringSize) { forging() })
+        return String(CharArray(stringSize) { this@Forge.forging() })
     }
 
     /**
@@ -577,6 +578,31 @@ open class Forge {
     @JvmOverloads
     fun aWhitespaceString(size: Int = -1): String {
         return aString(size) { aWhitespaceChar() }
+    }
+
+    /**
+     * @param regex a regular expression to drive the generation.
+     *
+     * Note that parsing the regex can take some time depending on the regex complexity. Also not
+     * all regex feature are supported.
+     *
+     * @return a String matching the given regular expression
+     */
+    fun aStringMatching(regex: String): String {
+        val factory = RegexParser().getFactory(regex)
+        return factory.getForgery(this)
+    }
+
+    /**
+     * @param regex a regular expression to drive the generation.
+     *
+     * Note that parsing the regex can take some time depending on the regex complexity. Also not
+     * all regex feature are supported.
+     *
+     * @return a String matching the given regular expression
+     */
+    fun aStringMatching(regex: Regex): String {
+        return aStringMatching(regex.pattern)
     }
 
     // endregion
@@ -851,7 +877,7 @@ open class Forge {
         val map = mutableMapOf<K, V>()
 
         for (i in 0 until mapSize) {
-            val mapEntry = forging()
+            val mapEntry = this.forging()
             map[mapEntry.first] = mapEntry.second
         }
 
