@@ -200,5 +200,33 @@ class ForgeStringSpek : Spek({
         }
 
         // endregion
+
+        // region String Regex
+        context("forging regex based strings ") {
+
+            // No need to be exhaustive, the regex package is heavily tested
+            val regexes = arrayOf(
+                    "foo",
+                    "[a-fA-F0-9]+"
+            )
+
+            regexes.forEach {
+
+                it("forges string matching /$it/") {
+                    val regex = it
+                    repeat(testRepeatCountSmall) {
+                        val res = forge.aStringMatching(regex)
+                        assertThat(res)
+                                .matches(regex)
+
+                        val res2 = forge.aStringMatching(Regex(regex))
+                        assertThat(res2)
+                                .matches(regex)
+                    }
+                }
+            }
+        }
+
+        // endregion
     }
 })
