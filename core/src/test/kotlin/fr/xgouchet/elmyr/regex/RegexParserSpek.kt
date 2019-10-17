@@ -23,11 +23,17 @@ class RegexParserSpek : Spek({
 
         context("parsing invalid regex strings ") {
             val regexes = arrayOf(
-                    // Character sets
+                    // Character class
                     "[abc",
                     "[Z-A]",
                     "[9-1]",
                     "[a-Z]",
+                    "[]",
+
+                    // repetition
+//                    "a{}",
+//                    "a{-4}",
+//                    "a{5,2}",
 
                     // escape sequence
                     "\\b",
@@ -79,9 +85,7 @@ class RegexParserSpek : Spek({
                     "\\6",
                     "\\7",
                     "\\8",
-                    "\\9",
-
-                    "\\x"
+                    "\\9"
             )
 
             regexes.forEach { regex ->
@@ -114,6 +118,15 @@ class RegexParserSpek : Spek({
                     "ab*c",
                     "x*y*z*",
 
+                    // Repetition
+//                    "[\\w]{5}",
+//                    "[0-9]{3,}",
+//                    "[a-z]{2,3}",
+//                    "[\\w]{42}",
+//                    "[0-9]{13,}",
+//                    "[a-z]{23,42}",
+//                    "{3}",
+
                     // TODO freespace (?x)
                     // TODO No group (?:)
 
@@ -133,6 +146,10 @@ class RegexParserSpek : Spek({
                     // TODO "[a-m&&[g-x]]", // intersection
                     // TODO "[a-m&&m-z]", // intersection
                     // TODO "[[a-m]&&[^a-c]]", // Complex intersection
+
+                    // Char class with escaped characters
+                    "[a\\-z]+",
+                    "[\\]]+",
 
                     // Char class with unescaped characters
                     "[abc-]+",
@@ -177,14 +194,10 @@ class RegexParserSpek : Spek({
                     // dot metacharacter
                     ".",
                     "ba.",
+                    ".?",
                     ".*",
+                    ".+",
 
-//                        // wildcard
-//                        "",
-//                        ".?",
-//                        ".*",
-//                        ".+",
-//
 //                        // choice
 //                        "[aeiou][tkfprs]",
 //                        "[a-h][i-p][q-z]",

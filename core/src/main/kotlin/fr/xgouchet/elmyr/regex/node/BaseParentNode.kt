@@ -14,12 +14,16 @@ internal abstract class BaseParentNode : ParentNode {
         children.remove(node)
     }
 
+    override fun isEmpty(): Boolean {
+        return children.isEmpty()
+    }
+
     // endregion
 
     // region Node
 
-    override fun verify() {
-        children.forEach { it.verify() }
+    override fun check() {
+        children.forEach { it.check() }
     }
 
     // endregion

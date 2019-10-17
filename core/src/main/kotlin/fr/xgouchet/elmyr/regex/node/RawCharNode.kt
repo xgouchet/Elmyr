@@ -13,7 +13,7 @@ internal class RawCharNode(
         builder.append(rawChar)
     }
 
-    override fun verify() {}
+    override fun check() {}
 
     // endregion
 }

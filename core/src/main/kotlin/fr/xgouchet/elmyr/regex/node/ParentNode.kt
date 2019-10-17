@@ -7,5 +7,7 @@ internal interface ParentNode :
 
     fun remove(node: Node)
 
+    fun isEmpty(): Boolean
+
     fun handleQuantifier(quantifier: Quantifier)
 }

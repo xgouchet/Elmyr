@@ -14,7 +14,7 @@ private constructor(
         builder.append(forge.forging())
     }
 
-    override fun verify() {}
+    override fun check() {}
 
     // endregion
 

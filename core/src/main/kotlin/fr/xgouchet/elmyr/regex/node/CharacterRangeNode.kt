@@ -14,7 +14,7 @@ internal class CharacterRangeNode(
         builder.append(forge.aChar(from, to))
     }
 
-    override fun verify() {
+    override fun check() {
         check(from < to) { "Illegal character range /$from-$to/" }
     }
 
