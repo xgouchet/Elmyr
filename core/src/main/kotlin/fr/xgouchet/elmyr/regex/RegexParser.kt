@@ -21,7 +21,7 @@ internal class RegexParser {
             state = state.handleChar(c)
         }
 
-        val rootNode = state.getRoot()
+        val rootNode = state.handleEndOfRegex()
         rootNode.check()
         return RegexStringFactory(rootNode)
     }

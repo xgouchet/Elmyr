@@ -18,6 +18,25 @@ internal abstract class BaseParentNode : ParentNode {
         return children.isEmpty()
     }
 
+    override fun flattenHierarchy(): List<Node> {
+        val list = mutableListOf<Node>()
+        list.add(this)
+        children.forEach {
+            if (it is ParentNode) {
+                it.flattenHierarchy().forEach { node -> list.add(node) }
+            } else {
+                list.add(it)
+            }
+        }
+        return list
+    }
+
+    override fun findGroup(groupReference: Int): GroupNode? {
+        val nodes = flattenHierarchy()
+        val groupNodes = nodes.filterIsInstance<GroupNode>()
+        return groupNodes.getOrNull(groupReference - 1)
+    }
+
     // endregion
 
     // region Node

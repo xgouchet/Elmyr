@@ -1,19 +1,45 @@
 package fr.xgouchet.elmyr.regex.state
 
+import fr.xgouchet.elmyr.regex.node.BackReferenceNode
 import fr.xgouchet.elmyr.regex.node.Node
 import fr.xgouchet.elmyr.regex.node.ParentNode
 import fr.xgouchet.elmyr.regex.node.PredefinedCharacterClassNode
 import fr.xgouchet.elmyr.regex.node.RawCharNode
-import java.lang.IllegalStateException
 
 internal class EscapeState(
     private val ongoingNode: ParentNode,
     private val previousState: State
 ) : State {
 
+    var readingBackReference = false
+    var backReference = 0
+
     // region State
 
     override fun handleChar(c: Char): State {
+        return if (readingBackReference) {
+            handleBackReferenceChars(c)
+        } else {
+            handleStandardEscapeChars(c)
+        }
+    }
+
+    override fun handleEndOfRegex(): Node {
+        if (readingBackReference) {
+            ongoingNode.add(BackReferenceNode(backReference, ongoingNode))
+            return previousState.handleEndOfRegex()
+        } else {
+            throw IllegalStateException("Unexpected end of expression after escape character")
+        }
+    }
+
+    // endregion
+
+    // region Internal
+
+    private fun handleStandardEscapeChars(c: Char): State {
+        var newState = previousState
+
         when (c) {
             // escapable characters
             '[', ']', '(', ')', '{', '}', '<', '>', '?', '+', '*',
@@ -35,15 +61,37 @@ internal class EscapeState(
             's' -> ongoingNode.add(PredefinedCharacterClassNode.whitespace(ongoingNode))
             'S' -> ongoingNode.add(PredefinedCharacterClassNode.notWhitespace(ongoingNode))
 
+            '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+                readingBackReference = true
+                val digit = (c - '0')
+                backReference = (backReference * BASE_10) + digit
+                newState = this
+            }
+
             else -> throw IllegalStateException("Illegal/unsupported escape sequence /\\$c/")
         }
-
-        return previousState
+        return newState
     }
 
-    override fun getRoot(): Node {
-        throw IllegalStateException("Unexpected end of expression after escape character")
+    private fun handleBackReferenceChars(c: Char): State {
+        var newState: State = this
+        when (c) {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+                val digit = (c - '0')
+                backReference = (backReference * BASE_10) + digit
+            }
+            else -> {
+                ongoingNode.add(BackReferenceNode(backReference, ongoingNode))
+                newState = previousState.handleChar(c)
+            }
+        }
+
+        return newState
     }
 
     // endregion
+
+    companion object {
+        private const val BASE_10 = 10
+    }
 }

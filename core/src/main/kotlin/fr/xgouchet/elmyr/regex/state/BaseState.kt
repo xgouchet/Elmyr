@@ -17,7 +17,8 @@ internal class BaseState(
 
     // region State
 
-    override fun getRoot(): Node {
+    override fun handleEndOfRegex(): Node {
+        check(previousState == null) { "Illegal state, retrieving root node from non root state" }
         checkNotNull(rootNode) { "Illegal state, retrieving root node from non root state" }
         return rootNode
     }
@@ -67,6 +68,8 @@ internal class BaseState(
 
     // endregion
 
+    // region Internal
+
     private fun handleAlternation(): State {
         val parentNode = ongoingNode.parentNode
 
@@ -92,4 +95,6 @@ internal class BaseState(
 
         return BaseState(newRootNode, next, previousState)
     }
+
+    // endregion
 }

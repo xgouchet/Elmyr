@@ -50,7 +50,7 @@ internal class CharacterClassState(
         return newState
     }
 
-    override fun getRoot(): Node {
+    override fun handleEndOfRegex(): Node {
         throw IllegalStateException("Unexpected end of expression in character class")
     }
 

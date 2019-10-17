@@ -7,6 +7,8 @@ internal class GroupNode(
     override var parentNode: ParentNode?
 ) : BaseParentNode() {
 
+    var referenceValue: String = ""
+
     // region ParentNode
 
     override fun handleQuantifier(quantifier: Quantifier) {
@@ -23,7 +25,10 @@ internal class GroupNode(
     }
 
     override fun build(forge: Forge, builder: StringBuilder) {
-        children.first().build(forge, builder)
+        val localBuilder = StringBuilder()
+        children.first().build(forge, localBuilder)
+        referenceValue = localBuilder.toString()
+        builder.append(localBuilder.toString())
     }
 
     // endregion

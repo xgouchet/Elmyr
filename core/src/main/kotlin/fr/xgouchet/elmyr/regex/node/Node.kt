@@ -9,4 +9,8 @@ internal interface Node {
     fun build(forge: Forge, builder: StringBuilder)
 
     fun check()
+
+    fun getRoot(): ParentNode? {
+        return parentNode?.getRoot() ?: parentNode ?: (this as? ParentNode)
+    }
 }
