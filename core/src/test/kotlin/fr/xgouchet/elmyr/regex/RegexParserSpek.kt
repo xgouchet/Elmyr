@@ -37,6 +37,10 @@ class RegexParserSpek : Spek({
                     "a{12",
                     "a{,2}",
 
+                    // groups
+                    "(ab",
+                    "ab)",
+
                     // escape sequence
                     "\\b",
                     "\\c",
@@ -137,6 +141,7 @@ class RegexParserSpek : Spek({
                     "a|b",
                     "a|b|cd",
                     "a|ad",
+                    "foo|ba[rz]|spam|bacon",
 
                     // Simple char class
                     "[abc]+",
@@ -201,41 +206,20 @@ class RegexParserSpek : Spek({
                     ".*",
                     ".+",
 
-//                        // choice
-//                        "[aeiou][tkfprs]",
-//                        "[a-h][i-p][q-z]",
-//                        "[a-h]+[i-p]*[q-z]?",
-//                        "[a-h]-[q-z]",
-//                        "[*+?]",
-//
-//                        // groups
-//                        "([a-h]-[q-z])+",
-//                        "(([0-9]-)+[q-z]+\n)+",
-//                        "((foo?)(ba[rz]))+",
-//
-//                        // character classes
-//                        "[a-h]\\s+[q-z]",
-//                        "(\\s\\S)",
-//                        "\\w\\w \\d\\d\\d \\w\\w",
-//                        "\\w\\W / \\d\\D",
-//
-//                        // whitespaces
-//                        "\\t\\n",
-//
-//                        // escaped characters
-//                        "\\<\\(\\[\\{\\\\\\^\\-\\=\\$\\!\\|\\]\\}\\)\\?\\*\\+\\.\\>",
-//
-//                        // quantifier range
-//                        "[abc]{3}-[xyz]{2,9}",
-//                        "[abc]{10,}",
-//
-//                        // Or
-//                        "abc|xyz",
-//                        "foo|ba[rz]|spam|bacon",
-//                        "test(foo|bar)",
-//
-//                        // negative choice
-//                        "[^a-z]+"
+                    // groups
+                    "(ab)+",
+                    "(a+b)+",
+                    "(a|b)+",
+                    "(a|ba(r|z))+",
+                    "(ab)*",
+                    "(ab)(cd*)",
+                    "abc(d)*abc",
+                    "([a-h]-[q-z])+",
+                    "(([0-9]-)+[q-z]+\n)+",
+                    "((foo?)(ba[rz]))+",
+
+                    // Back references
+                    // TODO "(a*)bc\\1",
 
                     // empty regex ?!
                     ""
