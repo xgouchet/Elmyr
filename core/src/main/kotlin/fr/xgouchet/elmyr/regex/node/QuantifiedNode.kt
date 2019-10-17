@@ -18,7 +18,7 @@ internal class QuantifiedNode(
         }
     }
 
-    override fun verify() {}
+    override fun check() {}
 
     // endregion
 }

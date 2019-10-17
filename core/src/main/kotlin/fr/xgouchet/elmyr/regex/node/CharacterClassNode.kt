@@ -7,7 +7,6 @@ internal class CharacterClassNode(
 ) : BaseParentNode() {
 
     private var isClosed: Boolean = false
-    private var isNegated: Boolean = false
     private var ongoingRange: Boolean = false
 
     private var negatedPattern: String = ""
@@ -15,10 +14,29 @@ internal class CharacterClassNode(
 
     // region CharacterClassNode
 
+    internal var isNegation = false
+
+    fun removeLast(): Node {
+        return children.removeAt(children.lastIndex)
+    }
+
     fun close() {
         if (ongoingRange) {
             children.add(RawCharNode('-', this))
             ongoingRange = false
+        }
+
+        if (isNegation) {
+            // TODO build Negated pattern properly
+            val builder = StringBuilder()
+            builder.append('[')
+            children.forEach {
+                if (it is RawCharNode) {
+                    builder.append(it.rawChar)
+                }
+            }
+            builder.append(']')
+            negatedPattern = builder.toString()
         }
 
         isClosed = true
@@ -36,24 +54,9 @@ internal class CharacterClassNode(
 
     // region Node
 
-    override fun handle(c: Char): Boolean {
-        return if (ongoingRange && c != ']') {
-            val rangeStart = children.removeAt(children.lastIndex)
-            check(rangeStart is RawCharNode) { "Cannot create a range starting with /$rangeStart/" }
-            children.add(CharacterRangeNode(rangeStart.rawChar, c, this))
-            ongoingRange = false
-            true
-        } else if (isNegated && c != ']') {
-            negatedPattern += c
-            true
-        } else {
-            handleSpecialCharacters(c)
-        }
-    }
-
     override fun build(forge: Forge, builder: StringBuilder) {
         check(isClosed) { "Trying to use an unclosed character class" }
-        if (isNegated) {
+        if (isNegation) {
             var char: Char
             do {
                 char = forge.aChar()
@@ -65,33 +68,10 @@ internal class CharacterClassNode(
         }
     }
 
-    override fun verify() {
+    override fun check() {
         check(isClosed) { "Character class is not closed" }
-        super.verify()
-    }
-
-    // endregion
-
-    // region Internal
-
-    private fun handleSpecialCharacters(c: Char): Boolean {
-        var handled = true
-        when (c) {
-            '.' -> children.add(RawCharNode(c, this))
-
-            '-' -> if (children.isEmpty()) {
-                children.add(RawCharNode(c, this))
-            } else {
-                ongoingRange = true
-            }
-
-            '^' -> if (children.isEmpty()) {
-                isNegated = true
-            }
-
-            else -> handled = false
-        }
-        return handled
+        check(children.isNotEmpty()) { "Character class is empty" }
+        super.check()
     }
 
     // endregion

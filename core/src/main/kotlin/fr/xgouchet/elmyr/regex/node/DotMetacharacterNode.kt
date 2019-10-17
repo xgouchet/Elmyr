@@ -12,7 +12,7 @@ internal class DotMetacharacterNode(
         builder.append(forge.aChar())
     }
 
-    override fun verify() {}
+    override fun check() {}
 
     // endregion
 }
