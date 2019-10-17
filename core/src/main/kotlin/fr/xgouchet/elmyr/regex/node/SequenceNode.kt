@@ -1,6 +1,7 @@
 package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
+import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
 internal open class SequenceNode(
     override var parentNode: ParentNode? = null
@@ -9,13 +10,15 @@ internal open class SequenceNode(
     // region ParentNode
 
     override fun handleQuantifier(quantifier: Quantifier) {
-        val lastElement = children.removeAt(children.lastIndex)
-        val newElement = QuantifiedNode(
-                node = lastElement,
-                quantifier = quantifier,
-                parentNode = this
-        )
-        children.add(newElement)
+        if (children.isNotEmpty()) {
+            val lastElement = children.removeAt(children.lastIndex)
+            val newElement = QuantifiedNode(
+                    node = lastElement,
+                    quantifier = quantifier,
+                    parentNode = this
+            )
+            children.add(newElement)
+        }
     }
 
     // endregion

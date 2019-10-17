@@ -1,5 +1,7 @@
 package fr.xgouchet.elmyr.regex.node
 
+import fr.xgouchet.elmyr.regex.quantifier.Quantifier
+
 internal interface ParentNode :
     Node {
 

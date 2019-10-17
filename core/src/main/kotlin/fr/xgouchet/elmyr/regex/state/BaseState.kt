@@ -4,7 +4,7 @@ import fr.xgouchet.elmyr.regex.node.AlternationNode
 import fr.xgouchet.elmyr.regex.node.DotMetacharacterNode
 import fr.xgouchet.elmyr.regex.node.Node
 import fr.xgouchet.elmyr.regex.node.ParentNode
-import fr.xgouchet.elmyr.regex.node.Quantifier
+import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 import fr.xgouchet.elmyr.regex.node.RawCharNode
 import fr.xgouchet.elmyr.regex.node.SequenceNode
 
@@ -36,6 +36,9 @@ internal class BaseState(
 
             // Character class
             '[' -> newState = CharacterClassState(ongoingNode, this)
+
+            // Repetition class
+            '{' -> newState = RepetitionState(ongoingNode, this)
 
             // Alternation
             '|' -> newState = handleAlternation()
