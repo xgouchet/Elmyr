@@ -6,5 +6,5 @@ internal interface State {
 
     fun handleChar(c: Char): State
 
-    fun getRoot(): Node
+    fun handleEndOfRegex(): Node
 }

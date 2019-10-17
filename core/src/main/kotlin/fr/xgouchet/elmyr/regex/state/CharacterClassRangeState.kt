@@ -10,6 +10,8 @@ internal class CharacterClassRangeState(
     private val previousState: State
 ) : State {
 
+    // region State
+
     override fun handleChar(c: Char): State {
         return when (c) {
             ']' -> {
@@ -26,7 +28,9 @@ internal class CharacterClassRangeState(
         }
     }
 
-    override fun getRoot(): Node {
+    override fun handleEndOfRegex(): Node {
         throw IllegalStateException("Unexpected end of expression in character class")
     }
+
+    // endregion
 }

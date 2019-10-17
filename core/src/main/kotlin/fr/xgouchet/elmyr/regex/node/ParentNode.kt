@@ -12,4 +12,8 @@ internal interface ParentNode :
     fun isEmpty(): Boolean
 
     fun handleQuantifier(quantifier: Quantifier)
+
+    fun flattenHierarchy(): List<Node>
+
+    fun findGroup(groupReference: Int): GroupNode?
 }

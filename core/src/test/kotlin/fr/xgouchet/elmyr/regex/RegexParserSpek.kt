@@ -81,17 +81,7 @@ class RegexParserSpek : Spek({
                     "\\V",
                     "\\X",
                     "\\Y",
-                    "\\Z",
-                    "\\0",
-                    "\\1",
-                    "\\2",
-                    "\\3",
-                    "\\4",
-                    "\\5",
-                    "\\6",
-                    "\\7",
-                    "\\8",
-                    "\\9"
+                    "\\Z"
             )
 
             regexes.forEach { regex ->
@@ -219,7 +209,8 @@ class RegexParserSpek : Spek({
                     "((foo?)(ba[rz]))+",
 
                     // Back references
-                    // TODO "(a*)bc\\1",
+                    "(a*)bc\\1",
+                    "(a((b)(c))(d))\\1\\2\\3\\4\\5",
 
                     // empty regex ?!
                     ""
