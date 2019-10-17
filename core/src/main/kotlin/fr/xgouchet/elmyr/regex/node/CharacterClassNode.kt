@@ -1,6 +1,7 @@
 package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
+import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
 internal class CharacterClassNode(
     override var parentNode: ParentNode?
