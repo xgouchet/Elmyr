@@ -2,20 +2,23 @@ package fr.xgouchet.elmyr.regex.state
 
 import fr.xgouchet.elmyr.regex.node.AlternationNode
 import fr.xgouchet.elmyr.regex.node.DotMetacharacterNode
+import fr.xgouchet.elmyr.regex.node.GroupNode
 import fr.xgouchet.elmyr.regex.node.Node
 import fr.xgouchet.elmyr.regex.node.ParentNode
-import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 import fr.xgouchet.elmyr.regex.node.RawCharNode
 import fr.xgouchet.elmyr.regex.node.SequenceNode
+import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
 internal class BaseState(
-    private val rootNode: ParentNode,
-    private val ongoingNode: ParentNode
+    private val rootNode: ParentNode?,
+    private val ongoingNode: ParentNode,
+    private val previousState: State? = null
 ) : State {
 
     // region State
 
     override fun getRoot(): Node {
+        checkNotNull(rootNode) { "Illegal state, retrieving root node from non root state" }
         return rootNode
     }
 
@@ -43,6 +46,19 @@ internal class BaseState(
             // Alternation
             '|' -> newState = handleAlternation()
 
+            // Group
+            '(' -> {
+                val group = GroupNode(ongoingNode)
+                ongoingNode.add(group)
+                val sequence = SequenceNode(group)
+                group.add(sequence)
+                newState = BaseState(null, sequence, this)
+            }
+            ')' -> {
+                checkNotNull(previousState) { "Illegal state when parsing regex" }
+                newState = previousState
+            }
+
             else -> ongoingNode.add(RawCharNode(c, ongoingNode))
         }
 
@@ -53,34 +69,27 @@ internal class BaseState(
 
     private fun handleAlternation(): State {
         val parentNode = ongoingNode.parentNode
-        return if (parentNode is AlternationNode) {
-            val next = SequenceNode(parentNode)
-            parentNode.add(next)
-            BaseState(rootNode, next)
-        } else if (parentNode is SequenceNode?) {
-            // create alternation
-            val alternation = AlternationNode(parentNode)
-            parentNode?.remove(ongoingNode)
-            parentNode?.add(alternation)
 
-            // update ongoing node
-            alternation.add(ongoingNode)
-            ongoingNode.parentNode = alternation
+        // create alternation
+        val alternation = AlternationNode(parentNode)
+        parentNode?.remove(ongoingNode)
+        parentNode?.add(alternation)
 
-            // create new sequence
-            val next = SequenceNode(alternation)
-            alternation.add(next)
+        // update ongoing node
+        alternation.add(ongoingNode)
+        ongoingNode.parentNode = alternation
 
-            // update root ?
-            val newRootNode = if (ongoingNode == rootNode || parentNode == rootNode) {
-                alternation
-            } else {
-                rootNode
-            }
+        // create new sequence
+        val next = SequenceNode(alternation)
+        alternation.add(next)
 
-            BaseState(newRootNode, next)
+        // update root ?
+        val newRootNode = if (ongoingNode == rootNode || parentNode == rootNode) {
+            alternation
         } else {
-            throw IllegalStateException("Whatever")
+            rootNode
         }
+
+        return BaseState(newRootNode, next, previousState)
     }
 }
