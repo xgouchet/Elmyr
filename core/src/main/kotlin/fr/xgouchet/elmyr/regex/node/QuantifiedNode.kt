@@ -5,8 +5,7 @@ import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
 internal class QuantifiedNode(
     private val node: Node,
-    private val quantifier: Quantifier,
-    override var parentNode: ParentNode?
+    private val quantifier: Quantifier
 ) : Node {
 
     // region Node
@@ -18,8 +17,6 @@ internal class QuantifiedNode(
             node.build(forge, builder)
         }
     }
-
-    override fun check() {}
 
     // endregion
 }

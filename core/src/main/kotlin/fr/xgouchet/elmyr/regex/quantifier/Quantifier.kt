@@ -7,8 +7,6 @@ internal interface Quantifier {
 
     companion object {
 
-        val ONE = QuantifierExactlyN(1)
-
         val MAYBE_ONE = QuantifierMaybeOne()
 
         val ZERO_OR_MORE = QuantifierAtLeastN(0)

@@ -1,28 +1,21 @@
 package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
-import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
 internal class GroupNode(
-    override var parentNode: ParentNode?
-) : BaseParentNode() {
+    private val parentNode: ParentNode
+) : BaseParentNode(), ChildNode {
 
-    var referenceValue: String = ""
+    internal var referenceValue: String = ""
+        private set
 
-    // region ParentNode
+    // region ChildNode
 
-    override fun handleQuantifier(quantifier: Quantifier) {
-        throw UnsupportedOperationException("CharacterClassNode cannot handle quantifiers")
-    }
+    override fun getParent(): ParentNode = parentNode
 
     // endregion
 
     // region Node
-
-    override fun check() {
-        check(children.size == 1) { "Illegal group construction" }
-        super.check()
-    }
 
     override fun build(forge: Forge, builder: StringBuilder) {
         val localBuilder = StringBuilder()
