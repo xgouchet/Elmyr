@@ -124,6 +124,12 @@ class RegexParserSpek : Spek({
                     "{3}",
                     "[a-z]{2,2}",
 
+                    // Embedded flags : (?α) = turn on; (?-α) turn of; (?α-κ:…) non capturing with flag
+                    // TODO case insensitive (?i)
+                    // TODO Unix Lines (?d)
+                    // TODO multiline (?m)
+                    // TODO dotall (?s)
+                    // TODO unicode case (?u)
                     // TODO freespace (?x)
                     // TODO No group (?:)
 
