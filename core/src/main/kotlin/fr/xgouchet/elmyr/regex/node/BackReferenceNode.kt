@@ -3,21 +3,23 @@ package fr.xgouchet.elmyr.regex.node
 import fr.xgouchet.elmyr.Forge
 
 internal class BackReferenceNode(
-    val groupReference: Int,
-    override var parentNode: ParentNode?
-) : Node {
+    internal val groupReference: Int,
+    private val parentNode: ParentNode
+) : ChildNode {
 
-    var referencedGroup: GroupNode? = null
+    internal lateinit var referencedGroup: GroupNode
+
+    // region ChildNode
+
+    override fun getParent(): ParentNode = parentNode
+
+    // endregion
+
+    // region Node
 
     override fun build(forge: Forge, builder: StringBuilder) {
-        referencedGroup?.let {
-            builder.append(it.referenceValue)
-        }
+        builder.append(referencedGroup.referenceValue)
     }
 
-    override fun check() {
-        val root = getRoot()
-        checkNotNull(root) { "Illegal state BackReference not within a hierarchy" }
-        referencedGroup = root.findGroup(groupReference)
-    }
+    // endregion
 }

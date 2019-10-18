@@ -28,7 +28,10 @@ class RegexParserSpek : Spek({
                     "[Z-A]",
                     "[9-1]",
                     "[a-Z]",
+                    "[a-z",
+                    "[a-",
                     "[]",
+                    "(a)[\\1]",
 
                     // repetition
                     "a{}",
@@ -40,6 +43,11 @@ class RegexParserSpek : Spek({
                     // groups
                     "(ab",
                     "ab)",
+                    "(ab(",
+
+                    // back reference
+                    "a*bc\\1",
+                    "(\\w)(\\d+(\\2))",
 
                     // escape sequence
                     "\\b",
@@ -81,7 +89,8 @@ class RegexParserSpek : Spek({
                     "\\V",
                     "\\X",
                     "\\Y",
-                    "\\Z"
+                    "\\Z",
+                    "a\\"
             )
 
             regexes.forEach { regex ->
@@ -217,6 +226,8 @@ class RegexParserSpek : Spek({
                     // Back references
                     "(a*)bc\\1",
                     "(a((b)(c))(d))\\1\\2\\3\\4\\5",
+                    "(\\d)(b)(c)(d)(\\d)(f)(g)(h)(\\d)(j)(k)(l)(m)(n)(\\d)(p)(q)(r)(s)(t)(\\d)(v)(w)(x)(y)(z)\\|\\1\\5\\9\\15\\21",
+                    "(\\w)(\\d+(\\1))",
 
                     // empty regex ?!
                     ""

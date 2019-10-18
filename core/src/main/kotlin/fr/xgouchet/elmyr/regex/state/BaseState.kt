@@ -1,26 +1,20 @@
 package fr.xgouchet.elmyr.regex.state
 
-import fr.xgouchet.elmyr.regex.node.AlternationNode
-import fr.xgouchet.elmyr.regex.node.DotMetacharacterNode
-import fr.xgouchet.elmyr.regex.node.GroupNode
-import fr.xgouchet.elmyr.regex.node.Node
-import fr.xgouchet.elmyr.regex.node.ParentNode
-import fr.xgouchet.elmyr.regex.node.RawCharNode
-import fr.xgouchet.elmyr.regex.node.SequenceNode
+import fr.xgouchet.elmyr.regex.node.*
 import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
-internal class BaseState(
-    private val rootNode: ParentNode?,
-    private val ongoingNode: ParentNode,
+internal class BaseState<T>(
+    private val ongoingNode: T,
     private val previousState: State? = null
-) : State {
+) : State
+        where T : ParentNode,
+              T : MovingChildNode,
+              T : QuantifiableNode {
 
     // region State
 
-    override fun handleEndOfRegex(): Node {
+    override fun handleEndOfRegex() {
         check(previousState == null) { "Illegal state, retrieving root node from non root state" }
-        checkNotNull(rootNode) { "Illegal state, retrieving root node from non root state" }
-        return rootNode
     }
 
     override fun handleChar(c: Char): State {
@@ -33,16 +27,18 @@ internal class BaseState(
             '*' -> ongoingNode.handleQuantifier(Quantifier.ZERO_OR_MORE)
 
             // Dot metacharacter
-            '.' -> ongoingNode.add(DotMetacharacterNode(ongoingNode))
+            '.' -> ongoingNode.add(DotMetacharacterNode())
 
             // Escape Sequence
-            '\\' -> newState = EscapeState(ongoingNode, this)
+            '\\' -> newState = EscapeState(ongoingNode, this, true)
 
             // Character class
             '[' -> newState = CharacterClassState(ongoingNode, this)
 
             // Repetition class
-            '{' -> newState = RepetitionState(ongoingNode, this)
+            '{' -> {
+                newState = RepetitionState(ongoingNode, this)
+            }
 
             // Alternation
             '|' -> newState = handleAlternation()
@@ -53,14 +49,14 @@ internal class BaseState(
                 ongoingNode.add(group)
                 val sequence = SequenceNode(group)
                 group.add(sequence)
-                newState = BaseState(null, sequence, this)
+                newState = BaseState(sequence, this)
             }
             ')' -> {
                 checkNotNull(previousState) { "Illegal state when parsing regex" }
                 newState = previousState
             }
 
-            else -> ongoingNode.add(RawCharNode(c, ongoingNode))
+            else -> ongoingNode.add(RawCharNode(c))
         }
 
         return newState
@@ -71,29 +67,25 @@ internal class BaseState(
     // region Internal
 
     private fun handleAlternation(): State {
-        val parentNode = ongoingNode.parentNode
+
+        println("Accessing parentNode for ${ongoingNode.javaClass.simpleName}")
+        val parentNode = ongoingNode.getParent()
 
         // create alternation
-        val alternation = AlternationNode(parentNode)
-        parentNode?.remove(ongoingNode)
-        parentNode?.add(alternation)
+        val alternation = AlternationNode()
+        parentNode.remove(ongoingNode)
+        parentNode.add(alternation)
 
         // update ongoing node
         alternation.add(ongoingNode)
-        ongoingNode.parentNode = alternation
+        println("Updating parentNode for ${ongoingNode.javaClass.simpleName}")
+        ongoingNode.updateParent(alternation)
 
         // create new sequence
         val next = SequenceNode(alternation)
         alternation.add(next)
 
-        // update root ?
-        val newRootNode = if (ongoingNode == rootNode || parentNode == rootNode) {
-            alternation
-        } else {
-            rootNode
-        }
-
-        return BaseState(newRootNode, next, previousState)
+        return BaseState(next, previousState)
     }
 
     // endregion

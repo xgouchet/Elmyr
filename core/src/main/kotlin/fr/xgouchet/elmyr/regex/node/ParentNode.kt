@@ -1,9 +1,7 @@
 package fr.xgouchet.elmyr.regex.node
 
-import fr.xgouchet.elmyr.regex.quantifier.Quantifier
-
 internal interface ParentNode :
-    Node {
+        Node {
 
     fun add(node: Node)
 
@@ -11,9 +9,5 @@ internal interface ParentNode :
 
     fun isEmpty(): Boolean
 
-    fun handleQuantifier(quantifier: Quantifier)
-
     fun flattenHierarchy(): List<Node>
-
-    fun findGroup(groupReference: Int): GroupNode?
 }

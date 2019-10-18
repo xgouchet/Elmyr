@@ -1,31 +1,24 @@
 package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
-import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
 internal class CharacterClassNode(
-    override var parentNode: ParentNode?
+    private val isNegation: Boolean
 ) : BaseParentNode() {
 
     private var isClosed: Boolean = false
-    private var ongoingRange: Boolean = false
 
     private var negatedPattern: String = ""
     private val negatedRegex: Regex by lazy { Regex("[$negatedPattern]") }
 
     // region CharacterClassNode
 
-    internal var isNegation = false
-
     fun removeLast(): Node {
         return children.removeAt(children.lastIndex)
     }
 
     fun close() {
-        if (ongoingRange) {
-            children.add(RawCharNode('-', this))
-            ongoingRange = false
-        }
+        check(children.isNotEmpty()) { "Character class is empty" }
 
         if (isNegation) {
             // TODO build Negated pattern properly
@@ -45,18 +38,9 @@ internal class CharacterClassNode(
 
     // endregion
 
-    // region ParentNode
-
-    override fun handleQuantifier(quantifier: Quantifier) {
-        throw UnsupportedOperationException("CharacterClassNode cannot handle quantifiers")
-    }
-
-    // endregion
-
     // region Node
 
     override fun build(forge: Forge, builder: StringBuilder) {
-        check(isClosed) { "Trying to use an unclosed character class" }
         if (isNegation) {
             var char: Char
             do {
@@ -67,12 +51,6 @@ internal class CharacterClassNode(
             val child = forge.anElementFrom(children)
             child.build(forge, builder)
         }
-    }
-
-    override fun check() {
-        check(isClosed) { "Character class is not closed" }
-        check(children.isNotEmpty()) { "Character class is empty" }
-        super.check()
     }
 
     // endregion

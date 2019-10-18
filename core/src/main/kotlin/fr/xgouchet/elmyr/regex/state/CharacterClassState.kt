@@ -1,16 +1,16 @@
 package fr.xgouchet.elmyr.regex.state
 
 import fr.xgouchet.elmyr.regex.node.CharacterClassNode
-import fr.xgouchet.elmyr.regex.node.Node
 import fr.xgouchet.elmyr.regex.node.ParentNode
 import fr.xgouchet.elmyr.regex.node.RawCharNode
 
 internal class CharacterClassState(
     private val ongoingNode: ParentNode,
-    private val previousState: State
+    private val previousState: State,
+    private val isNegation: Boolean = false
 ) : State {
 
-    val classNode = CharacterClassNode(ongoingNode)
+    private val classNode = CharacterClassNode(isNegation)
 
     // region State
 
@@ -18,7 +18,7 @@ internal class CharacterClassState(
         var newState: State = this
         when (c) {
             // Escape Sequence
-            '\\' -> newState = EscapeState(classNode, this)
+            '\\' -> newState = EscapeState(classNode, this, false)
 
             // Closing Bracket
             ']' -> {
@@ -32,25 +32,25 @@ internal class CharacterClassState(
 
             // Character range
             '-' -> if (classNode.isEmpty()) {
-                classNode.add(RawCharNode(c, classNode))
+                classNode.add(RawCharNode(c))
             } else {
                 newState = CharacterClassRangeState(classNode, this)
             }
 
             // Negation
             '^' -> if (classNode.isEmpty()) {
-                classNode.isNegation = true
+                newState = CharacterClassState(ongoingNode, previousState, true)
             } else {
-                classNode.add(RawCharNode(c, classNode))
+                classNode.add(RawCharNode(c))
             }
 
-            else -> classNode.add(RawCharNode(c, classNode))
+            else -> classNode.add(RawCharNode(c))
         }
 
         return newState
     }
 
-    override fun handleEndOfRegex(): Node {
+    override fun handleEndOfRegex() {
         throw IllegalStateException("Unexpected end of expression in character class")
     }
 

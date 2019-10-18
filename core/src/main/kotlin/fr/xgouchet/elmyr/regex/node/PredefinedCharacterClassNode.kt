@@ -4,7 +4,6 @@ import fr.xgouchet.elmyr.Forge
 
 internal class PredefinedCharacterClassNode
 private constructor(
-    override var parentNode: ParentNode?,
     private val forging: Forge.() -> Char
 ) : Node {
 
@@ -14,24 +13,22 @@ private constructor(
         builder.append(forge.forging())
     }
 
-    override fun check() {}
-
     // endregion
 
     companion object {
 
-        fun digit(parentNode: ParentNode?) = PredefinedCharacterClassNode(parentNode) {
+        fun digit() = PredefinedCharacterClassNode() {
             aNumericalChar()
         }
 
-        fun notDigit(parentNode: ParentNode?) = PredefinedCharacterClassNode(parentNode) {
+        fun notDigit() = PredefinedCharacterClassNode() {
             anElementFrom(
                     aChar(min = Forge.MIN_PRINTABLE, max = '0'),
                     aChar(min = ':', max = Forge.MAX_UTF8)
             )
         }
 
-        fun word(parentNode: ParentNode?) = PredefinedCharacterClassNode(parentNode) {
+        fun word() = PredefinedCharacterClassNode() {
             anElementFrom(
                     aChar('a', 'z'),
                     aChar('A', 'Z'),
@@ -39,7 +36,7 @@ private constructor(
                     '_')
         }
 
-        fun notWord(parentNode: ParentNode?) = PredefinedCharacterClassNode(parentNode) {
+        fun notWord() = PredefinedCharacterClassNode() {
             anElementFrom(
                     aChar(min = Forge.MIN_PRINTABLE, max = '0'),
                     aChar(min = ':', max = 'A'),
@@ -49,11 +46,11 @@ private constructor(
             )
         }
 
-        fun whitespace(parentNode: ParentNode?) = PredefinedCharacterClassNode(parentNode) {
+        fun whitespace() = PredefinedCharacterClassNode() {
             aWhitespaceChar()
         }
 
-        fun notWhitespace(parentNode: ParentNode?) = PredefinedCharacterClassNode(parentNode) {
+        fun notWhitespace() = PredefinedCharacterClassNode() {
             aChar(min = '\u0021', max = Forge.MAX_UTF8)
         }
     }

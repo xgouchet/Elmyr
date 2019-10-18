@@ -31,19 +31,5 @@ internal abstract class BaseParentNode : ParentNode {
         return list
     }
 
-    override fun findGroup(groupReference: Int): GroupNode? {
-        val nodes = flattenHierarchy()
-        val groupNodes = nodes.filterIsInstance<GroupNode>()
-        return groupNodes.getOrNull(groupReference - 1)
-    }
-
-    // endregion
-
-    // region Node
-
-    override fun check() {
-        children.forEach { it.check() }
-    }
-
     // endregion
 }

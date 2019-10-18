@@ -4,18 +4,17 @@ import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
 internal open class SequenceNode(
-    override var parentNode: ParentNode? = null
-) : BaseParentNode() {
+    private var parentNode: ParentNode
+) : BaseParentNode(), MovingChildNode, QuantifiableNode {
 
-    // region ParentNode
+    // region QuantifiableNode
 
     override fun handleQuantifier(quantifier: Quantifier) {
         if (children.isNotEmpty()) {
             val lastElement = children.removeAt(children.lastIndex)
             val newElement = QuantifiedNode(
                     node = lastElement,
-                    quantifier = quantifier,
-                    parentNode = this
+                    quantifier = quantifier
             )
             children.add(newElement)
         }
@@ -23,7 +22,21 @@ internal open class SequenceNode(
 
     // endregion
 
-    // region QuantifiedNode
+    // region ChildNode
+
+    override fun getParent(): ParentNode = parentNode
+
+    // endregion
+
+    // region MovingChildNode
+
+    override fun updateParent(parentNode: ParentNode) {
+        this.parentNode = parentNode
+    }
+
+    // endregion
+
+    // region Node
 
     override fun build(forge: Forge, builder: StringBuilder) {
         for (child in children) {

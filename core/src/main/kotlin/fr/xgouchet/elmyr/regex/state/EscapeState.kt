@@ -1,18 +1,18 @@
 package fr.xgouchet.elmyr.regex.state
 
 import fr.xgouchet.elmyr.regex.node.BackReferenceNode
-import fr.xgouchet.elmyr.regex.node.Node
 import fr.xgouchet.elmyr.regex.node.ParentNode
 import fr.xgouchet.elmyr.regex.node.PredefinedCharacterClassNode
 import fr.xgouchet.elmyr.regex.node.RawCharNode
 
 internal class EscapeState(
     private val ongoingNode: ParentNode,
-    private val previousState: State
+    private val previousState: State,
+    private val allowBackReference: Boolean
 ) : State {
 
-    var readingBackReference = false
-    var backReference = 0
+    private var readingBackReference = false
+    private var backReference = 0
 
     // region State
 
@@ -24,10 +24,10 @@ internal class EscapeState(
         }
     }
 
-    override fun handleEndOfRegex(): Node {
+    override fun handleEndOfRegex() {
         if (readingBackReference) {
             ongoingNode.add(BackReferenceNode(backReference, ongoingNode))
-            return previousState.handleEndOfRegex()
+            previousState.handleEndOfRegex()
         } else {
             throw IllegalStateException("Unexpected end of expression after escape character")
         }
@@ -43,29 +43,31 @@ internal class EscapeState(
         when (c) {
             // escapable characters
             '[', ']', '(', ')', '{', '}', '<', '>', '?', '+', '*',
-            '-', '=', '!', '.', '|', '^', '$', '\\' -> ongoingNode.add(RawCharNode(c, ongoingNode))
+            '-', '=', '!', '.', '|', '^', '$', '\\' -> ongoingNode.add(RawCharNode(c))
 
             // Whitespace
-            'n' -> ongoingNode.add(RawCharNode('\n', ongoingNode))
-            't' -> ongoingNode.add(RawCharNode('\t', ongoingNode))
-            'r' -> ongoingNode.add(RawCharNode('\r', ongoingNode))
-            'f' -> ongoingNode.add(RawCharNode('\u000C', ongoingNode))
-            'a' -> ongoingNode.add(RawCharNode('\u0007', ongoingNode))
-            'e' -> ongoingNode.add(RawCharNode('\u001B', ongoingNode))
+            'n' -> ongoingNode.add(RawCharNode('\n'))
+            't' -> ongoingNode.add(RawCharNode('\t'))
+            'r' -> ongoingNode.add(RawCharNode('\r'))
+            'f' -> ongoingNode.add(RawCharNode('\u000C'))
+            'a' -> ongoingNode.add(RawCharNode('\u0007'))
+            'e' -> ongoingNode.add(RawCharNode('\u001B'))
 
             // Predefined character classes
-            'd' -> ongoingNode.add(PredefinedCharacterClassNode.digit(ongoingNode))
-            'D' -> ongoingNode.add(PredefinedCharacterClassNode.notDigit(ongoingNode))
-            'w' -> ongoingNode.add(PredefinedCharacterClassNode.word(ongoingNode))
-            'W' -> ongoingNode.add(PredefinedCharacterClassNode.notWord(ongoingNode))
-            's' -> ongoingNode.add(PredefinedCharacterClassNode.whitespace(ongoingNode))
-            'S' -> ongoingNode.add(PredefinedCharacterClassNode.notWhitespace(ongoingNode))
+            'd' -> ongoingNode.add(PredefinedCharacterClassNode.digit())
+            'D' -> ongoingNode.add(PredefinedCharacterClassNode.notDigit())
+            'w' -> ongoingNode.add(PredefinedCharacterClassNode.word())
+            'W' -> ongoingNode.add(PredefinedCharacterClassNode.notWord())
+            's' -> ongoingNode.add(PredefinedCharacterClassNode.whitespace())
+            'S' -> ongoingNode.add(PredefinedCharacterClassNode.notWhitespace())
 
-            '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+            '1', '2', '3', '4', '5', '6', '7', '8', '9' -> if (allowBackReference) {
                 readingBackReference = true
                 val digit = (c - '0')
                 backReference = (backReference * BASE_10) + digit
                 newState = this
+            } else {
+                throw IllegalStateException("Illegal/unsupported escape sequence /\\$c/")
             }
 
             else -> throw IllegalStateException("Illegal/unsupported escape sequence /\\$c/")

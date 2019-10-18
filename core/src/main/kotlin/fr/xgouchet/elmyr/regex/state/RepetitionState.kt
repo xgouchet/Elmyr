@@ -1,16 +1,17 @@
 package fr.xgouchet.elmyr.regex.state
 
-import fr.xgouchet.elmyr.regex.node.Node
 import fr.xgouchet.elmyr.regex.node.ParentNode
+import fr.xgouchet.elmyr.regex.node.QuantifiableNode
 import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 import fr.xgouchet.elmyr.regex.quantifier.QuantifierAtLeastN
 import fr.xgouchet.elmyr.regex.quantifier.QuantifierExactlyN
 import fr.xgouchet.elmyr.regex.quantifier.QuantifierRange
 
-internal class RepetitionState(
-    private val ongoingNode: ParentNode,
+internal class RepetitionState<T>(
+    private val ongoingNode: T,
     private val previousState: State
-) : State {
+) : State
+        where T : ParentNode, T : QuantifiableNode {
 
     private var atLeastOneDigit = false
     private var beforeComma = true
@@ -46,7 +47,7 @@ internal class RepetitionState(
         return newState
     }
 
-    override fun handleEndOfRegex(): Node {
+    override fun handleEndOfRegex() {
         throw IllegalStateException("Unexpected end of expression in repetition range")
     }
 
