@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.0.0-alpha1 (2019/10/31)
+
+ - Rewrite of the whole core Forge class
+ - Split the library into artifacts 
+
 ### 0.12 (2019/09/10)
 
  - Add forgery to create an Android Web URL string (eg: `aWebUrl()`)

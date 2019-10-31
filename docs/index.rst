@@ -2,7 +2,7 @@
 Welcome to Elmyr's documentation!
 =================================
 
-Elmyr is a Kotlin library providing tools to forge “random” (and reproducible) values, specifically usefull for tests.
+Elmyr is a Kotlin library providing tools to forge “random” - and reproducible - values, specifically useful for tests.
 
 The code is open source, and available on GitHub_.
 
@@ -31,7 +31,4 @@ The concept of this library is to be able to generate values that could pass for
    :glob:
 
    getting_started
-   forger
-   constraints
-   junit
    faq
