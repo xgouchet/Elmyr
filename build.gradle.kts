@@ -1,15 +1,13 @@
-
-
 buildscript {
     repositories {
         google()
         mavenCentral()
-//        maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Gradle) }
+        maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Gradle) }
         jcenter()
     }
 
     dependencies {
-//        classpath(fr.xgouchet.buildsrc.Dependencies.ClassPaths.KtLint)
+        //        classpath(fr.xgouchet.buildsrc.Dependencies.ClassPaths.KtLint)
     }
 }
 

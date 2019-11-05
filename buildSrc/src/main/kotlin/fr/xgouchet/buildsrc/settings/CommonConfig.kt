@@ -7,4 +7,5 @@ fun Project.commonConfig() {
     jacocoConfig()
     kotlinConfig()
     junitConfig()
+    ktLintConfig()
 }
