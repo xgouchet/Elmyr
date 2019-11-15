@@ -9,13 +9,14 @@ import fr.xgouchet.elmyr.Forger
  * @author Xavier F. Gouchet
  */
 class ForgedDouble(
-        val constraint: DoubleConstraint = DoubleConstraint.ANY,
-        val min: Double = Double.NEGATIVE_INFINITY,
-        val max: Double = Double.POSITIVE_INFINITY,
-        val mean: Double = 0.0,
-        val standardDeviation: Double = -1.0,
-        forger: Forger)
-    : ForgedProperty<Double>(forger) {
+    val constraint: DoubleConstraint = DoubleConstraint.ANY,
+    val min: Double = Double.NEGATIVE_INFINITY,
+    val max: Double = Double.POSITIVE_INFINITY,
+    val mean: Double = 0.0,
+    val standardDeviation: Double = -1.0,
+    forger: Forger
+) :
+    ForgedProperty<Double>(forger) {
 
     override fun generate(forger: Forger): Double {
         return if (standardDeviation >= 0) {
@@ -26,5 +27,4 @@ class ForgedDouble(
             forger.aDouble(constraint)
         }
     }
-
 }

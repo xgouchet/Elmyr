@@ -1,11 +1,11 @@
 package fr.xgouchet.elmyr
 
+import java.util.concurrent.TimeUnit
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import java.util.concurrent.TimeUnit
 
 /**
  * @author Xavier F. Gouchet
@@ -190,6 +190,5 @@ class ForgerSpek_Misc : Spek({
                 }
             }
         }
-
     }
 })

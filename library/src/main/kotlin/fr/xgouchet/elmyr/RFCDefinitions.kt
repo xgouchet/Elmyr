@@ -165,7 +165,6 @@ object RFCDefinitions {
             builder.append("IPv6:")
             RFC4291_buildIPv6Address(forger, builder)
         }
-
     }
 
     // endregion

@@ -7,8 +7,8 @@ import fr.xgouchet.elmyr.Forger
  *
  * @author Xavier F. Gouchet
  */
-class RegexNonWhitespaceNode(parent: RegexParentNode)
-    : RegexNode(parent) {
+class RegexNonWhitespaceNode(parent: RegexParentNode) :
+    RegexNode(parent) {
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
         builder.append(forger.aNonWhitespaceChar())
@@ -17,5 +17,4 @@ class RegexNonWhitespaceNode(parent: RegexParentNode)
     override fun describe(builder: StringBuilder) {
         builder.append("\\S")
     }
-
 }

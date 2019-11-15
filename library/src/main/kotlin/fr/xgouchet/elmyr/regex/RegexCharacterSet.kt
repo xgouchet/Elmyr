@@ -6,8 +6,8 @@ import fr.xgouchet.elmyr.Forger
  * Represents a character set, eg [a-f]
  * @author Xavier F. Gouchet
  */
-internal class RegexCharacterSet(parent: RegexParentNode? = null)
-    : RegexParentNode(parent) {
+internal class RegexCharacterSet(parent: RegexParentNode? = null) :
+    RegexParentNode(parent) {
 
     private var ongoingRange: Boolean = false
     private var isNegated: Boolean = false
@@ -97,5 +97,4 @@ internal class RegexCharacterSet(parent: RegexParentNode? = null)
 
         return RegexCharRangeNode(fromChar, toChar, this)
     }
-
 }

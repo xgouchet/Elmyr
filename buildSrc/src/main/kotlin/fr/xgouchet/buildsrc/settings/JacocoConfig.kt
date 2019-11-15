@@ -11,7 +11,6 @@ fun Project.jacocoConfig() {
     extensionConfig<JacocoPluginExtension> {
         toolVersion = Dependencies.Versions.Jacoco
         reportsDir = file("$buildDir/jacoco") // Jacoco's output root.
-
     }
 
     tasks.withType(JacocoReport::class.java) {
@@ -37,5 +36,4 @@ fun Project.jacocoConfig() {
         dependsOn("jacocoTestReport")
         dependsOn("jacocoTestCoverageVerification")
     }
-
 }

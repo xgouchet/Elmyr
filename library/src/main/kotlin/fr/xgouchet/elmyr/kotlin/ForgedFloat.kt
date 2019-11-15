@@ -9,13 +9,14 @@ import fr.xgouchet.elmyr.Forger
  * @author Xavier F. Gouchet
  */
 class ForgedFloat(
-        val constraint: FloatConstraint = FloatConstraint.ANY,
-        val min: Float = Float.NEGATIVE_INFINITY,
-        val max: Float = Float.POSITIVE_INFINITY,
-        val mean: Float = 0f,
-        val standardDeviation: Float = -1f,
-        forger: Forger)
-    : ForgedProperty<Float>(forger) {
+    val constraint: FloatConstraint = FloatConstraint.ANY,
+    val min: Float = Float.NEGATIVE_INFINITY,
+    val max: Float = Float.POSITIVE_INFINITY,
+    val mean: Float = 0f,
+    val standardDeviation: Float = -1f,
+    forger: Forger
+) :
+    ForgedProperty<Float>(forger) {
 
     override fun generate(forger: Forger): Float {
         return if (standardDeviation >= 0) {
@@ -26,5 +27,4 @@ class ForgedFloat(
             forger.aFloat(constraint)
         }
     }
-
 }

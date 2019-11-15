@@ -1,11 +1,11 @@
 package fr.xgouchet.elmyr
 
 import org.assertj.core.api.Java6Assertions.assertThat
+import org.assertj.core.api.KotlinAssertions.assertThat as assertThatK
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import org.assertj.core.api.KotlinAssertions.assertThat as assertThatK
 
 @Suppress("UsePropertyAccessSyntax")
 /**
@@ -344,7 +344,6 @@ class ForgerSpek_Collections : Spek({
                 assertThat(data).containsExactly(*expectedData)
             }
 
-
             it("forges a map of whatever") {
                 var i = 0
                 val values = forger.aList { aWord() }
@@ -356,9 +355,7 @@ class ForgerSpek_Collections : Spek({
 
                 assertThat(data)
                         .contains(*expectedData.entries.toTypedArray())
-
             }
-
         }
 
         context("forging sublist") {
@@ -580,7 +577,6 @@ class ForgerSpek_Collections : Spek({
                     previousList = shuffled
                 }
             }
-
         }
 
         context("forging value from an enum") {
@@ -595,15 +591,13 @@ class ForgerSpek_Collections : Spek({
             it("selects a value from an enum class with excluded values") {
                 repeat(testRepeatCountSmall) {
                     val excluded = forger.aList(3) { aValueFrom(Month::class.java) }
-                    val value = forger.aValueFrom(Month::class.java,excluded)
+                    val value = forger.aValueFrom(Month::class.java, excluded)
 
                     assertThat(value)
                             .isInstanceOf(Month::class.java)
                             .isNotIn(excluded)
                 }
             }
-
         }
     }
-
 })

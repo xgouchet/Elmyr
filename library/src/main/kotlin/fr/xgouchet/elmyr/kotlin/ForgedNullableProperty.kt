@@ -9,10 +9,12 @@ import kotlin.reflect.KProperty
  *
  * @author Xavier F. Gouchet
  */
-class ForgedNullableProperty<T>(val delegate: ReadOnlyProperty<Any?, T>,
-                                probability: Float = 0.5f,
-                                val forger: Forger)
-    : ReadOnlyProperty<Any?, T?> {
+class ForgedNullableProperty<T>(
+    val delegate: ReadOnlyProperty<Any?, T>,
+    probability: Float = 0.5f,
+    val forger: Forger
+) :
+    ReadOnlyProperty<Any?, T?> {
 
     val isNull: Boolean = forger.aBool(probability)
 

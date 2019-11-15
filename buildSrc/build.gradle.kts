@@ -4,7 +4,6 @@ plugins {
     `kotlin-dsl`
 }
 
-
 buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41")
@@ -24,8 +23,8 @@ repositories {
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.41")
     compile("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41")
-    compile ("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.1")
-    compile ("org.jlleitschuh.gradle:ktlint-gradle:8.2.0")
+    compile("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.1")
+    compile("org.jlleitschuh.gradle:ktlint-gradle:8.2.0")
 }
 
 tasks.withType<KotlinCompile> {

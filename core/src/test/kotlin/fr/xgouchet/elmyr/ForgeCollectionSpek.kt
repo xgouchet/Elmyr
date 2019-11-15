@@ -1,11 +1,11 @@
 package fr.xgouchet.elmyr
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.KotlinAssertions.assertThat as assertThatK
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import org.assertj.core.api.KotlinAssertions.assertThat as assertThatK
 
 class ForgeCollectionSpek : Spek({
 
@@ -15,7 +15,6 @@ class ForgeCollectionSpek : Spek({
 
         val testRepeatCountSmall = 16
         val arraySize = 32 + forge.aTinyInt()
-        val arraySizeBig = 1024 + forge.aSmallInt()
 
         beforeEachTest {
             seed = System.nanoTime()
@@ -50,7 +49,7 @@ class ForgeCollectionSpek : Spek({
                 val data = BooleanArray(arraySize) { forge.aBool() }
 
                 repeat(testRepeatCountSmall) {
-                    val result = forge.anElementFrom(data)
+                    forge.anElementFrom(data)
                     // How do you test a boolean ????
                 }
             }

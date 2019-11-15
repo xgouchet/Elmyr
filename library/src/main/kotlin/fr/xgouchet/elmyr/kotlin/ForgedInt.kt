@@ -9,11 +9,12 @@ import fr.xgouchet.elmyr.IntConstraint
  * @author Xavier F. Gouchet
  */
 class ForgedInt(
-        val constraint: IntConstraint = IntConstraint.ANY,
-        val min: Int = -1,
-        val max: Int = -1,
-        forger: Forger)
-    : ForgedProperty<Int>(forger) {
+    val constraint: IntConstraint = IntConstraint.ANY,
+    val min: Int = -1,
+    val max: Int = -1,
+    forger: Forger
+) :
+    ForgedProperty<Int>(forger) {
 
     override fun generate(forger: Forger): Int {
         if ((min < 0) and (max < 0)) {
@@ -22,5 +23,4 @@ class ForgedInt(
             return forger.anInt(min, max)
         }
     }
-
 }

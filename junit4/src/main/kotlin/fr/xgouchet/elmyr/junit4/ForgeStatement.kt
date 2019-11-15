@@ -3,10 +3,10 @@ package fr.xgouchet.elmyr.junit4
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.inject.DefaultForgeryInjector
 import fr.xgouchet.elmyr.inject.ForgeryInjector
+import java.util.Locale
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.MultipleFailureException
 import org.junit.runners.model.Statement
-import java.util.Locale
 
 internal class ForgeStatement(
     private val base: Statement,

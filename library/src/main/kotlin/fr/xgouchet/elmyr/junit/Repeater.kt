@@ -16,9 +16,11 @@ class Repeater : TestRule {
         return RepeaterStatement(base, description)
     }
 
-    class RepeaterStatement(private val base: Statement,
-                            private val description: Description)
-        : Statement() {
+    class RepeaterStatement(
+        private val base: Statement,
+        private val description: Description
+    ) :
+        Statement() {
         @Throws(Throwable::class)
         override fun evaluate() {
 
@@ -38,8 +40,8 @@ class Repeater : TestRule {
         }
 
         @Suppress("TooGenericExceptionCaught")
-        private fun evaluateRepeated(count: Int)
-                : Pair<List<Throwable>, List<Throwable>> {
+        private fun evaluateRepeated(count: Int):
+                Pair<List<Throwable>, List<Throwable>> {
             val errors = mutableListOf<Throwable>()
             val ignores = mutableListOf<Throwable>()
 

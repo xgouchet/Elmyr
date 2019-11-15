@@ -2,7 +2,7 @@ package fr.xgouchet.elmyr
 
 import fr.xgouchet.elmyr.RFCDefinitions.RFC791_buildIPv4Address
 
-@Suppress("FunctionName",  "MagicNumber", "TooManyFunctions")
+@Suppress("FunctionName", "MagicNumber", "TooManyFunctions")
 object AndroidDefinitions {
 
     private val LABEL_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()

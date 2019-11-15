@@ -135,5 +135,4 @@ class RegexBuilder(regex: String) {
         rootNode.build(forger, builder)
         return builder.toString()
     }
-
 }

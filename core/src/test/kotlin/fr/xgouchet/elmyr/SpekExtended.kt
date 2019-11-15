@@ -1,9 +1,9 @@
 package fr.xgouchet.elmyr
 
-import org.assertj.core.api.Java6Assertions.assertThat
-import org.assertj.core.api.Java6Assertions.within
 import kotlin.math.abs
 import kotlin.math.sqrt
+import org.assertj.core.api.Java6Assertions.assertThat
+import org.assertj.core.api.Java6Assertions.within
 
 /**
  * @param T the expected type of throwable to thrown

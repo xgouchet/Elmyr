@@ -15,5 +15,4 @@ class RawChar(val rawChar: Char, parent: RegexParentNode) : RegexNode(parent) {
     override fun describe(builder: StringBuilder) {
         builder.append(rawChar)
     }
-
 }

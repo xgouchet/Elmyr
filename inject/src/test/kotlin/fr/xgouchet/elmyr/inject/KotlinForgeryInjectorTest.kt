@@ -5,8 +5,8 @@ import fr.xgouchet.elmyr.ForgeryException
 import fr.xgouchet.elmyr.inject.dummy.Foo
 import fr.xgouchet.elmyr.inject.dummy.FooFactory
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjected
-import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedImmutableVal
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedChild
+import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedImmutableVal
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedMissingFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

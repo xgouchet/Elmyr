@@ -150,7 +150,6 @@ class ForgeExtensionTest {
     }
 
     // endregion
-
 }
 
 class Reflekta(s: String) {

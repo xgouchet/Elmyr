@@ -29,10 +29,12 @@ inline fun <reified T : Throwable> throws(block: () -> Unit) {
     }
 }
 
-fun verifyGaussianDistribution(count: Int,
-                               expectedMean: Double,
-                               expectedStandardDev: Double,
-                               provider: (Int) -> Double) {
+fun verifyGaussianDistribution(
+    count: Int,
+    expectedMean: Double,
+    expectedStandardDev: Double,
+    provider: (Int) -> Double
+) {
     var sum = 0.0
     var squareSum = 0.0
 
@@ -50,9 +52,11 @@ fun verifyGaussianDistribution(count: Int,
             .isCloseTo(expectedStandardDev, within(expectedStandardDev * 10))
 }
 
-fun verifyProbability(count: Int,
-                      expectedProbability: Double,
-                      provider: () -> Boolean) {
+fun verifyProbability(
+    count: Int,
+    expectedProbability: Double,
+    provider: () -> Boolean
+) {
 
     var countTrue = 0.0
 

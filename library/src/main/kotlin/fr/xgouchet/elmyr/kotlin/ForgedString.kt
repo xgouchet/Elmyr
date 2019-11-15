@@ -10,12 +10,13 @@ import fr.xgouchet.elmyr.StringConstraint
  * @author Xavier F. Gouchet
  */
 class ForgedString(
-        val constraint: StringConstraint = StringConstraint.ANY,
-        val case: Case = Case.ANY,
-        val size: Int = -1,
-        val regex: Regex? = null,
-        forger: Forger)
-    : ForgedProperty<String>(forger) {
+    val constraint: StringConstraint = StringConstraint.ANY,
+    val case: Case = Case.ANY,
+    val size: Int = -1,
+    val regex: Regex? = null,
+    forger: Forger
+) :
+    ForgedProperty<String>(forger) {
 
     override fun generate(forger: Forger): String {
         if (regex != null) {
@@ -24,5 +25,4 @@ class ForgedString(
             return forger.aString(constraint, case, size)
         }
     }
-
 }

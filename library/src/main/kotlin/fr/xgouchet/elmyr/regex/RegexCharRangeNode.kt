@@ -7,10 +7,12 @@ import fr.xgouchet.elmyr.Forger
  *
  * @author Xavier F. Gouchet
  */
-internal class RegexCharRangeNode(val from: Char,
-                                  val to: Char,
-                                  parent: RegexParentNode)
-    : RegexNode(parent) {
+internal class RegexCharRangeNode(
+    val from: Char,
+    val to: Char,
+    parent: RegexParentNode
+) :
+    RegexNode(parent) {
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
         builder.append(forger.aChar(from, to))
@@ -21,5 +23,4 @@ internal class RegexCharRangeNode(val from: Char,
                 .append("-")
                 .append(to)
     }
-
 }

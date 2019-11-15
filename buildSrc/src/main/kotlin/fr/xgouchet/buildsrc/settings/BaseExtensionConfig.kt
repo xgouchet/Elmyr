@@ -4,7 +4,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.findByType
 
 inline fun <reified T : Any> Project.extensionConfig(
-        crossinline configure: T.() -> Unit
+    crossinline configure: T.() -> Unit
 ) {
 
     val ext: T? = extensions.findByType(T::class)

@@ -79,5 +79,4 @@ object Dependencies {
         const val DependencyVersion = "com.github.ben-manes"
         const val Kotlin = "org.jetbrains.kotlin"
     }
-
 }

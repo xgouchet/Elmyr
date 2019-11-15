@@ -1,7 +1,6 @@
 package fr.xgouchet.elmyr
 
 import fr.xgouchet.elmyr.regex.RegexBuilder
-import org.junit.AssumptionViolatedException
 import java.io.File
 import java.lang.Math.round
 import java.util.ArrayList
@@ -9,6 +8,7 @@ import java.util.Date
 import java.util.Random
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
+import org.junit.AssumptionViolatedException
 
 /**
  * @author Xavier F. Gouchet
@@ -483,9 +483,11 @@ open class Forger {
      * @return a Char with the given constraints
      */
     @JvmOverloads
-    fun aChar(constraint: CharConstraint,
-              case: Case = Case.ANY,
-              forbiddenChars: CharArray? = null): Char {
+    fun aChar(
+        constraint: CharConstraint,
+        case: Case = Case.ANY,
+        forbiddenChars: CharArray? = null
+    ): Char {
         var result: Char
 
         do {
@@ -680,9 +682,11 @@ open class Forger {
      * @return a random string following the given constraint
      */
     @JvmOverloads
-    fun aString(constraint: StringConstraint = StringConstraint.ANY,
-                case: Case = Case.ANY,
-                size: Int = -1): String {
+    fun aString(
+        constraint: StringConstraint = StringConstraint.ANY,
+        case: Case = Case.ANY,
+        size: Int = -1
+    ): String {
         when (constraint) {
             StringConstraint.ANY -> return String(CharArray(getWordSize(size)) { aChar(CharConstraint.ANY, Case.ANY) })
             StringConstraint.WORD -> return aWord(case, size)
@@ -709,10 +713,12 @@ open class Forger {
      * @return a random string whose chars follow the given constraint
      */
     @JvmOverloads
-    fun aString(constraint: CharConstraint,
-                case: Case = Case.ANY,
-                size: Int = -1,
-                forbiddenChars: CharArray? = null): String {
+    fun aString(
+        constraint: CharConstraint,
+        case: Case = Case.ANY,
+        size: Int = -1,
+        forbiddenChars: CharArray? = null
+    ): String {
         return String(CharArray(getWordSize(size), { aChar(constraint, case, forbiddenChars) }))
     }
 
@@ -1347,7 +1353,7 @@ open class Forger {
     /**
      * Creates a sub list of the given list, with random elements selected from the input
      *
-     * @param list       the list to choose from
+     * @param list the list to choose from
      * @param outputSize the size of the sublist. If the input list is smaller than the given size,
      * the result will have the size of the input list.
      * @param <T>        The type of elements in the list
@@ -1388,7 +1394,7 @@ open class Forger {
     /**
      * Creates a sub set of the given set, with random elements selected from the input
      *
-     * @param set       the set to choose from
+     * @param set the set to choose from
      * @param outputSize the size of the sublist. If the input set is smaller than the given size,
      * the result will have the size of the input set. If set to -1 (default) a random size is picked.
      * @param <T>        The type of elements in the set
@@ -1475,7 +1481,6 @@ open class Forger {
 
         val result = list.toTypedArray()
 
-
         for (i in 0..(list.size - 2)) {
             val j = anInt(i, list.size)
             val temp = result[i]
@@ -1498,8 +1503,9 @@ open class Forger {
     @Suppress("SpreadOperator")
     @JvmOverloads
     fun <E : Enum<E>> aValueFrom(
-            enumClass: Class<E>,
-            exclude: Collection<E> = emptyList()): E {
+        enumClass: Class<E>,
+        exclude: Collection<E> = emptyList()
+    ): E {
         val chooseFrom = if (exclude.isNotEmpty()) {
             enumClass.enumConstants.subtract(exclude).toList()
         } else {
@@ -1534,12 +1540,14 @@ open class Forger {
      */
     // TODO extract to separate class
     @Suppress("LongParameterList", "MagicNumber")
-    private fun aPath(separator: String = File.separator,
-                      roots: List<String>,
-                      maxPathSize: Int,
-                      maxFileSize: Int,
-                      forbiddenChars: CharArray? = null,
-                      reservedFilenames: List<String>? = null): String {
+    private fun aPath(
+        separator: String = File.separator,
+        roots: List<String>,
+        maxPathSize: Int,
+        maxFileSize: Int,
+        forbiddenChars: CharArray? = null,
+        reservedFilenames: List<String>? = null
+    ): String {
         val builder = StringBuilder()
         var segments = 0
 
@@ -1655,7 +1663,5 @@ open class Forger {
         @JvmField internal val DIGIT = "0123456789".toCharArray()
 
         @JvmField internal val WHITESPACE = "\t\n\r ".toCharArray()
-
     }
-
 }

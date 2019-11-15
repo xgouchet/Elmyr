@@ -5,8 +5,8 @@ package fr.xgouchet.elmyr.regex
  *
  * @author Xavier F. Gouchet
  */
-class RegexGroupNode(parent: RegexParentNode? = null)
-    : RegexParentNode(parent) {
+class RegexGroupNode(parent: RegexParentNode? = null) :
+    RegexParentNode(parent) {
 
     override fun describe(builder: StringBuilder) {
         builder.append(("("))

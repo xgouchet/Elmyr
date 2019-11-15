@@ -8,8 +8,8 @@ import fr.xgouchet.elmyr.Forger
  *
  * @author Xavier F. Gouchet
  */
-class RegexWildcardNode(parent: RegexParentNode? = null)
-    : RegexNode(parent) {
+class RegexWildcardNode(parent: RegexParentNode? = null) :
+    RegexNode(parent) {
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
         builder.append(forger.aChar(CharConstraint.ANY))

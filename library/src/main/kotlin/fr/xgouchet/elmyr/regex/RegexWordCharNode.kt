@@ -7,8 +7,8 @@ import fr.xgouchet.elmyr.Forger
  *
  * @author Xavier F. Gouchet
  */
-class RegexWordCharNode(parent: RegexParentNode)
-    : RegexNode(parent) {
+class RegexWordCharNode(parent: RegexParentNode) :
+    RegexNode(parent) {
 
     override fun buildIteration(forger: Forger, builder: StringBuilder) {
         builder.append(forger.anAlphaNumericalChar())
@@ -17,5 +17,4 @@ class RegexWordCharNode(parent: RegexParentNode)
     override fun describe(builder: StringBuilder) {
         builder.append("\\w")
     }
-
 }

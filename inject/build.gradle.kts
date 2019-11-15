@@ -1,7 +1,7 @@
 import fr.xgouchet.buildsrc.Dependencies
-import fr.xgouchet.buildsrc.testCompile
 import fr.xgouchet.buildsrc.compile
 import fr.xgouchet.buildsrc.settings.commonConfig
+import fr.xgouchet.buildsrc.testCompile
 
 plugins {
     id("org.jetbrains.kotlin.jvm")

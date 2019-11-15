@@ -9,11 +9,12 @@ import fr.xgouchet.elmyr.LongConstraint
  * @author Xavier F. Gouchet
  */
 class ForgedLong(
-        val constraint: LongConstraint = LongConstraint.ANY,
-        val min: Long = -1,
-        val max: Long = -1,
-        forger: Forger)
-    : ForgedProperty<Long>(forger) {
+    val constraint: LongConstraint = LongConstraint.ANY,
+    val min: Long = -1,
+    val max: Long = -1,
+    forger: Forger
+) :
+    ForgedProperty<Long>(forger) {
 
     override fun generate(forger: Forger): Long {
         if ((min < 0) and (max < 0)) {
@@ -22,5 +23,4 @@ class ForgedLong(
             return forger.aLong(min, max)
         }
     }
-
 }

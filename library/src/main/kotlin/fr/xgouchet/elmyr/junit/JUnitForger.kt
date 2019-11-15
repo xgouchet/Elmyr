@@ -1,11 +1,11 @@
 package fr.xgouchet.elmyr.junit
 
 import fr.xgouchet.elmyr.Forger
+import java.util.Locale
 import org.junit.rules.TestRule
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import java.util.Locale
 
 /**
  * @author Xavier F. Gouchet

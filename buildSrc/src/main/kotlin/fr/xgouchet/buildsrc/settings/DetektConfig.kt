@@ -21,5 +21,4 @@ fun Project.detektConfig() {
     tasks.named("check") {
         dependsOn("detekt")
     }
-
 }

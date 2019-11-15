@@ -1,6 +1,13 @@
 package fr.xgouchet.elmyr.regex.state
 
-import fr.xgouchet.elmyr.regex.node.*
+import fr.xgouchet.elmyr.regex.node.AlternationNode
+import fr.xgouchet.elmyr.regex.node.DotMetacharacterNode
+import fr.xgouchet.elmyr.regex.node.GroupNode
+import fr.xgouchet.elmyr.regex.node.MovingChildNode
+import fr.xgouchet.elmyr.regex.node.ParentNode
+import fr.xgouchet.elmyr.regex.node.QuantifiableNode
+import fr.xgouchet.elmyr.regex.node.RawCharNode
+import fr.xgouchet.elmyr.regex.node.SequenceNode
 import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
 internal class BaseState<T>(

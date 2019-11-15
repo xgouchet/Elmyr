@@ -1,11 +1,11 @@
 package fr.xgouchet.elmyr
 
+import java.util.concurrent.TimeUnit
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import java.util.concurrent.TimeUnit
 
 /**
  * @author Xavier F. Gouchet
@@ -232,7 +232,6 @@ class ForgerSpek_Integers : Spek({
                             .isGreaterThanOrEqualTo(Forger.HUGE_THRESHOLD)
                 }
             }
-
         }
 
         context("forging meaningful integers ") {
@@ -270,7 +269,6 @@ class ForgerSpek_Integers : Spek({
                             .isGreaterThanOrEqualTo(Forger.HUGE_THRESHOLD)
                 }
             }
-
         }
 
         // endregion
@@ -492,6 +490,5 @@ class ForgerSpek_Integers : Spek({
         }
 
         // endregion
-
     }
 })

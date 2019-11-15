@@ -10,10 +10,11 @@ import fr.xgouchet.elmyr.Forger
  * @author Xavier F. Gouchet
  */
 class ForgedChar(
-        val constraint: CharConstraint = CharConstraint.ANY,
-        val case: Case = Case.ANY,
-        forger: Forger)
-    : ForgedProperty<Char>(forger) {
+    val constraint: CharConstraint = CharConstraint.ANY,
+    val case: Case = Case.ANY,
+    forger: Forger
+) :
+    ForgedProperty<Char>(forger) {
 
     override fun generate(forger: Forger): Char {
         return forger.aChar(constraint, case)

@@ -58,6 +58,5 @@ class ForgerSpek_Reproducibility : Spek({
                 assertThat(actualSeed).isEqualTo(seed)
             }
         }
-
     }
 })

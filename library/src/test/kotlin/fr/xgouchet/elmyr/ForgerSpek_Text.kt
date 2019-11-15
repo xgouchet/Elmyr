@@ -1,6 +1,8 @@
 package fr.xgouchet.elmyr
 
 import android.util.Patterns
+import java.net.URI
+import java.net.URL
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressValidator
@@ -8,8 +10,6 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import java.net.URI
-import java.net.URL
 
 /**
  * @author Xavier F. Gouchet
@@ -719,7 +719,6 @@ class ForgerSpek_Text : Spek({
                     // How to test that ?
                 }
             }
-
         }
 
         context("forging char-constrained strings") {
@@ -986,8 +985,6 @@ class ForgerSpek_Text : Spek({
                     assertThat(substring).isSubstringOf(string)
                 }
             }
-
-
         }
 
         // endregion

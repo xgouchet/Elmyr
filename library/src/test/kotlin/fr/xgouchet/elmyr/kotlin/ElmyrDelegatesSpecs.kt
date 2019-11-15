@@ -29,13 +29,11 @@ import org.jetbrains.spek.api.dsl.it
  */
 class ElmyrDelegatesSpecs : Spek({
 
-
     describe("Read Only Delegates ") {
         val forger = Forger()
         var seed: Long = 0
         val testRepeatCountHuge = 1024
         var obj = ObjectWithProperties(forger)
-
 
         beforeEachTest {
             seed = System.nanoTime()
@@ -44,7 +42,6 @@ class ElmyrDelegatesSpecs : Spek({
         }
 
         context("String delegates") {
-
 
             it("Read Only property") {
                 val s1 = obj.forgedStringReadOnly
@@ -177,7 +174,6 @@ class ElmyrDelegatesSpecs : Spek({
                         val temp = ObjectWithNullableProperty(forger, probability)
                         temp.forgedNullableString == null
                     })
-
         }
     }
 })

@@ -16,5 +16,4 @@ class RegexWhitespaceNode(parent: RegexParentNode) : RegexNode(parent) {
     override fun describe(builder: StringBuilder) {
         builder.append("\\s")
     }
-
 }
