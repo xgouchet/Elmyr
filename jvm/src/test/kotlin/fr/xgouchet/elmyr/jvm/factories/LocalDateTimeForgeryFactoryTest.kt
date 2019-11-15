@@ -1,14 +1,18 @@
 package fr.xgouchet.elmyr.jvm.factories
 
 import fr.xgouchet.elmyr.annotation.Forgery
+import fr.xgouchet.elmyr.junit5.ForgeConfiguration
 import fr.xgouchet.elmyr.junit5.ForgeExtension
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.RegisterExtension
+import fr.xgouchet.elmyr.jvm.JvmConfigurator
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.math.abs
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(ForgeExtension::class)
+@ForgeConfiguration(JvmConfigurator::class)
 class LocalDateTimeForgeryFactoryTest {
 
     @Test
@@ -31,11 +35,6 @@ class LocalDateTimeForgeryFactoryTest {
     }
 
     companion object {
-        @RegisterExtension
-        @JvmField
-        val FORGE = ForgeExtension()
-                .withFactory(LocalDateTimeForgeryFactory())
-
         private const val ONE_YEAR_SEC: Long = 365L * 24L * 60L * 60L
     }
 }

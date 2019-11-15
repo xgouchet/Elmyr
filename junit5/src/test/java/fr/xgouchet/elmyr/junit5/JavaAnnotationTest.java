@@ -2,20 +2,26 @@ package fr.xgouchet.elmyr.junit5;
 
 
 import fr.xgouchet.elmyr.Forge;
+import fr.xgouchet.elmyr.ForgeConfigurator;
 import fr.xgouchet.elmyr.annotation.Forgery;
 import fr.xgouchet.elmyr.junit5.dummy.Foo;
 import fr.xgouchet.elmyr.junit5.dummy.FooFactory;
-import org.junit.jupiter.api.AfterAll;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(ForgeExtension.class)
+@ForgeConfiguration(JavaAnnotationTest.Configurator.class)
 class JavaAnnotationTest {
 
-    @RegisterExtension
-    static final ForgeExtension FORGE = new ForgeExtension()
-            .withFactory(Foo.class, new FooFactory());
+    public static class Configurator implements ForgeConfigurator {
+        @Override
+        public void configure(@NotNull Forge forge) {
+            forge.addFactory(Foo.class, new FooFactory());
+        }
+    }
 
     private static Long memoizedSeed = null;
     private static Foo memoizedFoo = null;

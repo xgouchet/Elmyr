@@ -1,12 +1,16 @@
 package fr.xgouchet.elmyr.jvm.factories
 
 import fr.xgouchet.elmyr.annotation.Forgery
+import fr.xgouchet.elmyr.junit5.ForgeConfiguration
 import fr.xgouchet.elmyr.junit5.ForgeExtension
+import fr.xgouchet.elmyr.jvm.JvmConfigurator
+import java.util.Currency
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.RegisterExtension
-import java.util.Currency
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(ForgeExtension::class)
+@ForgeConfiguration(JvmConfigurator::class)
 class CurrencyForgeryFactoryTest {
 
     @Test
@@ -16,14 +20,5 @@ class CurrencyForgeryFactoryTest {
     ) {
         assertThat(cur1.currencyCode)
                 .isNotEqualTo(cur2.currencyCode)
-    }
-
-    companion object {
-        @RegisterExtension
-        @JvmField
-        val FORGE = ForgeExtension()
-                .withFactory(CurrencyForgeryFactory())
-
-        const val ONE_YEAR_MILLIS: Long = 365L * 24L * 60L * 60L * 1000L
     }
 }

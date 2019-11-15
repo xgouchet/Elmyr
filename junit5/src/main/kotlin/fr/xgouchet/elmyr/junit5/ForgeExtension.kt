@@ -1,10 +1,12 @@
 package fr.xgouchet.elmyr.junit5
 
 import fr.xgouchet.elmyr.Forge
-import fr.xgouchet.elmyr.ForgeryFactory
+import fr.xgouchet.elmyr.ForgeConfigurator
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.inject.DefaultForgeryInjector
 import fr.xgouchet.elmyr.inject.ForgeryInjector
+import java.lang.reflect.Constructor
+import java.util.Locale
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -12,8 +14,7 @@ import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolutionException
 import org.junit.jupiter.api.extension.ParameterResolver
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler
-import java.lang.reflect.Constructor
-import java.util.Locale
+import org.junit.platform.commons.support.AnnotationSupport
 
 /**
  * A JUnit Jupiter extension that can inject forgeries in the test class's fields/properties/method
@@ -23,7 +24,6 @@ import java.util.Locale
  * @see Forgery
  * @see Forge
  */
-@ForgeConfiguration
 class ForgeExtension :
         BeforeAllCallback,
         BeforeTestExecutionCallback,
@@ -33,48 +33,15 @@ class ForgeExtension :
     internal val instanceForge: Forge = Forge()
     private val injector: ForgeryInjector = DefaultForgeryInjector()
 
-    // region Java/Factory
-
-    /**
-     * Allows you to configure the [Forge] instance used by this [ForgeExtension].
-     * @param configure the lambda that will be applied to the [Forge] instance backing this extension.
-     * @return the same [ForgeExtension] instance, perfect to chain calls
-     */
-    fun configure(configure: Forge.() -> Unit): ForgeExtension {
-        instanceForge.configure()
-        return this
-    }
-
-    /**
-     * Adds a factory to the forge. This is the best way to extend a forge and provides means to
-     * create custom forgeries.
-     * @param T the type the [ForgeryFactory] will be able to forge
-     * @param forgeryFactory the factory to be used
-     * @return the same [ForgeExtension] instance, perfect to chain calls
-     */
-    inline fun <reified T : Any> withFactory(forgeryFactory: ForgeryFactory<T>): ForgeExtension {
-        return withFactory(T::class.java, forgeryFactory)
-    }
-
-    /**
-     * Adds a factory to the forge. This is the best way to extend a forge and provides means to
-     * create custom forgeries.
-     * @param T the type the [ForgeryFactory] will be able to forge
-     * @param clazz the class of type T
-     * @param forgeryFactory the factory to be used
-     * @return the same [ForgeExtension] instance, perfect to chain calls
-     */
-    fun <T : Any> withFactory(clazz: Class<T>, forgeryFactory: ForgeryFactory<T>): ForgeExtension {
-        instanceForge.addFactory(clazz, forgeryFactory)
-        return this
-    }
-
-    // endregion
-
     // region BeforeAllCallback
 
     /** @inheritdoc */
     override fun beforeAll(context: ExtensionContext) {
+        val configurators = getConfigurators(context)
+
+        configurators.forEach {
+            it.configure(instanceForge)
+        }
     }
 
     // endregion
@@ -151,6 +118,32 @@ class ForgeExtension :
     private fun resetSeed(extensionContext: ExtensionContext) {
         val seed = (System.nanoTime() and SEED_MASK)
         instanceForge.seed = seed
+    }
+
+    private fun getConfigurators(context: ExtensionContext): List<ForgeConfigurator> {
+        val result = mutableListOf<ForgeConfigurator>()
+        var currentContext = context
+
+        do {
+            val annotation = AnnotationSupport
+                    .findAnnotation<ForgeConfiguration>(
+                            currentContext.element,
+                            ForgeConfiguration::class.java
+                    )
+
+            if (annotation.isPresent) {
+                val configurator = annotation.get().value.java.newInstance()
+                result.add(configurator)
+            }
+
+            if (!currentContext.parent.isPresent) {
+                break
+            }
+
+            currentContext = currentContext.parent.get()
+        } while (currentContext !== context.root)
+
+        return result
     }
 
     // endregion

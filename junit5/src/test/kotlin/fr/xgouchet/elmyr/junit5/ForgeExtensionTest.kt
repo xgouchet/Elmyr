@@ -5,6 +5,11 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.Forgery
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.PrintStream
+import java.lang.reflect.Method
+import java.lang.reflect.Parameter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -18,11 +23,6 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.PrintStream
-import java.lang.reflect.Method
-import java.lang.reflect.Parameter
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -53,20 +53,6 @@ class ForgeExtensionTest {
     @AfterEach
     fun tearDown() {
         System.setErr(originalStream)
-    }
-
-    @Test
-    fun applyConfiguration() {
-        var confApplied = false
-        var fakeInt = 0
-
-        testedExtension.configure {
-            confApplied = true
-            fakeInt = anInt(3, 42)
-        }
-
-        assertThat(confApplied).isTrue()
-        assertThat(fakeInt).isBetween(3, 42)
     }
 
     // region ParameterResolver
@@ -165,7 +151,6 @@ class ForgeExtensionTest {
 
     // endregion
 
-    // region Reflect Internal
 }
 
 class Reflekta(s: String) {

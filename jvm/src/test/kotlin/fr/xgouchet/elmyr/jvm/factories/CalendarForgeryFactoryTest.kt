@@ -1,13 +1,17 @@
 package fr.xgouchet.elmyr.jvm.factories
 
 import fr.xgouchet.elmyr.annotation.Forgery
+import fr.xgouchet.elmyr.junit5.ForgeConfiguration
 import fr.xgouchet.elmyr.junit5.ForgeExtension
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.RegisterExtension
+import fr.xgouchet.elmyr.jvm.JvmConfigurator
 import java.util.Calendar
 import kotlin.math.abs
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(ForgeExtension::class)
+@ForgeConfiguration(JvmConfigurator::class)
 class CalendarForgeryFactoryTest {
 
     @Test
@@ -30,11 +34,6 @@ class CalendarForgeryFactoryTest {
     }
 
     companion object {
-        @RegisterExtension
-        @JvmField
-        val FORGE = ForgeExtension()
-                .withFactory(CalendarForgeryFactory())
-
         const val ONE_YEAR_MILLIS: Long = 365L * 24L * 60L * 60L * 1000L
     }
 }

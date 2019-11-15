@@ -1,14 +1,17 @@
 package fr.xgouchet.elmyr.junit5
 
 import fr.xgouchet.elmyr.Forge
+import fr.xgouchet.elmyr.ForgeConfigurator
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.junit5.dummy.Foo
 import fr.xgouchet.elmyr.junit5.dummy.FooFactory
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.RegisterExtension
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(ForgeExtension::class)
+@ForgeConfiguration(KotlinAnnotationTest.Configurator::class)
 class KotlinAnnotationTest {
 
     @Forgery
@@ -53,12 +56,13 @@ class KotlinAnnotationTest {
 
     // endregion
 
-    companion object {
-        @RegisterExtension
-        @JvmField
-        val FORGE = ForgeExtension()
-                .withFactory(FooFactory())
+    class Configurator : ForgeConfigurator {
+        override fun configure(forge: Forge) {
+            forge.addFactory(FooFactory())
+        }
+    }
 
+    companion object {
         internal var memoizedSeed: Long? = null
         internal var memoizedFoo: Foo? = null
     }

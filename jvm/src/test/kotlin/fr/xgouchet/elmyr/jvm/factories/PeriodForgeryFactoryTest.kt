@@ -1,12 +1,16 @@
 package fr.xgouchet.elmyr.jvm.factories
 
 import fr.xgouchet.elmyr.annotation.Forgery
+import fr.xgouchet.elmyr.junit5.ForgeConfiguration
 import fr.xgouchet.elmyr.junit5.ForgeExtension
+import fr.xgouchet.elmyr.jvm.JvmConfigurator
+import java.time.Period
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.RegisterExtension
-import java.time.Period
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(ForgeExtension::class)
+@ForgeConfiguration(JvmConfigurator::class)
 class PeriodForgeryFactoryTest {
 
     @Test
@@ -16,12 +20,5 @@ class PeriodForgeryFactoryTest {
     ) {
         assertThat(period1)
                 .isNotEqualTo(period2)
-    }
-
-    companion object {
-        @RegisterExtension
-        @JvmField
-        val FORGE = ForgeExtension()
-                .withFactory(PeriodForgeryFactory())
     }
 }
