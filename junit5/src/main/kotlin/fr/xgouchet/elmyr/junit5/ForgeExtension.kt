@@ -136,7 +136,7 @@ class ForgeExtension :
         val result = mutableListOf<ForgeConfigurator>()
         var currentContext = context
 
-        do {
+        while (currentContext != context.root) {
             val annotation = AnnotationSupport
                     .findAnnotation<ForgeConfiguration>(
                             currentContext.element,
@@ -150,10 +150,10 @@ class ForgeExtension :
 
             if (!currentContext.parent.isPresent) {
                 break
+            } else {
+                currentContext = currentContext.parent.get()
             }
-
-            currentContext = currentContext.parent.get()
-        } while (currentContext !== context.root)
+        }
 
         return result
     }
