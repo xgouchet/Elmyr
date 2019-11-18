@@ -6,7 +6,12 @@ import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.inject.DefaultForgeryInjector
 import fr.xgouchet.elmyr.inject.ForgeryInjector
 import java.lang.reflect.Constructor
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
+import java.util.Collection as JavaCollection
+import java.util.List as JavaList
 import java.util.Locale
+import java.util.Set as JavaSet
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -102,12 +107,19 @@ class ForgeExtension :
         parameterContext: ParameterContext,
         extensionContext: ExtensionContext
     ): Any? {
-        val parameterType = parameterContext.parameter.type
+        val type = parameterContext.parameter.type
+        val parameterizedType = parameterContext.parameter.parameterizedType
         val forge = instanceForge
-        return if (parameterType == Forge::class.java) {
+        return if (type == Forge::class.java) {
             forge
+        } else if (parameterizedType is ParameterizedType) {
+            getParameterizedForgery(
+                    forge,
+                    parameterizedType.rawType,
+                    parameterizedType.actualTypeArguments
+            ) ?: forge.getForgery(type)
         } else {
-            forge.getForgery(parameterType)
+            forge.getForgery(type)
         }
     }
 
@@ -146,9 +158,27 @@ class ForgeExtension :
         return result
     }
 
+    private fun getParameterizedForgery(
+        forge: Forge,
+        rawType: Type,
+        typeArgs: Array<Type>
+    ): Any? {
+        val firstTypeArg = typeArgs[0] as? Class<*> ?: return null
+        if (rawType in listClasses) {
+            return forge.aList { getForgery(firstTypeArg) }
+        } else if (rawType in setClasses) {
+            return forge.aList { getForgery(firstTypeArg) }.toSet()
+        } else {
+            return null
+        }
+    }
+
     // endregion
 
     companion object {
+        private val listClasses = arrayOf(JavaList::class.java, JavaCollection::class.java)
+        private val setClasses = arrayOf(JavaSet::class.java)
+
         private val NAMESPACE = ExtensionContext.Namespace.create(ForgeExtension::class.java)
 
         const val SEED_MASK = 0x7FFFFFFFL

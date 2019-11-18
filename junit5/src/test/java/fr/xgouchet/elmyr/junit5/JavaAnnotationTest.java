@@ -10,6 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(ForgeExtension.class)
@@ -50,6 +54,26 @@ class JavaAnnotationTest {
         checkForgeryInjectedInField();
     }
 
+    @Test
+    void injectForgeryCollection(@Forgery Collection<Foo> foo) {
+        assertThat(foo).isNotNull().isNotEmpty()
+                .allMatch(f -> f instanceof Foo);
+        checkForgeryInjectedInField();
+    }
+
+    @Test
+    void injectForgeryList(@Forgery List<Foo> foo) {
+        assertThat(foo).isNotNull().isNotEmpty()
+                .allMatch(f -> f instanceof Foo);
+        checkForgeryInjectedInField();
+    }
+
+    @Test
+    void injectForgerySet(@Forgery Set<Foo> foo) {
+        assertThat(foo).isNotNull().isNotEmpty()
+                .allMatch(f -> f instanceof Foo);
+        checkForgeryInjectedInField();
+    }
 
     private void checkSeedChanged(Forge forge) {
         Long previousSeed = memoizedSeed;

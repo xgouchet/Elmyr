@@ -35,6 +35,42 @@ class KotlinAnnotationTest {
         checkForgeryInjectedInField()
     }
 
+    @Test
+    fun injectCollection(@Forgery list: List<Foo>) {
+        assertThat(list).isNotNull().isNotEmpty()
+
+        list.forEach { it: Any ->
+            assertThat(it).isInstanceOf(Foo::class.java)
+        }
+    }
+
+    @Test
+    fun injectCollection(@Forgery collection: Collection<Foo>) {
+        assertThat(collection).isNotNull().isNotEmpty()
+
+        collection.forEach { it: Any ->
+            assertThat(it).isInstanceOf(Foo::class.java)
+        }
+    }
+
+    @Test
+    fun injectList(@Forgery list: List<Foo>) {
+        assertThat(list).isNotNull().isNotEmpty()
+
+        list.forEach { it: Any ->
+            assertThat(it).isInstanceOf(Foo::class.java)
+        }
+    }
+
+    @Test
+    fun injectSet(@Forgery set: Set<Foo>) {
+        assertThat(set).isNotNull().isNotEmpty()
+
+        set.forEach { it: Any ->
+            assertThat(it).isInstanceOf(Foo::class.java)
+        }
+    }
+
     // region Internal
 
     private fun checkSeedChanged(forge: Forge) {
