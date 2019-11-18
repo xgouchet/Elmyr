@@ -52,10 +52,10 @@ class ForgeStatementTest {
         assertThat(systemErrRule.log)
                 .isEqualTo(
                         "<${mockTarget.javaClass.simpleName}.${mockMethod.name}()> failed " +
-                                "with Forge seed 0x${forge.seed.toString(16)}\n" +
+                                "with Forge seed 0x${forge.seed.toString(16)}L\n" +
                                 "Add the following line in your @Before method to reproduce :\n" +
                                 "\n" +
-                                "\tforger.resetSeed(0x${forge.seed.toString(16)}L)\n" +
+                                "\tforge.setSeed(0x${forge.seed.toString(16)}L);\n" +
                                 "\n")
     }
 

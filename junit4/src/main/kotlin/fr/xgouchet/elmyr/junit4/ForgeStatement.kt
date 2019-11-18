@@ -72,9 +72,9 @@ internal class ForgeStatement(
     }
 
     private fun failed() {
-        val message = "<%s.%s()> failed with Forge seed 0x%x\n" +
+        val message = "<%s.%s()> failed with Forge seed 0x%xL\n" +
                 "Add the following line in your @Before method to reproduce :\n\n" +
-                "\tforger.resetSeed(0x%xL)\n"
+                "\tforge.setSeed(0x%xL);\n"
         System.err.println(
                 message.format(
                         Locale.US,

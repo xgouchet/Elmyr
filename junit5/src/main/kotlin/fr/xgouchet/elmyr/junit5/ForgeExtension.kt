@@ -61,9 +61,9 @@ class ForgeExtension :
 
     /** @inheritdoc */
     override fun handleTestExecutionException(context: ExtensionContext, throwable: Throwable) {
-        val message = "<%s.%s()> failed with Forge seed 0x%x\n" +
-                "Add the following line in your @Before method to reproduce :\n\n" +
-                "\tforger.resetSeed(0x%xL)\n"
+        val message = "<%s.%s()> failed with Forge seed 0x%xL\n" +
+                "Add the following line in your @BeforeEach method to reproduce :\n\n" +
+                "\tforge.setSeed(0x%xL);\n"
         System.err.println(
                 message.format(
                         Locale.US,
