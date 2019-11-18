@@ -7,6 +7,7 @@ plugins {
     id("com.github.ben-manes.versions")
     id("io.gitlab.arturbosch.detekt")
     id("org.jlleitschuh.gradle.ktlint")
+    id("org.jetbrains.dokka")
     jacoco
     maven
 }

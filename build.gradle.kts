@@ -3,6 +3,7 @@ buildscript {
         google()
         mavenCentral()
         maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Gradle) }
+        maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Dokka) }
         jcenter()
     }
 
@@ -15,6 +16,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Dokka) }
         jcenter()
     }
 }

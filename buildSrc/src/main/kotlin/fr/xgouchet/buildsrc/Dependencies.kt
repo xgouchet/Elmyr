@@ -24,6 +24,9 @@ object Dependencies {
 
         const val SystemRules = "1.19.0"
         const val MockitoExt = "2.23.0"
+
+        // Docs
+        const val Dokka = "0.10.0"
     }
 
     object Libraries {
@@ -64,6 +67,7 @@ object Dependencies {
         const val Kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
         const val KtLint = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.KtLint}"
         const val JUnitPlatform = "org.junit.platform:junit-platform-gradle-plugin:${Versions.JUnitPlatform}"
+
     }
 
     object Repositories {
@@ -71,12 +75,18 @@ object Dependencies {
         const val Jitpack = "https://jitpack.io"
         const val Gradle = "https://plugins.gradle.org/m2/"
         const val Google = "https://maven.google.com"
+        const val Dokka = "https://dl.bintray.com/kotlin/dokka"
+    }
+
+    object PluginId {
+        const val Detetk = "io.gitlab.arturbosch.detekt"
+        const val KtLint = "org.jlleitschuh.gradle.ktlint"
+        const val DependencyVersion = "com.github.ben-manes.versions"
+        const val Kotlin = "org.jetbrains.kotlin.jvm"
+        const val Dokka = "org.jetbrains.dokka"
     }
 
     object PluginNamespaces {
-        const val Detetk = "io.gitlab.arturbosch"
-        const val KtLint = "org.jlleitschuh.gradle"
-        const val DependencyVersion = "com.github.ben-manes"
-        const val Kotlin = "org.jetbrains.kotlin"
+        const val Gradle = "org.gradle"
     }
 }

@@ -8,4 +8,5 @@ fun Project.commonConfig() {
     kotlinConfig()
     junitConfig()
     ktLintConfig()
+    dokkaConfig()
 }

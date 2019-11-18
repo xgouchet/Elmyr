@@ -3,16 +3,23 @@ import fr.xgouchet.buildsrc.Dependencies
 pluginManagement {
     resolutionStrategy {
         eachPlugin {
-            if (requested.id.namespace == Dependencies.PluginNamespaces.Kotlin) {
-                useVersion(Dependencies.Versions.Kotlin)
-            } else if (requested.id.namespace == Dependencies.PluginNamespaces.Detetk) {
-                useVersion(Dependencies.Versions.Detekt)
-            } else if (requested.id.namespace == Dependencies.PluginNamespaces.DependencyVersion) {
-                useVersion(Dependencies.Versions.DependencyVersion)
-            } else if (requested.id.namespace == Dependencies.PluginNamespaces.KtLint) {
-                useVersion(Dependencies.Versions.KtLint)
-            } else {
-                println("⋄⋄⋄ namespace:${requested.id.namespace} / name:${requested.id.name}")
+
+            val version = when (requested.id.id) {
+                Dependencies.PluginId.Kotlin -> Dependencies.Versions.Kotlin
+                Dependencies.PluginId.DependencyVersion -> Dependencies.Versions.DependencyVersion
+                Dependencies.PluginId.Detetk -> Dependencies.Versions.Detekt
+                Dependencies.PluginId.KtLint -> Dependencies.Versions.KtLint
+                Dependencies.PluginId.Dokka -> Dependencies.Versions.Dokka
+                else -> {
+                    if (requested.id.namespace != Dependencies.PluginNamespaces.Gradle) {
+                        println("⋄⋄⋄ id:${requested.id.id} / namespace:${requested.id.namespace} / name:${requested.id.name}")
+                    }
+                    null
+                }
+            }
+
+            if (version != null) {
+                useVersion(version)
             }
         }
     }
