@@ -9,5 +9,4 @@ fun Project.dokkaConfig() {
         outputFormat = "gfm"
 //        outputDirectory = "${rootDir.path}/../Elmyr.wiki/"
     }
-
 }

@@ -2,6 +2,7 @@ package fr.xgouchet.elmyr.junit5
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeConfigurator
+import fr.xgouchet.elmyr.annotation.BoolForgery
 import fr.xgouchet.elmyr.annotation.DoubleForgery
 import fr.xgouchet.elmyr.annotation.FloatForgery
 import fr.xgouchet.elmyr.annotation.Forgery
@@ -44,6 +45,16 @@ open class KotlinAnnotationTest {
     // endregion
 
     // region primitive
+
+    @Test
+    fun injectIntWithDefaultProbability(@BoolForgery b: Boolean) {
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectIntWithCustomProbability(@BoolForgery(probability = 0.001f) b: Boolean) {
+        checkForgeryInjectedInField()
+    }
 
     @Test
     fun injectIntWithDefaultRange(@IntForgery i: Int) {

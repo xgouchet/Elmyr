@@ -1,9 +1,9 @@
 package fr.xgouchet.elmyr.junit5
 
-import org.junit.jupiter.api.extension.ParameterContext
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
-import java.util.*
+import java.util.Optional
+import org.junit.jupiter.api.extension.ParameterContext
 
 class MockParameterContext(
     private val targetClass: Class<*>,

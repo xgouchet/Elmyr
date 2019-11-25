@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeryFactoryMissingException
+import fr.xgouchet.elmyr.annotation.BoolForgery
 import fr.xgouchet.elmyr.annotation.DoubleForgery
 import fr.xgouchet.elmyr.annotation.FloatForgery
 import fr.xgouchet.elmyr.annotation.Forgery
@@ -14,6 +15,7 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.PrintStream
 import java.lang.reflect.Method
+import kotlin.Comparator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +28,6 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
-import kotlin.Comparator
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -67,6 +68,15 @@ class ForgeExtensionTest {
     @Test
     fun `supportsParameter with Forgery`() {
         prepareContext("withStringForgery")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with BoolForgery`() {
+        prepareContext("withBool")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -139,6 +149,15 @@ class ForgeExtensionTest {
     }
 
     @Test
+    fun `supportsParameter Fails on BoolForger param not Bool`() {
+        prepareContext("withNotBool")
+
+        assertThrows<IllegalStateException> {
+            testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+        }
+    }
+
+    @Test
     fun `supportsParameter Fails on IntForgery param not Int`() {
         prepareContext("withNotInt")
 
@@ -183,6 +202,22 @@ class ForgeExtensionTest {
         prepareContext("withParameterized")
 
         assertThrows<ForgeryFactoryMissingException> {
+            testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+        }
+    }
+
+    @Test
+    fun `resolveParameter Fails on BoolForgery param invalid min + stDev`() {
+        prepareContext("withBoolInvalid1")
+        assertThrows<IllegalStateException> {
+            testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+        }
+    }
+
+    @Test
+    fun `resolveParameter Fails on BoolForgery param invalid max + stDev`() {
+        prepareContext("withBoolInvalid2")
+        assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
     }
@@ -373,6 +408,22 @@ class Reflekta(@Forgery s: String) {
 
     fun withForge(f: Forge) {
     }
+
+    // region boolean
+
+    fun withBool(@BoolForgery b: Boolean) {
+    }
+
+    fun withNotBool(@BoolForgery s: String) {
+    }
+
+    fun withBoolInvalid1(@BoolForgery(probability = -1f)b: Boolean) {
+    }
+
+    fun withBoolInvalid2(@BoolForgery(probability = 2f)b: Boolean) {
+    }
+
+    // endregion 
 
     // region int
 

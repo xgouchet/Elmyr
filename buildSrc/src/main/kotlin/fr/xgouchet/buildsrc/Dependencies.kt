@@ -67,7 +67,6 @@ object Dependencies {
         const val Kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
         const val KtLint = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.KtLint}"
         const val JUnitPlatform = "org.junit.platform:junit-platform-gradle-plugin:${Versions.JUnitPlatform}"
-
     }
 
     object Repositories {
