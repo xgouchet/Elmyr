@@ -24,6 +24,15 @@ open class KotlinAnnotationTest {
     @Forgery
     lateinit var fakeFoo: Foo
 
+    @Forgery
+    lateinit var fakeFooList: List<Foo>
+
+    @Forgery
+    lateinit var fakeFooSet: Set<Foo>
+
+    @Forgery
+    lateinit var fakeFooMap: Map<Foo, Bar>
+
     // region Forge
 
     @Test
@@ -218,17 +227,22 @@ open class KotlinAnnotationTest {
         val previousFoo = memoizedFoo
         check(::fakeFoo.isInitialized)
         if (previousFoo != null) {
-            Assertions.assertThat(fakeFoo).isNotEqualTo(previousFoo)
+            assertThat(fakeFoo).isNotEqualTo(previousFoo)
         }
         memoizedFoo = fakeFoo
+
+        assertThat(fakeFoo).isNotNull()
+        assertThat(fakeFooList).isNotNull.isNotEmpty
+        assertThat(fakeFooSet).isNotNull.isNotEmpty
+        assertThat(fakeFooMap).isNotNull.isNotEmpty
     }
 
     // endregion
 
     class Configurator : ForgeConfigurator {
         override fun configure(forge: Forge) {
-            forge.addFactory(FooFactory())
-            forge.addFactory(BarFactory())
+            forge.addFactory(Foo::class.java, FooFactory())
+            forge.addFactory(Bar::class.java, BarFactory())
         }
     }
 

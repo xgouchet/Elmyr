@@ -5,6 +5,6 @@ import fr.xgouchet.elmyr.annotation.Forgery;
 public class JavaInjectedMissingFactory {
 
     @Forgery
-    public Bar unknownBar;
+    public Spam unknownSpam;
 
 }

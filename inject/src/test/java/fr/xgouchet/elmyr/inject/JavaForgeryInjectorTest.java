@@ -20,6 +20,7 @@ class JavaForgeryInjectorTest {
         injector = JavaInjectorFactory.javaInjector();
         forge = new Forge();
         forge.addFactory(Foo.class, new FooFactory());
+        forge.addFactory(Bar.class, new BarFactory());
     }
 
     @Test
@@ -90,6 +91,18 @@ class JavaForgeryInjectorTest {
         assertThat(injected.getChildFoo()).isNotNull();
     }
 
+    @Test
+    void injectsGenerics() {
+        JavaInjectedGenerics injected = new JavaInjectedGenerics();
+
+        injector.inject(forge, injected);
+
+        assertThat(injected.privateFooList).isNotNull().isNotEmpty();
+        assertThat(injected.privateFooSet).isNotNull().isNotEmpty();
+        assertThat(injected.privateFooMap).isNotNull().isNotEmpty();
+        assertThat(injected.privateFooCollection).isNotNull().isNotEmpty();
+    }
+
     @Test()
     void failsWhenMissingFactory() {
         JavaInjectedMissingFactory injected = new JavaInjectedMissingFactory();
@@ -102,6 +115,15 @@ class JavaForgeryInjectorTest {
     @Test()
     void failsWhenInjectingFinalField() {
         JavaInjectedFinalField injected = new JavaInjectedFinalField();
+
+        assertThrows(ForgeryInjectorException.class, () -> {
+            injector.inject(forge, injected);
+        });
+    }
+
+    @Test()
+    void failsWhenInjectingUnknownGeneric() {
+        JavaInjectedUnknownGenerics injected = new JavaInjectedUnknownGenerics();
 
         assertThrows(ForgeryInjectorException.class, () -> {
             injector.inject(forge, injected);

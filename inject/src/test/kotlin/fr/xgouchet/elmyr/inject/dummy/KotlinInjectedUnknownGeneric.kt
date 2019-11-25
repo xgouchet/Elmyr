@@ -2,8 +2,8 @@ package fr.xgouchet.elmyr.inject.dummy
 
 import fr.xgouchet.elmyr.annotation.Forgery
 
-class KotlinInjectedMissingFactory {
+class KotlinInjectedUnknownGeneric {
 
     @Forgery
-    lateinit var unknownSpam: Spam
+    lateinit var unknownGeneric: Comparable<Foo>
 }

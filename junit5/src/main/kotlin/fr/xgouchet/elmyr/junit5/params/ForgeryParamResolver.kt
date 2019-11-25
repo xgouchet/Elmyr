@@ -4,12 +4,12 @@ import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.Forgery
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.lang.reflect.WildcardType
 import java.util.Collection
 import java.util.List
 import java.util.Set
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
-import java.lang.reflect.WildcardType
 
 internal class ForgeryParamResolver :
         ForgeryResolver {

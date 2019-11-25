@@ -2,12 +2,16 @@ package fr.xgouchet.elmyr.inject
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeryException
+import fr.xgouchet.elmyr.inject.dummy.Bar
+import fr.xgouchet.elmyr.inject.dummy.BarFactory
 import fr.xgouchet.elmyr.inject.dummy.Foo
 import fr.xgouchet.elmyr.inject.dummy.FooFactory
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjected
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedChild
+import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedGenerics
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedImmutableVal
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedMissingFactory
+import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedUnknownGeneric
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,6 +27,7 @@ class KotlinForgeryInjectorTest {
         injector = DefaultForgeryInjector()
         forge = Forge().apply {
             addFactory(Foo::class.java, FooFactory())
+            addFactory(Bar::class.java, BarFactory())
         }
     }
 
@@ -95,6 +100,18 @@ class KotlinForgeryInjectorTest {
     }
 
     @Test
+    fun injectsGenerics() {
+        val injected = KotlinInjectedGenerics()
+
+        injector.inject(forge, injected)
+
+        assertThat(injected.publicFooList).isNotNull.isNotEmpty
+        assertThat(injected.publicFooSet).isNotNull.isNotEmpty
+        assertThat(injected.publicFooMap).isNotNull.isNotEmpty
+        assertThat(injected.publicFooColletion).isNotNull.isNotEmpty
+    }
+
+    @Test
     fun failsWhenMissingFactory() {
         val injected = KotlinInjectedMissingFactory()
 
@@ -106,6 +123,15 @@ class KotlinForgeryInjectorTest {
     @Test
     fun failsWhenImmutableProperty() {
         val injected = KotlinInjectedImmutableVal()
+
+        assertThrows<ForgeryInjectorException> {
+            injector.inject(forge, injected)
+        }
+    }
+
+    @Test
+    fun failsWhenUnknownGeneric() {
+        val injected = KotlinInjectedUnknownGeneric()
 
         assertThrows<ForgeryInjectorException> {
             injector.inject(forge, injected)

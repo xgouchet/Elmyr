@@ -1,11 +1,17 @@
 package fr.xgouchet.elmyr.junit4;
 
 import fr.xgouchet.elmyr.annotation.Forgery;
+import fr.xgouchet.elmyr.junit4.dummy.Bar;
+import fr.xgouchet.elmyr.junit4.dummy.BarFactory;
 import fr.xgouchet.elmyr.junit4.dummy.Foo;
 import fr.xgouchet.elmyr.junit4.dummy.FooFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,10 +21,21 @@ public class JavaAnnotationTest {
     private static Foo memoizedFoo = null;
 
     @Rule
-    public ForgeRule forge = new ForgeRule().withFactory(Foo.class, new FooFactory());
+    public ForgeRule forge = new ForgeRule()
+            .withFactory(Foo.class, new FooFactory())
+            .withFactory(Bar.class, new BarFactory());
 
     @Forgery
     private Foo fakeFoo = null;
+
+    @Forgery
+    public List<Foo> fakeFooList;
+
+    @Forgery
+    public Set<Foo> fakeFooSet;
+
+    @Forgery
+    public Map<Foo, Bar> fakeFooMap;
 
     @Before
     public void setUp() {
@@ -49,6 +66,10 @@ public class JavaAnnotationTest {
             assertThat(fakeFoo).isNotEqualTo(previousFoo);
         }
         memoizedFoo = fakeFoo;
+
+        assertThat(fakeFooList).isNotNull().isNotEmpty();
+        assertThat(fakeFooSet).isNotNull().isNotEmpty();
+        assertThat(fakeFooMap).isNotNull().isNotEmpty();
     }
 
 }

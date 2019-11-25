@@ -6,6 +6,8 @@ import fr.xgouchet.elmyr.inject.reflect.invokePrivate
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.full.superclasses
 
@@ -81,11 +83,56 @@ class DefaultForgeryInjector : ForgeryInjector {
         property: KMutableProperty<*>,
         target: Any
     ) {
-        @Suppress("UnsafeCast")
-        val kclass = (property.returnType.classifier as KClass<*>)
-        val forgery = forge.getForgery(kclass.java)
+        val forgery = forgeProperty(property.returnType, forge)
+                ?: throw ForgeryInjectorException("Unable to forge $property.")
+
         property.setter.invokePrivate(target, forgery)
     }
 
+    private fun forgeProperty(type: KType, forge: Forge): Any? {
+        val arguments = type.arguments
+        val classifier = type.classifier
+        if (classifier !is KClass<*>) return null
+
+        return if (arguments.isEmpty()) {
+            forge.getForgery(classifier.java)
+        } else {
+            forgeParameterizedProperty(forge, type, arguments, classifier)
+        }
+    }
+
+    @Suppress("UnsafeCallOnNullableType")
+    private fun forgeParameterizedProperty(
+        forge: Forge,
+        type: KType,
+        arguments: List<KTypeProjection>,
+        classifier: KClass<*>
+    ): Any? {
+        return when (classifier) {
+            in knownLists -> forge.aList { forgeProperty(arguments[0].type!!, forge) }
+            in knownSets -> forge.aList { forgeProperty(arguments[0].type!!, forge) }.toSet()
+            in knownMaps -> forge.aMap {
+                val key = forgeProperty(arguments[0].type!!, forge)
+                val value = forgeProperty(arguments[1].type!!, forge)
+                key to value
+            }
+            else -> {
+                null
+            }
+        }
+    }
+
     // endregion
+
+    companion object {
+        private val knownLists = setOf<KClass<*>>(
+                List::class, Collection::class
+        )
+        private val knownSets = setOf<KClass<*>>(
+                Set::class
+        )
+        private val knownMaps = setOf<KClass<*>>(
+                Map::class
+        )
+    }
 }

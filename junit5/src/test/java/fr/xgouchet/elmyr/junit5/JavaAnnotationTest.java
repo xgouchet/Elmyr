@@ -4,6 +4,8 @@ package fr.xgouchet.elmyr.junit5;
 import fr.xgouchet.elmyr.Forge;
 import fr.xgouchet.elmyr.ForgeConfigurator;
 import fr.xgouchet.elmyr.annotation.*;
+import fr.xgouchet.elmyr.junit5.dummy.Bar;
+import fr.xgouchet.elmyr.junit5.dummy.BarFactory;
 import fr.xgouchet.elmyr.junit5.dummy.Foo;
 import fr.xgouchet.elmyr.junit5.dummy.FooFactory;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +27,7 @@ class JavaAnnotationTest {
         @Override
         public void configure(@NotNull Forge forge) {
             forge.addFactory(Foo.class, new FooFactory());
+            forge.addFactory(Bar.class, new BarFactory());
         }
     }
 
@@ -33,6 +37,15 @@ class JavaAnnotationTest {
 
     @Forgery
     public Foo fakeFoo;
+
+    @Forgery
+    public List<Foo> fakeFooList;
+
+    @Forgery
+    public Set<Foo> fakeFooSet;
+
+    @Forgery
+    public Map<Foo, Bar> fakeFooMap;
 
     @Test
     void injectForge(Forge forge) {
@@ -74,8 +87,6 @@ class JavaAnnotationTest {
                 .allMatch(f -> f instanceof Foo);
         checkForgeryInjectedInField();
     }
-
-
 
     // region primitive
 
@@ -168,6 +179,10 @@ class JavaAnnotationTest {
             assertThat(fakeFoo).isNotEqualTo(previousFoo);
         }
         memoizedFoo = fakeFoo;
+
+        assertThat(fakeFooList).isNotNull().isNotEmpty();
+        assertThat(fakeFooSet).isNotNull().isNotEmpty();
+        assertThat(fakeFooMap).isNotNull().isNotEmpty();
     }
 
 }
