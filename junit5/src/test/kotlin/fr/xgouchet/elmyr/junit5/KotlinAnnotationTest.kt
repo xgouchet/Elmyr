@@ -144,37 +144,49 @@ open class KotlinAnnotationTest {
 
     @Test
     fun injectCollection(@Forgery list: List<Foo>) {
-        assertThat(list).isNotNull().isNotEmpty()
+        assertThat(list).isNotNull.isNotEmpty
 
-        list.forEach { it: Any ->
+        list.forEach {
             assertThat(it).isInstanceOf(Foo::class.java)
         }
     }
 
     @Test
     fun injectCollection(@Forgery collection: Collection<Foo>) {
-        assertThat(collection).isNotNull().isNotEmpty()
+        assertThat(collection).isNotNull.isNotEmpty
 
-        collection.forEach { it: Any ->
+        collection.forEach {
             assertThat(it).isInstanceOf(Foo::class.java)
         }
     }
 
     @Test
     fun injectList(@Forgery list: List<Foo>) {
-        assertThat(list).isNotNull().isNotEmpty()
+        assertThat(list).isNotNull.isNotEmpty
 
-        list.forEach { it: Any ->
+        list.forEach {
             assertThat(it).isInstanceOf(Foo::class.java)
         }
     }
 
     @Test
     fun injectSet(@Forgery set: Set<Foo>) {
-        assertThat(set).isNotNull().isNotEmpty()
+        assertThat(set).isNotNull.isNotEmpty
 
-        set.forEach { it: Any ->
+        set.forEach {
             assertThat(it).isInstanceOf(Foo::class.java)
+        }
+    }
+
+    @Test
+    fun injectNestedCollection(@Forgery nested: List<Set<Foo>>) {
+        assertThat(nested).isNotNull.isNotEmpty
+
+        nested.forEach { set ->
+            assertThat(set).isNotNull.isNotEmpty
+            set.forEach {
+                assertThat(it).isInstanceOf(Foo::class.java)
+            }
         }
     }
 

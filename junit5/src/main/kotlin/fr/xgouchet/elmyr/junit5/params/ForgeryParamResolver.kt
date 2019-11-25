@@ -9,6 +9,7 @@ import java.util.List
 import java.util.Set
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
+import java.lang.reflect.WildcardType
 
 internal class ForgeryParamResolver :
         ForgeryResolver {
@@ -51,10 +52,19 @@ internal class ForgeryParamResolver :
         rawType: Type,
         typeArgs: Array<Type>
     ): Any? {
-        val firstTypeArg = typeArgs[0] as? Class<*> ?: return null
+        val firstTypeArg = typeArgs[0]
         return when (rawType) {
-            in listClasses -> forge.aList { getForgery(firstTypeArg) }
-            in setClasses -> forge.aList { getForgery(firstTypeArg) }.toSet()
+            in listClasses -> forge.aList { getForgery(forge, firstTypeArg) }
+            in setClasses -> forge.aList { getForgery(forge, firstTypeArg) }.toSet()
+            else -> null
+        }
+    }
+
+    private fun getForgery(forge: Forge, type: Type): Any? {
+        return when (type) {
+            is Class<*> -> forge.getForgery(type)
+            is WildcardType -> getForgery(forge, type.upperBounds.first())
+            is ParameterizedType -> getParameterizedForgery(forge, type.rawType, type.actualTypeArguments)
             else -> null
         }
     }
