@@ -8,6 +8,8 @@ import fr.xgouchet.elmyr.annotation.FloatForgery
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.annotation.LongForgery
+import fr.xgouchet.elmyr.junit5.dummy.Bar
+import fr.xgouchet.elmyr.junit5.dummy.BarFactory
 import fr.xgouchet.elmyr.junit5.dummy.Foo
 import fr.xgouchet.elmyr.junit5.dummy.FooFactory
 import org.assertj.core.api.Assertions
@@ -190,6 +192,16 @@ open class KotlinAnnotationTest {
         }
     }
 
+    @Test
+    fun injectMap(@Forgery map: Map<Foo, Bar>) {
+        assertThat(map).isNotNull.isNotEmpty
+
+        map.forEach {
+            assertThat(it.key).isInstanceOf(Foo::class.java)
+            assertThat(it.value).isInstanceOf(Bar::class.java)
+        }
+    }
+
     // endregion
 
     // region Internal
@@ -216,6 +228,7 @@ open class KotlinAnnotationTest {
     class Configurator : ForgeConfigurator {
         override fun configure(forge: Forge) {
             forge.addFactory(FooFactory())
+            forge.addFactory(BarFactory())
         }
     }
 

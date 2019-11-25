@@ -52,10 +52,14 @@ internal class ForgeryParamResolver :
         rawType: Type,
         typeArgs: Array<Type>
     ): Any? {
-        val firstTypeArg = typeArgs[0]
         return when (rawType) {
-            in listClasses -> forge.aList { getForgery(forge, firstTypeArg) }
-            in setClasses -> forge.aList { getForgery(forge, firstTypeArg) }.toSet()
+            in listClasses -> forge.aList { getForgery(forge, typeArgs[0]) }
+            in setClasses -> forge.aList { getForgery(forge, typeArgs[0]) }.toSet()
+            in mapClasses -> forge.aList {
+                val key = getForgery(forge, typeArgs[0])
+                val value = getForgery(forge, typeArgs[1])
+                key to value
+            }.toMap()
             else -> null
         }
     }
@@ -74,5 +78,6 @@ internal class ForgeryParamResolver :
     companion object {
         private val listClasses = arrayOf(List::class.java, Collection::class.java)
         private val setClasses = arrayOf(Set::class.java)
+        private val mapClasses = arrayOf(Map::class.java)
     }
 }
