@@ -605,6 +605,54 @@ open class Forge {
         return aStringMatching(regex.pattern)
     }
 
+    /**
+     * Randomizes the case of a String.
+     * @param string the string to randomize
+     * @return a new String with the same content, but any letter in it has a random case
+     */
+    fun randomizeCase(string: String): String {
+        return string.toCharArray().joinToString("") {
+            val s = it.toString()
+            if (aBool()) s.toLowerCase() else s.toUpperCase()
+        }
+    }
+
+    /**
+     * Randomizes the case of a String.
+     * @param forging a lambda generating a String that will be randomized
+     * @return a new String with the same content, but any letter in it has a random case
+     */
+    fun randomizeCase(forging: Forge.() -> String): String {
+        return randomizeCase(this.forging())
+    }
+
+    /**
+     * @param string the string from which a substring will be taken
+     * @return a random sub string
+     */
+    fun aSubStringOf(string: String, outputSize: Int = -1): String {
+        val size = if (outputSize >= 0) outputSize else anInt(0, string.length)
+
+        // fast exit : input too short -> return full string
+        if (string.length <= outputSize) return string
+
+        // fast exit : output == 0
+        if (size <= 0) return ""
+
+        val startIndex = anInt(0, string.length - size)
+        val endIndex = startIndex + size
+
+        return string.substring(startIndex, endIndex)
+    }
+
+    /**
+     * @param forging a lambda generating a String from which a substring will be taken
+     * @return a random sub string
+     */
+    fun aSubStringOf(forging: Forge.() -> String): String {
+        return aSubStringOf(this.forging())
+    }
+
     // endregion
 
     // region Element from …

@@ -228,5 +228,78 @@ class ForgeStringSpek : Spek({
         }
 
         // endregion
+
+        // region String modification
+
+        context("modifying strings") {
+
+            it("randomizes a string case from lower") {
+                var isAllLower = 0
+                repeat(testRepeatCountSmall) {
+                    val string = forge.anAlphabeticalString(Case.LOWER)
+
+                    val randomized = forge.randomizeCase { string }
+
+                    val upper = randomized.toCharArray().count { it.isUpperCase() }
+                    val lower = randomized.toCharArray().count { it.isLowerCase() }
+
+                    assertThat(randomized).isEqualToIgnoringCase(string)
+                    if (upper == 0) {
+                        isAllLower++
+                    }
+                }
+                assertThat(isAllLower).isLessThan(testRepeatCountSmall / 4)
+            }
+
+            it("randomizes a string case from upper") {
+                var isAllLower = 0
+                repeat(testRepeatCountSmall) {
+                    val string = forge.anAlphabeticalString(Case.UPPER)
+
+                    val randomized = forge.randomizeCase(string)
+
+                    val upper = randomized.toCharArray().count { it.isUpperCase() }
+                    val lower = randomized.toCharArray().count { it.isLowerCase() }
+
+                    assertThat(randomized).isEqualToIgnoringCase(string)
+                    if (upper == 0) {
+                        isAllLower++
+                    }
+                }
+                assertThat(isAllLower).isLessThan(testRepeatCountSmall / 4)
+            }
+
+            it("creates a sub string from lambda") {
+                var isSameLength = 0
+                repeat(testRepeatCountSmall) {
+                    val string = forge.anAlphabeticalString()
+
+                    val substring = forge.aSubStringOf { string }
+
+                    assertThat(substring).isSubstringOf(string)
+                    if (substring.length == string.length) {
+                        isSameLength++
+                    }
+                }
+                assertThat(isSameLength).isLessThan(testRepeatCountSmall / 4)
+            }
+
+            it("creates a sub string") {
+                var isSameLength = 0
+                repeat(testRepeatCountSmall) {
+                    val string = forge.anAsciiString()
+
+                    val substring = forge.aSubStringOf(string)
+
+                    assertThat(substring).isSubstringOf(string)
+                    if (substring.length == string.length) {
+                        isSameLength++
+                    }
+                }
+                assertThat(isSameLength).isLessThan(testRepeatCountSmall / 4)
+            }
+        }
+
+        // endregion
     }
 })
