@@ -14,5 +14,6 @@ import org.junit.platform.commons.annotation.Testable
 @MustBeDocumented
 @Inherited
 annotation class ForgeConfiguration(
-    val value: KClass<out ForgeConfigurator>
+    val value: KClass<out ForgeConfigurator>,
+    val seed: Long = 0L
 )

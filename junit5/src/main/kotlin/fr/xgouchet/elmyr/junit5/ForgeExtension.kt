@@ -15,6 +15,7 @@ import fr.xgouchet.elmyr.junit5.params.LongForgeryParamResolver
 import java.lang.reflect.Constructor
 import java.util.Locale
 import org.junit.jupiter.api.extension.BeforeAllCallback
+import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
@@ -32,6 +33,7 @@ import org.junit.platform.commons.support.AnnotationSupport
  */
 class ForgeExtension :
         BeforeAllCallback,
+        BeforeEachCallback,
         BeforeTestExecutionCallback,
         TestExecutionExceptionHandler,
         ParameterResolver {
@@ -62,13 +64,21 @@ class ForgeExtension :
 
     // endregion
 
+    // region BeforeEachCallback
+
+    /** @inheritdoc */
+    override fun beforeEach(context: ExtensionContext) {
+        resetSeed(context)
+        val target = context.requiredTestInstance
+        injector.inject(instanceForge, target)
+    }
+
+    // endregion
+
     // region BeforeTestExecutionCallback
 
     /** @inheritdoc */
     override fun beforeTestExecution(context: ExtensionContext) {
-        resetSeed(context)
-        val target = context.requiredTestInstance
-        injector.inject(instanceForge, target)
     }
 
     // endregion
@@ -131,13 +141,15 @@ class ForgeExtension :
 
     // region Internal
 
-    private fun resetSeed(extensionContext: ExtensionContext) {
-        val seed = (System.nanoTime() and SEED_MASK)
-        instanceForge.seed = seed
+    private fun resetSeed(context: ExtensionContext) {
+        val configurations = getConfigurations(context)
+        val seed = configurations.map { it.seed }
+                .firstOrNull { it != 0L }
+        instanceForge.seed = seed ?: (System.nanoTime() and SEED_MASK)
     }
 
-    private fun getConfigurators(context: ExtensionContext): List<ForgeConfigurator> {
-        val result = mutableListOf<ForgeConfigurator>()
+    private fun getConfigurations(context: ExtensionContext): List<ForgeConfiguration> {
+        val result = mutableListOf<ForgeConfiguration>()
         var currentContext = context
 
         while (currentContext != context.root) {
@@ -148,14 +160,18 @@ class ForgeExtension :
                     )
 
             if (annotation.isPresent) {
-                val configurator = annotation.get().value.java.newInstance()
-                result.add(configurator)
+                result.add(annotation.get())
             }
 
             currentContext = currentContext.parent.get()
         }
 
         return result
+    }
+
+    private fun getConfigurators(context: ExtensionContext): List<ForgeConfigurator> {
+        return getConfigurations(context)
+                .map { it.value.java.newInstance() }
     }
 
     // endregion
