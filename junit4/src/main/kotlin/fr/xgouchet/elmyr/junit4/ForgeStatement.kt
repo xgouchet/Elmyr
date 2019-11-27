@@ -59,8 +59,8 @@ internal class ForgeStatement(
         }
     }
 
+    @Suppress("EmptyFunctionBlock")
     private fun starting() {
-        resetSeed()
     }
 
     @Suppress("EmptyFunctionBlock")
@@ -73,8 +73,8 @@ internal class ForgeStatement(
 
     private fun failed() {
         val message = "<%s.%s()> failed with Forge seed 0x%xL\n" +
-                "Add the following line in your @Before method to reproduce :\n\n" +
-                "\tforge.setSeed(0x%xL);\n"
+                "Add this seed in the ForgeRule in your test class :\n\n" +
+                "\tForgeRule forge = new ForgeRule(0x%xL);\n"
         System.err.println(
                 message.format(
                         Locale.US,
@@ -88,11 +88,6 @@ internal class ForgeStatement(
 
     @Suppress("EmptyFunctionBlock")
     private fun finished() {
-    }
-
-    private fun resetSeed() {
-        val seed = (System.nanoTime() and SEED_MASK)
-        forge.seed = seed
     }
 
     // endregion

@@ -16,7 +16,9 @@ import org.junit.runners.model.Statement
  * you to reproduce consistently failing tests.
  *
  */
-class ForgeRule :
+class ForgeRule(
+    val ruleSeed: Long = 0L
+) :
         Forge(),
         MethodRule {
 
@@ -53,8 +55,21 @@ class ForgeRule :
 
     /** @inheritdoc */
     override fun apply(base: Statement, method: FrameworkMethod, target: Any): Statement {
+        resetSeed()
         return ForgeStatement(base, method, target, this)
     }
 
     // endregion
+
+    // region Internal
+
+    private fun resetSeed() {
+        seed = if (ruleSeed == 0L) (System.nanoTime() and SEED_MASK) else ruleSeed
+    }
+
+    // endregion
+
+    companion object {
+        const val SEED_MASK = 0x7FFFFFFFL
+    }
 }
