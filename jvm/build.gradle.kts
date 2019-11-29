@@ -17,7 +17,6 @@ dependencies {
     compile(project(":core"))
 
     testCompile(Dependencies.Libraries.JUnit5)
-    testCompile(Dependencies.Libraries.Spek)
     testCompile(Dependencies.Libraries.TestTools)
     testCompile(Dependencies.Libraries.JUnit5Extensions)
 

@@ -5,6 +5,7 @@ import fr.xgouchet.elmyr.jvm.factories.CalendarForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.CurrencyForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.DateForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.DurationForgeryFactory
+import fr.xgouchet.elmyr.jvm.factories.FileForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.LocalDateForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.LocalDateTimeForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.LocalTimeForgeryFactory
@@ -13,6 +14,8 @@ import fr.xgouchet.elmyr.jvm.factories.PeriodForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.RandomForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.TimeZoneForgeryFactory
 import fr.xgouchet.elmyr.jvm.factories.UUIDForgeryFactory
+import fr.xgouchet.elmyr.jvm.factories.UriForgeryFactory
+import fr.xgouchet.elmyr.jvm.factories.UrlForgeryFactory
 
 /**
  * Adds all the JVM factories to the current [Forge].
@@ -29,6 +32,9 @@ import fr.xgouchet.elmyr.jvm.factories.UUIDForgeryFactory
  * @see [LocalDateForgeryFactory]
  * @see [LocalDateTimeForgeryFactory]
  * @see [LocalTimeForgeryFactory]
+ * @see [FileForgeryFactory]
+ * @see [UriForgeryFactory]
+ * @see [UrlForgeryFactory]
  */
 fun <T : Forge> T.useJvmFactories(): T {
 
@@ -44,6 +50,9 @@ fun <T : Forge> T.useJvmFactories(): T {
     this.addFactory(LocalDateForgeryFactory())
     this.addFactory(LocalDateTimeForgeryFactory())
     this.addFactory(LocalTimeForgeryFactory())
+    this.addFactory(FileForgeryFactory())
+    this.addFactory(UriForgeryFactory())
+    this.addFactory(UrlForgeryFactory())
 
     return this
 }
