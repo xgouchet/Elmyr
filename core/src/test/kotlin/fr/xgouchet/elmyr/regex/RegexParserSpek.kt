@@ -3,10 +3,8 @@ package fr.xgouchet.elmyr.regex
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.throws
 import org.assertj.core.api.Assertions.assertThat
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.context
-import org.jetbrains.spek.api.dsl.describe
-import org.jetbrains.spek.api.dsl.it
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.specification.describe
 
 class RegexParserSpek : Spek({
     describe("A regex parser") {

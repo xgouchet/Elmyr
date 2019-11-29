@@ -12,7 +12,7 @@ object Dependencies {
         const val JUnitPlatform = "1.5.2"
         const val JUnitVintage = "5.5.2"
 
-        const val Spek = "1.2.1"
+        const val Spek2 = "2.0.8"
         const val AssertJ = "0.2.1"
         const val MockitoKotlin = "2.1.0"
         const val Jacoco = "0.8.4"
@@ -37,9 +37,8 @@ object Dependencies {
         const val JUnit4 = "junit:junit:${Versions.JUnit4}"
 
         @JvmField val Spek = arrayOf(
-                "org.jetbrains.spek:spek-api:${Versions.Spek}",
-                "org.jetbrains.spek:spek-subject-extension:${Versions.Spek}",
-                "org.jetbrains.spek:spek-junit-platform-engine:${Versions.Spek}",
+                "org.spekframework.spek2:spek-dsl-jvm:${Versions.Spek2}",
+                "org.spekframework.spek2:spek-runner-junit5:${Versions.Spek2}",
                 "org.jetbrains.kotlin:kotlin-reflect:${Versions.Kotlin}"
         )
 
