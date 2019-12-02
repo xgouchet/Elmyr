@@ -12,7 +12,7 @@ class MockParameterContext(
 ) : ParameterContext {
 
     override fun <A : Annotation?> findRepeatableAnnotations(annotationType: Class<A>?): MutableList<A> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return mutableListOf()
     }
 
     override fun <A : Annotation?> findAnnotation(annotationType: Class<A>?): Optional<A> {
@@ -28,7 +28,7 @@ class MockParameterContext(
     }
 
     override fun getTarget(): Optional<Any> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return Optional.empty()
     }
 
     override fun isAnnotated(annotationType: Class<out Annotation>?): Boolean {

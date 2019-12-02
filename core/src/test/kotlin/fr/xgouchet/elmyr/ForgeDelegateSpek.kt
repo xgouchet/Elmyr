@@ -35,7 +35,7 @@ class ForgeDelegateSpek : Spek({
         context("in a class with nullable properties") {
 
             it("forges a nullable instance") {
-                val probability = 0.13f // TODO random
+                val probability = forge.aFloat(0f, 1f)
                 verifyProbability(expectedProbability = probability) {
                     val temp = WithNullable(forge, probability)
                     temp.forgedNullableBoolean == null
@@ -43,7 +43,7 @@ class ForgeDelegateSpek : Spek({
             }
 
             it("forges a nullable instance with default probability") {
-                val probability = 0.13f // TODO random
+                val probability = forge.aFloat(0f, 1f)
                 verifyProbability(expectedProbability = Forge.HALF_PROBABILITY) {
                     val temp = WithNullable(forge, probability)
                     temp.forgedNullableBooleanHalf == null
@@ -51,7 +51,7 @@ class ForgeDelegateSpek : Spek({
             }
 
             it("forges a nullable instance from Lambda") {
-                val probability = 0.13f // TODO random
+                val probability = forge.aFloat(0f, 1f)
                 verifyProbability(expectedProbability = probability) {
                     val temp = WithNullable(forge, probability)
                     temp.forgedNullableInt == null
@@ -59,7 +59,7 @@ class ForgeDelegateSpek : Spek({
             }
 
             it("forges a nullable instance from Lambda with default probability") {
-                val probability = 0.13f // TODO random
+                val probability = forge.aFloat(0f, 1f)
                 verifyProbability(expectedProbability = Forge.HALF_PROBABILITY) {
                     val temp = WithNullable(forge, probability)
                     temp.forgedNullableIntHalf == null
@@ -70,7 +70,7 @@ class ForgeDelegateSpek : Spek({
         context("in a class with boolean properties") {
 
             it("forges a boolean instance") {
-                val probability = 0.13f // TODO random
+                val probability = forge.aFloat(0f, 1f)
                 verifyProbability(
                         expectedProbability = probability
                 ) {

@@ -21,7 +21,7 @@ class ForgeBooleanSpek : Spek({
             }
 
             it("forges random boolean with probability") {
-                val probability = 0.13f // TODO random
+                val probability = forge.aFloat(0f, 1f)
                 verifyProbability(probability) { forge.aBool(probability) }
             }
         }

@@ -11,8 +11,6 @@ import kotlin.math.sqrt
 
 /**
  * The base class to generate forgeries.
- *
- * TODO include examples of all that's possible
  */
 @Suppress("TooManyFunctions", "MethodOverloading")
 open class Forge {
