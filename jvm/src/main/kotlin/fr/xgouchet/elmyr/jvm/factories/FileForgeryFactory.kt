@@ -16,27 +16,21 @@ class FileForgeryFactory :
         return File(aLocalPath(forge))
     }
 
-    private fun aLocalPath(
-        forge: Forge,
-        absolute: Boolean? = null
-    ): String {
+    private fun aLocalPath(forge: Forge): String {
         val osName = System.getProperty("os.name").toLowerCase()
         return if (osName.contains("win")) {
-            aWindowsPath(forge, absolute)
+            aWindowsPath(forge)
         } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) {
-            aLinuxPath(forge, absolute)
+            aLinuxPath(forge)
         } else if (osName.contains("mac")) {
-            aMacOsPath(forge, absolute)
+            aMacOsPath(forge)
         } else {
             throw IllegalStateException("Unsupported OS path format for “$osName”")
         }
     }
 
-    private fun aLinuxPath(
-        forge: Forge,
-        absolute: Boolean? = null
-    ): String {
-        val isAbsolute = absolute ?: forge.aBool()
+    private fun aLinuxPath(forge: Forge): String {
+        val isAbsolute = forge.aBool()
         val ancestorRoot = Array(forge.aTinyInt()) { ".." }.joinToString(UNIX_SEP) { it }
         val roots = if (isAbsolute) LINUX_ROOTS else listOf(".", "..", ancestorRoot)
         return aPath(
@@ -47,11 +41,8 @@ class FileForgeryFactory :
         )
     }
 
-    private fun aWindowsPath(
-        forge: Forge,
-        absolute: Boolean? = null
-    ): String {
-        val isAbsolute = absolute ?: forge.aBool()
+    private fun aWindowsPath(forge: Forge): String {
+        val isAbsolute = forge.aBool()
         val ancestorRoot = Array(forge.aTinyInt()) { ".." }.joinToString(WINDOWS_SEP) { it }
         val roots = if (isAbsolute) WINDOWS_ROOTS else listOf(".", "..", ancestorRoot)
         return aPath(
@@ -63,11 +54,8 @@ class FileForgeryFactory :
         )
     }
 
-    private fun aMacOsPath(
-        forge: Forge,
-        absolute: Boolean? = null
-    ): String {
-        val isAbsolute = absolute ?: forge.aBool()
+    private fun aMacOsPath(forge: Forge): String {
+        val isAbsolute = forge.aBool()
         val ancestorRoot = Array(forge.aTinyInt()) { ".." }.joinToString(UNIX_SEP) { it }
         val roots = if (isAbsolute) MAC_ROOTS else listOf(".", "..", ancestorRoot)
         return aPath(
