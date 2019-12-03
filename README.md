@@ -6,7 +6,6 @@
 [![Kotlin 1.2.10](https://img.shields.io/badge/Kotlin-1.3.0-blue.svg)](http://kotlinlang.org)
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
-[![Documentation Status](https://img.shields.io/badge/docs-1.0.0--alpha1-brightgreen.svg)](http://elmyr.readthedocs.io/en/stable/?badge=0.11)
 [![Build Status](https://travis-ci.org/xgouchet/Elmyr.svg?branch=master)](https://travis-ci.org/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
@@ -28,13 +27,72 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
     }
     dependencies {
         testCompile("com.github.xgouchet.Elmyr:core:x.x.x")
+        testCompile("com.github.xgouchet.Elmyr:junit4:x.x.x")
+        testCompile("com.github.xgouchet.Elmyr:junit5:x.x.x")
+        testCompile("com.github.xgouchet.Elmyr:jvm:x.x.x")
     }
 ```
 
+### Forging data: the `core` module
+
+You can create an instance of the `Forge` class, and from that generate: 
+
+ - primitives, with basic constraints
+ - Strings matching simple predicates or even Regexes
+ - Your own custom data, by implementing the `ForgeryFactory` interface, then
+    calling the `Forge::addFactory` method.
+
+### ForgeRule for `junit4`
+
+You can instantiate a `ForgeRule` instance, which extends the `Forge` class,
+add factories to it, and then annotate fields on your test class with `@Forgery`.
+
+```kotlin
+class FoonTest {
+
+    @Rule
+    @JvmField
+    val forge = ForgeRule()
+            .withFactory(FooFactory())
+            .withFactory(BarFactory())
+
+    @Forgery
+    internal lateinit var fakeBar: Bar
+
+    @Forgery
+    lateinit var fakeFooList: List<Foo>
+
+    //…
+}
+```
+
+### ForgeExtension for `junit5`
+
+You can add an extension and configure it. In addition to creating forgeries on 
+fields/properties of your test class, you can inject parameters directly on your 
+test methods.
+
+```kotlin
+@ExtendWith(ForgeExtension::class)
+@ForgeConfiguration(KotlinAnnotationTest.Configurator::class)
+open class FooTest {
+
+    @Forgery
+    internal lateinit var fakeBar: Bar
+
+    @Forgery
+    lateinit var fakeFooList: List<Foo>
+
+    @Test
+    fun testSomething(@IntForgery i: Int, forge:Forge){
+        // …
+    }
+}
+```
 
 ## Documentation
 
-The full documentation can be read on [ReadTheDocs](http://elmyr.readthedocs.io/en/latest/).
+The full documentation will be comming shortly
 
 ## Contributing 
 
@@ -46,11 +104,15 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
+### Latest Release: `1.0.0-beta2` (2019/12/02)
 
-### Latest Release : 1.0.0-alpha1 (2019/10/31)
+#### `core`
 
- - Rewrite of the whole core Forge class
- - Split the library into artifacts 
+ - Add the randomizeCase and substring forgeries
+
+#### `jvm`
+
+ - Implement File, Uri and Url forgery factories
 
 For more information, read the [Changelog](CHANGELOG.md).
 
