@@ -1,12 +1,13 @@
 package fr.xgouchet.buildsrc.settings
 
 import fr.xgouchet.buildsrc.Dependencies
+import java.math.BigDecimal
 import org.gradle.api.Project
 import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
-fun Project.jacocoConfig() {
+fun Project.jacocoConfig(targetCoverage: Double) {
 
     extensionConfig<JacocoPluginExtension> {
         toolVersion = Dependencies.Versions.Jacoco
@@ -26,7 +27,7 @@ fun Project.jacocoConfig() {
         violationRules {
             rule {
                 limit {
-                    minimum = 0.85.toBigDecimal()
+                    minimum = BigDecimal(targetCoverage)
                 }
             }
         }

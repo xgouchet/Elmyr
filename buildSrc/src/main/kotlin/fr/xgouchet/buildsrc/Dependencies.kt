@@ -4,7 +4,7 @@ object Dependencies {
 
     object Versions {
         // Commons
-        const val Kotlin = "1.3.50"
+        const val Kotlin = "1.3.61"
 
         // Tests
         const val JUnit4 = "4.12"
@@ -14,16 +14,16 @@ object Dependencies {
 
         const val Spek2 = "2.0.8"
         const val AssertJ = "0.2.1"
-        const val MockitoKotlin = "2.1.0"
+        const val MockitoKotlin = "2.2.0"
         const val Jacoco = "0.8.4"
 
         // Tools
-        const val Detekt = "1.0.1"
-        const val KtLint = "8.2.0"
-        const val DependencyVersion = "0.25.0"
+        const val Detekt = "1.1.1"
+        const val KtLint = "9.1.0"
+        const val DependencyVersion = "0.27.0"
 
         const val SystemRules = "1.19.0"
-        const val MockitoExt = "2.23.0"
+        const val MockitoExt = "3.2.0"
 
         // Docs
         const val Dokka = "0.10.0"
@@ -58,7 +58,7 @@ object Dependencies {
         )
 
         @JvmField val JUnit5Extensions = arrayOf(
-                "org.mockito:mockito-junit-jupiter:2.23.0"
+                "org.mockito:mockito-junit-jupiter:${Versions.MockitoExt}"
         )
     }
 

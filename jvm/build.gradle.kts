@@ -23,4 +23,4 @@ dependencies {
     testCompile(project(":junit5"))
 }
 
-commonConfig()
+commonConfig(0.85)

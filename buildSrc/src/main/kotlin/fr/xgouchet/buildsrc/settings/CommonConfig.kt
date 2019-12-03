@@ -2,9 +2,9 @@ package fr.xgouchet.buildsrc.settings
 
 import org.gradle.api.Project
 
-fun Project.commonConfig() {
+fun Project.commonConfig(targetCoverage: Double = 0.95) {
     detektConfig()
-    jacocoConfig()
+    jacocoConfig(targetCoverage)
     kotlinConfig()
     junitConfig()
     ktLintConfig()
