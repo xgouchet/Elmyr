@@ -1,5 +1,46 @@
 # Changelog
 
+### 1.0.0-beta2 (2019/12/02)
+
+#### `core`
+
+ - Add the randomizeCase and substring forgeries
+
+#### `jvm`
+
+ - Implement File, Uri and Url forgery factories
+ 
+### 1.0.0-beta1 (2019/11/27)
+ 
+#### `inject`
+
+ - Allow injecting Generics
+ 
+#### `junit4`
+
+ - Ensure tests are fully reproducible
+
+#### `junit5`
+
+ - Ensure tests are fully reproducible 
+ - Handle Map Forgeries in JUnit5 methods
+ - Handle nested collection forgeries in JUnit5 methods
+ - Implement @BoolForgery in JUnit5 methods
+ - Implement primitive forgeries in JUnit5 methods
+ - Make the ForgeConfiguration annotation Inherited by child classes
+ 
+### 1.0.0-alpha5 (2019/11/18)
+
+#### `junit5`
+
+ - Allow JUnit5 extension to fill in collections
+ 
+### 1.0.0-alpha3 (2019/11/15)
+
+#### `junit5`
+
+ - Create JUnit5 ForgeConfiguration annotation
+
 ### 1.0.0-alpha1 (2019/10/31)
 
  - Rewrite of the whole core Forge class
