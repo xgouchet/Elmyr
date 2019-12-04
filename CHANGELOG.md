@@ -5,6 +5,10 @@
 #### `core`
 
  - Add the nullable value forgeries
+
+#### `junit5`
+
+ - Fix the error message when a test fails
  
 #### `jvm`
 

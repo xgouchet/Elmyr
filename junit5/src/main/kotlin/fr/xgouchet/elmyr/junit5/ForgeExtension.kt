@@ -87,9 +87,16 @@ class ForgeExtension :
 
     /** @inheritdoc */
     override fun handleTestExecutionException(context: ExtensionContext, throwable: Throwable) {
-        val message = "<%s.%s()> failed with Forge seed 0x%xL\n" +
-                "Add the following line in your @BeforeEach method to reproduce :\n\n" +
-                "\tforge.setSeed(0x%xL);\n"
+        val configuration = getConfigurations(context).firstOrNull()
+        val message = if (configuration == null) {
+            "<%s.%s()> failed with Forge seed 0x%xL\n" +
+                    "Add the following @ForgeConfiguration annotation to your test class :\n\n" +
+                    "\t@ForgeConfiguration(seed = 0x%xL)\n"
+        } else {
+            "<%s.%s()> failed with Forge seed 0x%xL\n" +
+                    "Add the seed in your @ForgeConfiguration annotation :\n\n" +
+                    "\t@ForgeConfiguration(value = ${configuration.value.simpleName}::class, seed = 0x%xL)\n"
+        }
         System.err.println(
                 message.format(
                         Locale.US,
@@ -163,7 +170,11 @@ class ForgeExtension :
                 result.add(annotation.get())
             }
 
-            currentContext = currentContext.parent.get()
+            if (currentContext.parent.isPresent) {
+                currentContext = currentContext.parent.get()
+            } else {
+                break
+            }
         }
 
         return result

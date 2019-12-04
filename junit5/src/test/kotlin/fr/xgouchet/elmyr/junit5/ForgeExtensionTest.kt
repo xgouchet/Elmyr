@@ -377,10 +377,11 @@ class ForgeExtensionTest {
                 .isEqualTo(
                         "<${mockTarget.javaClass.simpleName}.${fakeMethod.name}()> failed " +
                                 "with Forge seed 0x${forge.seed.toString(16)}L\n" +
-                                "Add the following line in your @BeforeEach method to reproduce :\n" +
+                                "Add the following @ForgeConfiguration annotation to your test class :\n" +
                                 "\n" +
-                                "\tforge.setSeed(0x${forge.seed.toString(16)}L);\n" +
-                                "\n")
+                                "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                                "\n"
+                )
     }
 
     // endregion
@@ -417,10 +418,10 @@ class Reflekta(@Forgery s: String) {
     fun withNotBool(@BoolForgery s: String) {
     }
 
-    fun withBoolInvalid1(@BoolForgery(probability = -1f)b: Boolean) {
+    fun withBoolInvalid1(@BoolForgery(probability = -1f) b: Boolean) {
     }
 
-    fun withBoolInvalid2(@BoolForgery(probability = 2f)b: Boolean) {
+    fun withBoolInvalid2(@BoolForgery(probability = 2f) b: Boolean) {
     }
 
     // endregion 
