@@ -21,22 +21,21 @@ class FileForgeryFactory :
         return if (osName.contains("win")) {
             aWindowsPath(forge)
         } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) {
-            aLinuxPath(forge)
+            aUnixPath(forge, LINUX_ROOTS)
         } else if (osName.contains("mac")) {
-            aMacOsPath(forge)
+            aUnixPath(forge, MAC_ROOTS)
         } else {
             throw IllegalStateException("Unsupported OS path format for “$osName”")
         }
     }
 
-    private fun aLinuxPath(forge: Forge): String {
+    private fun aUnixPath(forge: Forge, roots: List<String>): String {
         val isAbsolute = forge.aBool()
         val ancestorRoot = Array(forge.aTinyInt()) { ".." }.joinToString(UNIX_SEP) { it }
-        val roots = if (isAbsolute) LINUX_ROOTS else listOf(".", "..", ancestorRoot)
         return aPath(
                 forge = forge,
                 separator = UNIX_SEP,
-                roots = roots,
+                roots = if (isAbsolute) roots else listOf(".", "..", ancestorRoot),
                 forbiddenChars = UNIX_FORBIDDEN_CHARS
         )
     }
@@ -54,18 +53,6 @@ class FileForgeryFactory :
         )
     }
 
-    private fun aMacOsPath(forge: Forge): String {
-        val isAbsolute = forge.aBool()
-        val ancestorRoot = Array(forge.aTinyInt()) { ".." }.joinToString(UNIX_SEP) { it }
-        val roots = if (isAbsolute) MAC_ROOTS else listOf(".", "..", ancestorRoot)
-        return aPath(
-                forge = forge,
-                separator = UNIX_SEP,
-                roots = roots,
-                forbiddenChars = UNIX_FORBIDDEN_CHARS
-        )
-    }
-
     private fun aPath(
         forge: Forge,
         separator: String = File.separator,
@@ -76,11 +63,9 @@ class FileForgeryFactory :
         val builder = StringBuilder()
         var segments = 0
 
-        if (roots.isNotEmpty()) {
-            builder.append(forge.anElementFrom(roots))
-                    .append(separator)
-            segments++
-        }
+        builder.append(forge.anElementFrom(roots))
+                .append(separator)
+        segments++
 
         val isFile = forge.aBool()
         val fileSize = if (isFile) forge.anInt(3, MAX_FILENAME_SIZE) else 0
@@ -137,15 +122,16 @@ class FileForgeryFactory :
         private const val MAX_PATH_SIZE = 1024
         private const val MAX_FILENAME_SIZE = 128
 
-        private val LINUX_ROOTS = listOf("", "/bin", "/boot", "/dev", "/dev/null", "/etc", "/home", "/lib", "/media",
+        internal val LINUX_ROOTS = listOf("/bin", "/boot", "/dev", "/dev/null", "/etc", "/home", "/lib", "/media",
                 "/mnt", "/opt", "/sbin", "/srv", "/tmp", "/usr", "/usr/bin", "/usr/lib", "/usr/share",
                 "/usr/local", "/usr/local/bin", "/var", "/var/lib", "/var/log", "/root", "/sys")
-        private val MAC_ROOTS = listOf("", "/Applications", "/Developer", "/Library", "/Network", "/System", "/Users",
+        internal val MAC_ROOTS = listOf("/Applications", "/Developer", "/Library", "/Network", "/System", "/Users",
                 "/Volumes", "/bin", "/dev", "/dev/null", "/etc", "/sbin", "/tmp", "/usr", "/usr/bin",
                 "/usr/lib", "/usr/share", "/usr/local", "/usr/local/bin", "/var", "/var/lib", "/var/log")
-        private val WINDOWS_ROOTS = listOf("A:", "C:", "D:", "C:\\Program Files", "C:\\Program Files (x86)",
-                "C:\\Program Files\\Common Files", "C:\\ProgramData", "C:\\Users", "C:\\Users\\Public", "C:\\Documents and Settings",
-                "C:\\Windows", "C:\\Windows\\System32")
+        internal val WINDOWS_ROOTS = listOf("C:", "C:\\Program Files", "C:\\Program Files (x86)",
+                "C:\\Program Files\\Common Files", "C:\\ProgramData", "C:\\Users", "C:\\Users\\Public",
+                "C:\\Documents and Settings", "C:\\Windows", "C:\\Windows\\System32",
+                "A:", "B:", "D:", "E:", "F:", "H:", "L:", "M:", "N:", "O:", "P:", "Q:", "U:", "Z:")
 
         private const val UNIX_SEP = "/"
         private const val WINDOWS_SEP = "\\"

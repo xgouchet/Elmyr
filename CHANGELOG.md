@@ -5,6 +5,10 @@
 #### `core`
 
  - Add the nullable value forgeries
+ 
+#### `jvm`
+
+ - Improve the File forgery factory
 
 ### 1.0.0-beta2 (2019/12/02)
 
