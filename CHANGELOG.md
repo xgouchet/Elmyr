@@ -1,5 +1,11 @@
 # Changelog
 
+### next version (????/??/??)
+
+#### `core`
+
+ - Add the nullable value forgeries
+
 ### 1.0.0-beta2 (2019/12/02)
 
 #### `core`

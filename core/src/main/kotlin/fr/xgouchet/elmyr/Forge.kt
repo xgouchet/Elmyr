@@ -932,6 +932,51 @@ open class Forge {
 
     // endregion
 
+    // region Nullable
+
+    /**
+     * @return either a value forged by an existing factory, or null (with 50% probability)
+     * @see [Forge.addFactory]
+     */
+    inline fun <reified T : Any> aNullable(): T? {
+        return aNullable(T::class.java)
+    }
+
+    /**
+     * @param probability the probability the result will be null (default 0.5f)
+     * @return either a value forged by an existing factory, or null (with the given probability)
+     * @see [Forge.addFactory]
+     */
+    inline fun <reified T : Any> aNullable(probability: Float): T? {
+        return aNullable(T::class.java, probability)
+    }
+
+    /**
+     * @param probability the probability the result will be null (default 0.5f)
+     * @param clazz the class of the data to forge
+     * @return either a value forged  by an existing factory, or null (with the given probability)
+     * @see [Forge.addFactory]
+     */
+    @JvmOverloads
+    fun <T : Any> aNullable(clazz: Class<T>, probability: Float = HALF_PROBABILITY): T? {
+        return aNullable(probability) { getForgery(clazz) }
+    }
+
+    /**
+     * @param probability the probability the result will be null (default 0.5f)
+     * @param forging the lambda to forge a non null value
+     * @return either a value forged by the lambda, or null (with the given probability)
+     */
+    fun <T : Any> aNullable(probability: Float = HALF_PROBABILITY, forging: Forge.() -> T): T? {
+        return if (aBool(probability)) {
+            null
+        } else {
+            forging.invoke(this)
+        }
+    }
+
+    // endregion
+
     companion object {
 
         // Boolean
@@ -946,10 +991,14 @@ open class Forge {
         private const val DEFAULT_STDEV_INT = 100
 
         // Gaussians
-        @JvmField internal val MEAN_THRESHOLD_INT = sqrt(Int.MAX_VALUE.toDouble()).roundToInt()
-        @JvmField internal val MEAN_THRESHOLD_LONG = sqrt(Long.MAX_VALUE.toDouble()).roundToLong()
-        @JvmField internal val MEAN_THRESHOLD_FLOAT = sqrt(Float.MAX_VALUE.toDouble()).toFloat()
-        @JvmField internal val MEAN_THRESHOLD_DOUBLE = sqrt(Double.MAX_VALUE)
+        @JvmField
+        internal val MEAN_THRESHOLD_INT = sqrt(Int.MAX_VALUE.toDouble()).roundToInt()
+        @JvmField
+        internal val MEAN_THRESHOLD_LONG = sqrt(Long.MAX_VALUE.toDouble()).roundToLong()
+        @JvmField
+        internal val MEAN_THRESHOLD_FLOAT = sqrt(Float.MAX_VALUE.toDouble()).toFloat()
+        @JvmField
+        internal val MEAN_THRESHOLD_DOUBLE = sqrt(Double.MAX_VALUE)
 
         // Char
         internal const val MIN_PRINTABLE = 0x20.toChar()
