@@ -5,6 +5,7 @@ import fr.xgouchet.elmyr.junit4.dummy.Bar
 import fr.xgouchet.elmyr.junit4.dummy.BarFactory
 import fr.xgouchet.elmyr.junit4.dummy.Foo
 import fr.xgouchet.elmyr.junit4.dummy.FooFactory
+import java.time.Month
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -29,6 +30,9 @@ class KotlinAnnotationTest {
 
     @Forgery
     lateinit var fakeFooMap: Map<Foo, Bar>
+
+    @Forgery
+    lateinit var fakeMonth: Month
 
     @Before
     fun setUp() {
@@ -64,6 +68,8 @@ class KotlinAnnotationTest {
         assertThat(fakeFooList).isNotNull.isNotEmpty
         assertThat(fakeFooSet).isNotNull.isNotEmpty
         assertThat(fakeFooMap).isNotNull.isNotEmpty
+
+        assertThat(fakeMonth).isNotNull()
     }
 
     // endregion
