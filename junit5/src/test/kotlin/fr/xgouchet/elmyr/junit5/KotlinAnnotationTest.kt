@@ -12,6 +12,7 @@ import fr.xgouchet.elmyr.junit5.dummy.Bar
 import fr.xgouchet.elmyr.junit5.dummy.BarFactory
 import fr.xgouchet.elmyr.junit5.dummy.Foo
 import fr.xgouchet.elmyr.junit5.dummy.FooFactory
+import java.time.Month
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -32,6 +33,9 @@ open class KotlinAnnotationTest {
 
     @Forgery
     lateinit var fakeFooMap: Map<Foo, Bar>
+
+    @Forgery
+    lateinit var fakeMonth: Month
 
     // region Forge
 
@@ -141,6 +145,14 @@ open class KotlinAnnotationTest {
 
     // endregion
 
+    // region Enum
+
+    @Test
+    fun injectEnumForgery(@Forgery month: Month) {
+        assertThat(month)
+                .isNotNull()
+    }
+
     // region Object from Factory
 
     @Test
@@ -235,6 +247,8 @@ open class KotlinAnnotationTest {
         assertThat(fakeFooList).isNotNull.isNotEmpty
         assertThat(fakeFooSet).isNotNull.isNotEmpty
         assertThat(fakeFooMap).isNotNull.isNotEmpty
+
+        assertThat(fakeMonth).isNotNull()
     }
 
     // endregion
