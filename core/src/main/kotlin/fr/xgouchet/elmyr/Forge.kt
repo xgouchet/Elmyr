@@ -72,11 +72,10 @@ open class Forge {
         @Suppress("UNCHECKED_CAST")
         val strictMatch = factories[clazz] as? ForgeryFactory<T>
 
-        @Suppress("IfThenToElvis")
-        return if (strictMatch == null) {
-            getSubclassForgery(clazz)
-        } else {
-            strictMatch.getForgery(this)
+        return when {
+            clazz.isEnum -> anElementFrom(*clazz.enumConstants)
+            strictMatch == null -> getSubclassForgery(clazz)
+            else -> strictMatch.getForgery(this)
         }
     }
 
@@ -928,6 +927,29 @@ open class Forge {
         }
 
         return map
+    }
+
+    // endregion
+
+    // region Enum
+
+    /**
+     * @param enumClass an Enum class
+     * @param exclude a list of enum constants to exclude from the values
+     * @return an element “randomly” picked in the enum values
+     */
+    @Suppress("SpreadOperator")
+    @JvmOverloads
+    fun <E : Enum<E>> aValueFrom(
+        enumClass: Class<E>,
+        exclude: Collection<E> = emptyList()
+    ): E {
+        val chooseFrom = if (exclude.isNotEmpty()) {
+            enumClass.enumConstants.subtract(exclude).toList()
+        } else {
+            enumClass.enumConstants.toList()
+        }
+        return anElementFrom(chooseFrom)
     }
 
     // endregion

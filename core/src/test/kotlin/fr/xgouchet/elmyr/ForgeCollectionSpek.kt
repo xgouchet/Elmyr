@@ -1,5 +1,6 @@
 package fr.xgouchet.elmyr
 
+import java.time.Month
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.KotlinAssertions.assertThat as assertThatK
 import org.spekframework.spek2.Spek
@@ -158,6 +159,47 @@ class ForgeCollectionSpek : Spek({
         }
 
         // endregion
+
+        // region Choosing from an enum
+
+        context("forging value from an enum") {
+            it("selects a value from an enum class") {
+                repeat(testRepeatCountSmall) {
+                    val value = forge.aValueFrom(Month::class.java)
+
+                    assertThat(value).isInstanceOf(Month::class.java)
+                }
+            }
+
+            it("selects a value from an enum class") {
+                repeat(testRepeatCountSmall) {
+                    val value = forge.getForgery(Month::class.java)
+
+                    assertThat(value).isInstanceOf(Month::class.java)
+                }
+            }
+
+            it("selects a value from an enum class") {
+                repeat(testRepeatCountSmall) {
+                    val value = forge.getForgery<Month>()
+
+                    assertThat(value).isInstanceOf(Month::class.java)
+                }
+            }
+
+            it("selects a value from an enum class with excluded values") {
+                repeat(testRepeatCountSmall) {
+                    val excluded = forge.aList(3) { aValueFrom(Month::class.java) }
+                    val value = forge.aValueFrom(Month::class.java, excluded)
+
+                    assertThat(value)
+                            .isInstanceOf(Month::class.java)
+                            .isNotIn(excluded)
+                }
+            }
+        }
+
+        //endregion
 
         // region Transforming collections
 
