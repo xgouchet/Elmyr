@@ -104,19 +104,25 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Latest Release: `1.0.0-beta2` (2019/12/02)
+### Latest Release: `1.0.0-beta3` (2019/12/09)
 
 #### `core`
 
- - Add the randomizeCase and substring forgeries
+ - Add the nullable value forgeries
+ - Add the enum forgeries
 
+#### `junit4`
+
+ - Handle enums fields annotated with `@Forgery`
+
+#### `junit5`
+
+ - Fix the error message when a test fails
+ - Handle enums fields and parameters annotated with `@Forgery`
+ 
 #### `jvm`
 
- - Implement File, Uri and Url forgery factories
-
-For more information, read the [Changelog](CHANGELOG.md).
-
-
+ - Improve the File forgery factory
 ## Meta
 
 Xavier F. Gouchet – [@xgouchet](https://twitter.com/xgouchet)
