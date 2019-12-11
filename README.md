@@ -9,7 +9,7 @@
 [![Build Status](https://travis-ci.org/xgouchet/Elmyr.svg?branch=master)](https://travis-ci.org/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
-
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/xaviergouchet)
 
 Being an adept of testing code, I write a lot of tests. One thing I noticed is that in my tests, my fake / test data always look the same. My user names are always `“Bob”` and `“Alice”`, aged `42` or `69`, with userId `4816152342` or `24601`, and eating `“spam”`, `“eggs”` and `“bacon”`. 
 
@@ -123,6 +123,16 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 #### `jvm`
 
  - Improve the File forgery factory
+
+
+## Donate
+
+This library is completely free to use and modify (as per the [License](LICENSE.md)). 
+I try my best to make it as good as possible, but only do this on my free time. 
+If you want to support my work, you can click the Donate button below.
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/xaviergouchet)
+
 ## Meta
 
 Xavier F. Gouchet – [@xgouchet](https://twitter.com/xgouchet)
