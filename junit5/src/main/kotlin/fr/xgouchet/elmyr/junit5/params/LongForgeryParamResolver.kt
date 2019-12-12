@@ -16,7 +16,7 @@ internal class LongForgeryParamResolver :
         val annotated = parameterContext.isAnnotated(LongForgery::class.java)
         return if (annotated) {
             check(parameterContext.parameter.type == Long::class.java) {
-                "@LongForgery can only be used on a Java long or Longeger, or a Kotlin Long"
+                "@LongForgery can only be used on a Java long or Long, or a Kotlin Long"
             }
             true
         } else {

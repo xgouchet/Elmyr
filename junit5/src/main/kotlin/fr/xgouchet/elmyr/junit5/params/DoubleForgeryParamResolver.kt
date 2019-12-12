@@ -16,7 +16,7 @@ internal class DoubleForgeryParamResolver :
         val annotated = parameterContext.isAnnotated(DoubleForgery::class.java)
         return if (annotated) {
             check(parameterContext.parameter.type == Double::class.java) {
-                "@DoubleForgery can only be used on a Java double or Doubleeger, or a Kotlin Double"
+                "@DoubleForgery can only be used on a Java double or Double, or a Kotlin Double"
             }
             true
         } else {

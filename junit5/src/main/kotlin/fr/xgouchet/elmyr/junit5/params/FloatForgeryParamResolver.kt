@@ -16,7 +16,7 @@ internal class FloatForgeryParamResolver :
         val annotated = parameterContext.isAnnotated(FloatForgery::class.java)
         return if (annotated) {
             check(parameterContext.parameter.type == Float::class.java) {
-                "@FloatForgery can only be used on a Java float or Floateger, or a Kotlin Float"
+                "@FloatForgery can only be used on a Java float or Float, or a Kotlin Float"
             }
             true
         } else {

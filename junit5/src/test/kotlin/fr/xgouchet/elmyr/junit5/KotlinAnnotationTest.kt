@@ -1,5 +1,6 @@
 package fr.xgouchet.elmyr.junit5
 
+import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeConfigurator
 import fr.xgouchet.elmyr.annotation.BoolForgery
@@ -8,6 +9,8 @@ import fr.xgouchet.elmyr.annotation.FloatForgery
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.annotation.LongForgery
+import fr.xgouchet.elmyr.annotation.RegexForgery
+import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.junit5.dummy.Bar
 import fr.xgouchet.elmyr.junit5.dummy.BarFactory
 import fr.xgouchet.elmyr.junit5.dummy.Foo
@@ -145,6 +148,116 @@ open class KotlinAnnotationTest {
 
     // endregion
 
+    // region Strings
+
+    @Test
+    fun injectStringWithRegex(@RegexForgery(TEST_REGEX) s: String) {
+        assertThat(s).matches(TEST_REGEX)
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectAsciiString(@StringForgery(StringForgery.Type.ASCII) s: String) {
+        s.forEach {
+            assertThat(it)
+                    .isGreaterThanOrEqualTo(MIN_PRINTABLE)
+                    .isLessThanOrEqualTo(MAX_ASCII)
+        }
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectAsciiExtendedString(@StringForgery(StringForgery.Type.ASCII_EXTENDED) s: String) {
+        s.forEach {
+            assertThat(it)
+                    .isGreaterThanOrEqualTo(MIN_PRINTABLE)
+                    .isLessThanOrEqualTo(MAX_ASCII_EXTENDED)
+        }
+        checkForgeryInjectedInField()
+    }
+
+    // TODO add case
+
+    @Test
+    fun injectAlphabeticalString(@StringForgery(StringForgery.Type.ALPHABETICAL) s: String) {
+        assertThat(s).matches("[a-zA-Z]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectAlphabeticalLowercaseString(
+        @StringForgery(StringForgery.Type.ALPHABETICAL, Case.LOWER) s: String
+    ) {
+        assertThat(s).matches("[a-z]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectAlphabeticalUppercaseString(
+        @StringForgery(StringForgery.Type.ALPHABETICAL, Case.UPPER) s: String
+    ) {
+        assertThat(s).matches("[A-Z]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectAlphaNumericalString(@StringForgery(StringForgery.Type.ALPHA_NUMERICAL) s: String) {
+        assertThat(s).matches("[a-zA-Z0-9]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectAlphaNumericalLowercaseString(
+        @StringForgery(StringForgery.Type.ALPHA_NUMERICAL, Case.LOWER) s: String
+    ) {
+        assertThat(s).matches("[a-z0-9]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectAlphaNumericalUpercaseString(
+        @StringForgery(StringForgery.Type.ALPHA_NUMERICAL, Case.UPPER) s: String
+    ) {
+        assertThat(s).matches("[A-Z0-9]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectWhitespaceString(@StringForgery(StringForgery.Type.WHITESPACE) s: String) {
+        assertThat(s).matches("\\s+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectHexadecimalString(@StringForgery(StringForgery.Type.HEXADECIMAL) s: String) {
+        assertThat(s).matches("[a-fA-F0-9]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectHexadecimalLowercaseString(
+        @StringForgery(StringForgery.Type.HEXADECIMAL, Case.LOWER) s: String
+    ) {
+        assertThat(s).matches("[a-f0-9]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectHexadecimalUppercaseString(
+        @StringForgery(StringForgery.Type.HEXADECIMAL, Case.UPPER) s: String
+    ) {
+        assertThat(s).matches("[A-F0-9]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectNumericalString(@StringForgery(StringForgery.Type.NUMERICAL) s: String) {
+        assertThat(s).matches("[0-9]+")
+        checkForgeryInjectedInField()
+    }
+
+    // endregion
+
     // region Enum
 
     @Test
@@ -152,6 +265,8 @@ open class KotlinAnnotationTest {
         assertThat(month)
                 .isNotNull()
     }
+
+    // endregion
 
     // region Object from Factory
 
@@ -263,5 +378,11 @@ open class KotlinAnnotationTest {
     companion object {
         internal var memoizedSeed: Long? = null
         internal var memoizedFoo: Foo? = null
+
+        internal const val MIN_PRINTABLE = 0x20.toChar()
+        internal const val MAX_ASCII = 0x7F.toChar()
+        internal const val MAX_ASCII_EXTENDED = 0xFF.toChar()
+
+        internal const val TEST_REGEX = "[a-z](\\d+)[_\\.\\-][A-Z]*"
     }
 }

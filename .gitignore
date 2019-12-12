@@ -13,3 +13,4 @@
 **/out/
 .idea/codeStyles/
 .idea/caches/
+.idea/jarRepositories.xml

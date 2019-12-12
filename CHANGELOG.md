@@ -1,5 +1,11 @@
 # Changelog
 
+### next version (????/??/??)
+
+#### `junit5`
+
+ - Handle String forgeries injection (by type and Regex)
+
 ### 1.0.0-beta3 (2019/12/09)
 
 #### `core`

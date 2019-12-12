@@ -12,6 +12,8 @@ import fr.xgouchet.elmyr.junit5.params.ForgeParamResolver
 import fr.xgouchet.elmyr.junit5.params.ForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.IntForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.LongForgeryParamResolver
+import fr.xgouchet.elmyr.junit5.params.RegexForgeryParamResolver
+import fr.xgouchet.elmyr.junit5.params.StringForgeryParamResolver
 import java.lang.reflect.Constructor
 import java.util.Locale
 import org.junit.jupiter.api.extension.BeforeAllCallback
@@ -48,6 +50,8 @@ class ForgeExtension :
             LongForgeryParamResolver(),
             FloatForgeryParamResolver(),
             DoubleForgeryParamResolver(),
+            StringForgeryParamResolver(),
+            RegexForgeryParamResolver(),
             ForgeryParamResolver()
     )
 
