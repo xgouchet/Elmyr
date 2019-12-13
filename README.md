@@ -2,13 +2,14 @@
 
 > Elmyr is a Kotlin library providing tools to generate “random” values, specifically usefull for tests
 
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
-[![Kotlin 1.2.10](https://img.shields.io/badge/Kotlin-1.3.0-blue.svg)](http://kotlinlang.org)
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
+[![Documentation Status](https://img.shields.io/badge/docs-wiki-brightgreen.svg)](https://github.com/xgouchet/Elmyr/wiki)
+
 [![Build Status](https://travis-ci.org/xgouchet/Elmyr.svg?branch=master)](https://travis-ci.org/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/xaviergouchet)
 
 Being an adept of testing code, I write a lot of tests. One thing I noticed is that in my tests, my fake / test data always look the same. My user names are always `“Bob”` and `“Alice”`, aged `42` or `69`, with userId `4816152342` or `24601`, and eating `“spam”`, `“eggs”` and `“bacon”`. 
