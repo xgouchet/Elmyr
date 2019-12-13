@@ -9,6 +9,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt")
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
+    id("githubWiki")
     jacoco
     maven
 }
@@ -28,3 +29,10 @@ dependencies {
 }
 
 commonConfig()
+
+githubWiki {
+    types = listOf(
+            "fr.xgouchet.elmyr.junit5.ForgeExtension",
+            "fr.xgouchet.elmyr.junit5.ForgeConfiguration"
+    )
+}

@@ -11,8 +11,10 @@ pluginManagement {
                 Dependencies.PluginId.KtLint -> Dependencies.Versions.KtLint
                 Dependencies.PluginId.Dokka -> Dependencies.Versions.Dokka
                 else -> {
-                    if (requested.id.namespace != Dependencies.PluginNamespaces.Gradle) {
-                        println("⋄⋄⋄ id:${requested.id.id} / namespace:${requested.id.namespace} / name:${requested.id.name}")
+                    when (requested.id.namespace) {
+                        Dependencies.PluginNamespaces.Gradle -> println("Core Gradle plugin id:${requested.id.id}")
+                        null -> println("Custom Gradle plugin id:${requested.id.id}")
+                        else -> println("Unknown Gradle plugin id:${requested.id.id} / namespace:${requested.id.namespace} / name:${requested.id.name}")
                     }
                     null
                 }

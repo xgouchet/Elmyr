@@ -2,6 +2,12 @@ package fr.xgouchet.elmyr.annotation
 
 /**
  * Mark a field, property or method parameter as a primitive float forgery.
+ * You can only specify the `min` and `max` parameters, or the `mean` and `standardDeviation` parameters.
+ *
+ * @param min the minimum value (inclusive), default = -[Float.MAX_VALUE]
+ * @param max the maximum value (exclusive), default = [Float.MAX_VALUE]
+ * @param mean the mean value of the distribution
+ * @param standardDeviation the standard deviation value of the distribution
  */
 @Target(
         AnnotationTarget.VALUE_PARAMETER,

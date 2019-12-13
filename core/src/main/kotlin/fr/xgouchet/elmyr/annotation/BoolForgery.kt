@@ -4,6 +4,7 @@ import fr.xgouchet.elmyr.Forge
 
 /**
  * Mark a field, property or method parameter as a primitive boolean forgery.
+ * @param probability the probability the boolean will be true (default 0.5f)
  */
 @Target(
         AnnotationTarget.VALUE_PARAMETER,

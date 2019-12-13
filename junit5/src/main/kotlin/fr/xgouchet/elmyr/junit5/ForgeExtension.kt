@@ -120,8 +120,8 @@ class ForgeExtension :
 
     /** @inheritdoc */
     override fun supportsParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
+            parameterContext: ParameterContext,
+            extensionContext: ExtensionContext
     ): Boolean {
         val isSupported = parameterResolvers.any {
             it.supportsParameter(parameterContext, extensionContext)
@@ -139,8 +139,8 @@ class ForgeExtension :
 
     /** @inheritdoc */
     override fun resolveParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
+            parameterContext: ParameterContext,
+            extensionContext: ExtensionContext
     ): Any? {
         val resolver = parameterResolvers.firstOrNull {
             it.supportsParameter(parameterContext, extensionContext)
@@ -194,6 +194,6 @@ class ForgeExtension :
     companion object {
         private val NAMESPACE = ExtensionContext.Namespace.create(ForgeExtension::class.java)
 
-        const val SEED_MASK = 0x7FFFFFFFL
+        private const val SEED_MASK = 0x7FFFFFFFL
     }
 }

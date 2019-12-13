@@ -31,3 +31,11 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
 }
+gradlePlugin {
+    plugins {
+        register("githubWiki") {
+            id = "githubWiki" // the alias
+            implementationClass = "fr.xgouchet.buildsrc.plugin.GithubWikiPlugin"
+        }
+    }
+}

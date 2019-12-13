@@ -5,6 +5,7 @@ import fr.xgouchet.elmyr.ForgeryFactory
 import org.junit.rules.MethodRule
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.Statement
+import fr.xgouchet.elmyr.annotation.Forgery
 
 /**
  * A JUnit rule to keep your test class clean and automate the creation of fake data.
@@ -15,9 +16,11 @@ import org.junit.runners.model.Statement
  * In case of failure, the seed of the [Forge] is printed to the [System.err] output stream, allowing
  * you to reproduce consistently failing tests.
  *
+ * @param ruleSeed the seed to reset the [Forge] for each test
+ *
  */
 class ForgeRule(
-    val ruleSeed: Long = 0L
+        private val ruleSeed: Long = 0L
 ) :
         Forge(),
         MethodRule {
@@ -70,6 +73,6 @@ class ForgeRule(
     // endregion
 
     companion object {
-        const val SEED_MASK = 0x7FFFFFFFL
+       private const val SEED_MASK = 0x7FFFFFFFL
     }
 }

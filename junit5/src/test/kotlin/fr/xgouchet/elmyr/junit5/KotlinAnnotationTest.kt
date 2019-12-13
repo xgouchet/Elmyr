@@ -157,7 +157,7 @@ open class KotlinAnnotationTest {
     }
 
     @Test
-    fun injectAsciiString(@StringForgery(StringForgery.Type.ASCII) s: String) {
+    fun injectAsciiString(@StringForgery(StringForgery.StringForgeryType.ASCII) s: String) {
         s.forEach {
             assertThat(it)
                     .isGreaterThanOrEqualTo(MIN_PRINTABLE)
@@ -167,7 +167,7 @@ open class KotlinAnnotationTest {
     }
 
     @Test
-    fun injectAsciiExtendedString(@StringForgery(StringForgery.Type.ASCII_EXTENDED) s: String) {
+    fun injectAsciiExtendedString(@StringForgery(StringForgery.StringForgeryType.ASCII_EXTENDED) s: String) {
         s.forEach {
             assertThat(it)
                     .isGreaterThanOrEqualTo(MIN_PRINTABLE)
@@ -179,14 +179,14 @@ open class KotlinAnnotationTest {
     // TODO add case
 
     @Test
-    fun injectAlphabeticalString(@StringForgery(StringForgery.Type.ALPHABETICAL) s: String) {
+    fun injectAlphabeticalString(@StringForgery(StringForgery.StringForgeryType.ALPHABETICAL) s: String) {
         assertThat(s).matches("[a-zA-Z]+")
         checkForgeryInjectedInField()
     }
 
     @Test
     fun injectAlphabeticalLowercaseString(
-        @StringForgery(StringForgery.Type.ALPHABETICAL, Case.LOWER) s: String
+        @StringForgery(StringForgery.StringForgeryType.ALPHABETICAL, Case.LOWER) s: String
     ) {
         assertThat(s).matches("[a-z]+")
         checkForgeryInjectedInField()
@@ -194,21 +194,21 @@ open class KotlinAnnotationTest {
 
     @Test
     fun injectAlphabeticalUppercaseString(
-        @StringForgery(StringForgery.Type.ALPHABETICAL, Case.UPPER) s: String
+        @StringForgery(StringForgery.StringForgeryType.ALPHABETICAL, Case.UPPER) s: String
     ) {
         assertThat(s).matches("[A-Z]+")
         checkForgeryInjectedInField()
     }
 
     @Test
-    fun injectAlphaNumericalString(@StringForgery(StringForgery.Type.ALPHA_NUMERICAL) s: String) {
+    fun injectAlphaNumericalString(@StringForgery(StringForgery.StringForgeryType.ALPHA_NUMERICAL) s: String) {
         assertThat(s).matches("[a-zA-Z0-9]+")
         checkForgeryInjectedInField()
     }
 
     @Test
     fun injectAlphaNumericalLowercaseString(
-        @StringForgery(StringForgery.Type.ALPHA_NUMERICAL, Case.LOWER) s: String
+        @StringForgery(StringForgery.StringForgeryType.ALPHA_NUMERICAL, Case.LOWER) s: String
     ) {
         assertThat(s).matches("[a-z0-9]+")
         checkForgeryInjectedInField()
@@ -216,27 +216,27 @@ open class KotlinAnnotationTest {
 
     @Test
     fun injectAlphaNumericalUpercaseString(
-        @StringForgery(StringForgery.Type.ALPHA_NUMERICAL, Case.UPPER) s: String
+        @StringForgery(StringForgery.StringForgeryType.ALPHA_NUMERICAL, Case.UPPER) s: String
     ) {
         assertThat(s).matches("[A-Z0-9]+")
         checkForgeryInjectedInField()
     }
 
     @Test
-    fun injectWhitespaceString(@StringForgery(StringForgery.Type.WHITESPACE) s: String) {
+    fun injectWhitespaceString(@StringForgery(StringForgery.StringForgeryType.WHITESPACE) s: String) {
         assertThat(s).matches("\\s+")
         checkForgeryInjectedInField()
     }
 
     @Test
-    fun injectHexadecimalString(@StringForgery(StringForgery.Type.HEXADECIMAL) s: String) {
+    fun injectHexadecimalString(@StringForgery(StringForgery.StringForgeryType.HEXADECIMAL) s: String) {
         assertThat(s).matches("[a-fA-F0-9]+")
         checkForgeryInjectedInField()
     }
 
     @Test
     fun injectHexadecimalLowercaseString(
-        @StringForgery(StringForgery.Type.HEXADECIMAL, Case.LOWER) s: String
+        @StringForgery(StringForgery.StringForgeryType.HEXADECIMAL, Case.LOWER) s: String
     ) {
         assertThat(s).matches("[a-f0-9]+")
         checkForgeryInjectedInField()
@@ -244,14 +244,14 @@ open class KotlinAnnotationTest {
 
     @Test
     fun injectHexadecimalUppercaseString(
-        @StringForgery(StringForgery.Type.HEXADECIMAL, Case.UPPER) s: String
+        @StringForgery(StringForgery.StringForgeryType.HEXADECIMAL, Case.UPPER) s: String
     ) {
         assertThat(s).matches("[A-F0-9]+")
         checkForgeryInjectedInField()
     }
 
     @Test
-    fun injectNumericalString(@StringForgery(StringForgery.Type.NUMERICAL) s: String) {
+    fun injectNumericalString(@StringForgery(StringForgery.StringForgeryType.NUMERICAL) s: String) {
         assertThat(s).matches("[0-9]+")
         checkForgeryInjectedInField()
     }
