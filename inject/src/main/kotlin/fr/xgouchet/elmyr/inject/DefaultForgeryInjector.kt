@@ -97,16 +97,15 @@ class DefaultForgeryInjector : ForgeryInjector {
         return if (arguments.isEmpty()) {
             forge.getForgery(classifier.java)
         } else {
-            forgeParameterizedProperty(forge, type, arguments, classifier)
+            forgeParameterizedProperty(forge, arguments, classifier)
         }
     }
 
     @Suppress("UnsafeCallOnNullableType")
     private fun forgeParameterizedProperty(
-        forge: Forge,
-        type: KType,
-        arguments: List<KTypeProjection>,
-        classifier: KClass<*>
+            forge: Forge,
+            arguments: List<KTypeProjection>,
+            classifier: KClass<*>
     ): Any? {
         return when (classifier) {
             in knownLists -> forge.aList { forgeProperty(arguments[0].type!!, forge) }

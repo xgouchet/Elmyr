@@ -1,7 +1,6 @@
 package fr.xgouchet.buildsrc.plugin
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -32,8 +31,7 @@ open class GithubWikiTask : DefaultTask() {
         }
     }
 
-    @InputDirectory
-    fun getInputDir(): File {
+    internal fun getInputDir(): File {
         return File(projectDokkaDir, projectName)
     }
 
@@ -48,31 +46,19 @@ open class GithubWikiTask : DefaultTask() {
 
     private fun combineForType(type: String) {
         val packageDir = File(getInputDir(), type.substringBeforeLast('.'))
-        val typeDir = File(packageDir, convertTypeName(type.substringAfterLast('.')))
-        val outputFile = File(getOutputDir(), "${type.substringAfterLast('.')}.md")
+        val typeName = type.substringAfterLast('.')
+        val typeDir = File(packageDir, convertToDokkaTypeName(typeName))
+        val outputFile = File(getOutputDir(), "$typeName.md")
 
         if (typeDir.exists()) {
-            combine(typeDir, outputFile)
+            combine(typeDir, outputFile, typeName)
         } else {
             System.err.println("Unable to find $typeDir")
         }
     }
 
-    private fun convertTypeName(type: String): String {
-        val builder = StringBuilder()
-        type.forEach {
-            when (it) {
-                in 'A'..'Z' -> {
-                    builder.append('-')
-                    builder.append(it.toLowerCase())
-                }
-                else -> builder.append(it)
-            }
-        }
-        return builder.toString()
-    }
 
-    private fun combine(typeDir: File, outputFile: File) {
+    private fun combine(typeDir: File, outputFile: File, typeName: String) {
         val indexFile = File(typeDir, "index.md")
 
         val header = mutableListOf<String>()
@@ -92,9 +78,9 @@ open class GithubWikiTask : DefaultTask() {
             }
 
             if (fillList == null) {
-                if (i > 2) header.add(line)
+                if (i > 2) header.add(fixLinks(line, typeName))
             } else {
-                val match = linkRegex.matchEntire(line)
+                val match = indexLinkRegex.matchEntire(line)
                 if (match != null) {
                     fillList?.add(File(typeDir, match.groupValues[1]))
                 }
@@ -108,7 +94,7 @@ open class GithubWikiTask : DefaultTask() {
                     }
 
                     sectionNames.forEach {
-                        combineSectionFiles(writer, sections[it], it)
+                        combineSectionFiles(writer, sections[it], it, typeName)
                     }
                 }
     }
@@ -116,16 +102,17 @@ open class GithubWikiTask : DefaultTask() {
     private fun combineSectionFiles(
             writer: PrintWriter,
             files: List<File>?,
-            title: String) {
+            title: String,
+            typeName: String) {
         if (files.isNullOrEmpty()) return
 
         writer.println("## $title")
         files.forEach {
-            appendFile(writer, it)
+            appendFile(writer, it, typeName)
         }
     }
 
-    private fun appendFile(writer: PrintWriter, file: File) {
+    private fun appendFile(writer: PrintWriter, file: File, typeName: String) {
         check(file.exists()) { "Missing file ${file.path}" }
         check(file.canRead()) { "Can't read file ${file.path}" }
 
@@ -134,9 +121,69 @@ open class GithubWikiTask : DefaultTask() {
                 if (line.startsWith('#')) {
                     writer.print("##")
                 }
-                writer.println(line)
+
+                writer.println(fixLinks(line, typeName))
             }
         }
+    }
+
+    private fun fixLinks(line: String, typeName: String): String {
+        return markdownLinkRegex.replace(line) {
+            val title = it.groupValues[1]
+            val href = it.groupValues[2]
+            if (href.startsWith("http")) {
+                it.value
+            } else if (href == "#") {
+                "[$title]($title)"
+            } else if (href == "index.md") {
+                "[$title]($typeName)"
+            } else {
+                val typeHrefMatch = typeHrefRegex.matchEntire(href)
+                if (typeHrefMatch != null) {
+                    val type = convertFromDokkaTypeName(typeHrefMatch.groupValues[1])
+                    val anchor = convertFromDokkaTypeName(typeHrefMatch.groupValues[2])
+                    if (anchor == "index") {
+                        "[$title]($type)"
+                    } else {
+                        "[$title]($type#$anchor)"
+                    }
+                } else {
+                    println("••• LINK $title -> $href")
+                    "[$title](???)"
+                }
+            }
+
+        }
+    }
+
+    private fun convertToDokkaTypeName(type: String): String {
+        val builder = StringBuilder()
+        type.forEach {
+            when (it) {
+                in 'A'..'Z' -> {
+                    builder.append('-')
+                    builder.append(it.toLowerCase())
+                }
+                else -> builder.append(it)
+            }
+        }
+        return builder.toString()
+    }
+
+    private fun convertFromDokkaTypeName(type: String): String {
+        val builder = StringBuilder()
+        var upperCaseNext = false
+        type.forEach {
+            when (it) {
+                '-' -> upperCaseNext = true
+                in 'a'..'z' -> {
+                    builder.append(if (upperCaseNext) it.toUpperCase() else it)
+                    upperCaseNext = false
+                }
+                else -> builder.append(it)
+            }
+        }
+        return builder.toString()
     }
 
     // endregion
@@ -151,10 +198,10 @@ open class GithubWikiTask : DefaultTask() {
                 "Types"
         )
 
-        private const val LINK_PATTERN = "\\| \\[[\\w_\\-&;]+\\]\\(([\\w_-]+.md)\\) \\| .* \\|"
 
-        private val linkRegex = Regex(LINK_PATTERN)
-
+        private val indexLinkRegex = Regex("\\| \\[[\\w_\\-&;]+]\\(([\\w_-]+.md)\\) \\| .* \\|")
+        private val markdownLinkRegex = Regex("\\[([^]]+)]\\(([^)]+)\\)")
+        private val typeHrefRegex = Regex("(?:[\\w.]+/)*(?:([\\w\\-]+)/)?([\\w\\-]+).md")
     }
 }
 
