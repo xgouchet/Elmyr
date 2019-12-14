@@ -2,10 +2,10 @@ package fr.xgouchet.elmyr.junit4
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeryFactory
+import fr.xgouchet.elmyr.annotation.Forgery
 import org.junit.rules.MethodRule
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.Statement
-import fr.xgouchet.elmyr.annotation.Forgery
 
 /**
  * A JUnit rule to keep your test class clean and automate the creation of fake data.
@@ -20,7 +20,7 @@ import fr.xgouchet.elmyr.annotation.Forgery
  *
  */
 class ForgeRule(
-        private val ruleSeed: Long = 0L
+    private val ruleSeed: Long = 0L
 ) :
         Forge(),
         MethodRule {
@@ -73,6 +73,6 @@ class ForgeRule(
     // endregion
 
     companion object {
-       private const val SEED_MASK = 0x7FFFFFFFL
+        private const val SEED_MASK = 0x7FFFFFFFL
     }
 }

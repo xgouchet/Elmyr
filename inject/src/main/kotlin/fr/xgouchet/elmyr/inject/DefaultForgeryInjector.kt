@@ -103,9 +103,9 @@ class DefaultForgeryInjector : ForgeryInjector {
 
     @Suppress("UnsafeCallOnNullableType")
     private fun forgeParameterizedProperty(
-            forge: Forge,
-            arguments: List<KTypeProjection>,
-            classifier: KClass<*>
+        forge: Forge,
+        arguments: List<KTypeProjection>,
+        classifier: KClass<*>
     ): Any? {
         return when (classifier) {
             in knownLists -> forge.aList { forgeProperty(arguments[0].type!!, forge) }

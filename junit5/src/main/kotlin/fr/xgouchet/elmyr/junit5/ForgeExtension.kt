@@ -120,8 +120,8 @@ class ForgeExtension :
 
     /** @inheritdoc */
     override fun supportsParameter(
-            parameterContext: ParameterContext,
-            extensionContext: ExtensionContext
+        parameterContext: ParameterContext,
+        extensionContext: ExtensionContext
     ): Boolean {
         val isSupported = parameterResolvers.any {
             it.supportsParameter(parameterContext, extensionContext)
@@ -139,8 +139,8 @@ class ForgeExtension :
 
     /** @inheritdoc */
     override fun resolveParameter(
-            parameterContext: ParameterContext,
-            extensionContext: ExtensionContext
+        parameterContext: ParameterContext,
+        extensionContext: ExtensionContext
     ): Any? {
         val resolver = parameterResolvers.firstOrNull {
             it.supportsParameter(parameterContext, extensionContext)
