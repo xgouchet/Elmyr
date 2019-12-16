@@ -76,7 +76,7 @@ internal object RfcDefinitions {
     // authority   = [ userinfo "@" ] host [ ":" port ]
     private fun buildAuthority(forge: Forge, builder: StringBuilder) {
         // maybe user info
-        if (forge.aBool(0.25f)) {
+        if (forge.aBool()) {
             buildUserInfo(forge, builder)
             builder.append("@")
         }
@@ -84,7 +84,7 @@ internal object RfcDefinitions {
         buildHost(forge, builder)
 
         // maybe port
-        if (forge.aBool(0.25f)) {
+        if (forge.aBool()) {
             builder.append(":")
             builder.append(forge.anInt(1, 65536))
         }
