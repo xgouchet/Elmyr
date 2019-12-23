@@ -2,9 +2,14 @@
 
 ### next version (????/??/??)
 
+#### `inject`
+
+ - Handle primitives fields / properties annotated with `@XxxForgery`, as well 
+    as String fields/properties annotated with `@StringForgery` and `@RegexForgery`
+
 #### `junit5`
 
- - Handle String forgeries injection (by type and Regex)
+ - Handle String forgeries injection annotated with `@StringForgery` and `@RegexForgery`
 
 ### 1.0.0-beta3 (2019/12/09)
 
@@ -51,7 +56,7 @@
  - Ensure tests are fully reproducible 
  - Handle Map Forgeries in JUnit5 methods
  - Handle nested collection forgeries in JUnit5 methods
- - Implement @BoolForgery in JUnit5 methods
+ - Implement ``@BoolForgery` in JUnit5 methods
  - Implement primitive forgeries in JUnit5 methods
  - Make the ForgeConfiguration annotation Inherited by child classes
  

@@ -12,16 +12,32 @@ class ForgeryInjectorException(
     message: String
 ) : ForgeryException(message) {
 
-    constructor(
-        target: Any,
-        property: KProperty<*>
-    ) : this("Impossible to inject forgery on property " +
-            "'${target.javaClass.canonicalName}.${property.name}'")
+    companion object {
 
-    constructor(
-        target: Any,
-        properties: List<KProperty<*>>
-    ) : this("Impossible to inject forgery in class " +
-            "'${target.javaClass.canonicalName}' on the following properties : " +
-            properties.joinToString { it.name })
+        internal fun withProperty(
+            target: Any,
+            property: KProperty<*>
+        ) = ForgeryInjectorException(
+                "Impossible to inject forgery on property " +
+                        "'${target.javaClass.canonicalName}.${property.name}'"
+        )
+
+        internal fun withProperties(
+            target: Any,
+            properties: List<KProperty<*>>
+        ) = ForgeryInjectorException(
+                "Impossible to inject forgery in class " +
+                        "'${target.javaClass.canonicalName}' on the following properties : " +
+                        properties.joinToString { it.name }
+        )
+
+        internal fun withErrors(
+            target: Any,
+            throwables: List<Throwable>
+        ) = ForgeryInjectorException(
+                "Impossible to inject forgery in class " +
+                        "'${target.javaClass.canonicalName}' because of the following errors :\n\t" +
+                        throwables.joinToString("\n\t") { it.message ?: it.javaClass.canonicalName }
+        )
+    }
 }

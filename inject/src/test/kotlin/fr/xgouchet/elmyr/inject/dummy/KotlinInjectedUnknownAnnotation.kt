@@ -1,9 +1,17 @@
 package fr.xgouchet.elmyr.inject.dummy
 
-import fr.xgouchet.elmyr.annotation.Forgery
+import org.mockito.Mock
 
 class KotlinInjectedUnknownAnnotation {
 
-    @Forgery
-    lateinit var unknownSpam: Spam
+    @Mock
+    lateinit var unknownFoo: Foo
+
+    fun retrieveFooOrNull(): Foo? {
+        return if (::unknownFoo.isInitialized) {
+            unknownFoo
+        } else {
+            null
+        }
+    }
 }

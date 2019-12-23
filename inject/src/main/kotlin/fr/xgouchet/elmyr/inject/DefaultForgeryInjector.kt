@@ -1,7 +1,15 @@
 package fr.xgouchet.elmyr.inject
 
 import fr.xgouchet.elmyr.Forge
+import fr.xgouchet.elmyr.annotation.BoolForgery
+import fr.xgouchet.elmyr.annotation.DoubleForgery
+import fr.xgouchet.elmyr.annotation.FloatForgery
 import fr.xgouchet.elmyr.annotation.Forgery
+import fr.xgouchet.elmyr.annotation.IntForgery
+import fr.xgouchet.elmyr.annotation.LongForgery
+import fr.xgouchet.elmyr.annotation.RegexForgery
+import fr.xgouchet.elmyr.annotation.StringForgery
+import fr.xgouchet.elmyr.annotation.StringForgeryType
 import fr.xgouchet.elmyr.inject.reflect.invokePrivate
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
@@ -49,19 +57,41 @@ class DefaultForgeryInjector : ForgeryInjector {
         val invalidProperties = clazz.declaredMembers
                 .filterIsInstance<KProperty<*>>()
                 .filter { it !is KMutableProperty }
-                .filter { it.annotations.any { annotation -> annotation is Forgery } }
+                .filter {
+                    it.annotations.any { annotation ->
+                        annotation is Forgery ||
+                                annotation is BoolForgery ||
+                                annotation is IntForgery ||
+                                annotation is LongForgery ||
+                                annotation is FloatForgery ||
+                                annotation is DoubleForgery ||
+                                annotation is StringForgery ||
+                                annotation is RegexForgery
+                    }
+                }
         when (invalidProperties.size) {
             0 -> injectInClassSafe(clazz, forge, target)
-            1 -> throw ForgeryInjectorException(target, invalidProperties.first())
-            else -> throw ForgeryInjectorException(target, invalidProperties)
+            1 -> throw ForgeryInjectorException.withProperty(target, invalidProperties.first())
+            else -> throw ForgeryInjectorException.withProperties(target, invalidProperties)
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun injectInClassSafe(clazz: KClass<*>, forge: Forge, target: Any) {
         val mutableProperties = clazz.declaredMembers.filterIsInstance<KMutableProperty<*>>()
 
+        val errors = mutableListOf<Throwable>()
+
         for (property in mutableProperties) {
-            injectInProperty(forge, property, target)
+            try {
+                injectInProperty(forge, property, target)
+            } catch (e: Throwable) {
+                errors.add(e)
+            }
+        }
+
+        if (errors.isNotEmpty()) {
+            throw ForgeryInjectorException.withErrors(target, errors)
         }
     }
 
@@ -71,13 +101,19 @@ class DefaultForgeryInjector : ForgeryInjector {
         target: Any
     ) {
         for (annotation in property.annotations) {
-            if (annotation is Forgery) {
-                processPropertyWithForgery(forge, property, target)
+            when (annotation) {
+                is Forgery -> processPropertyWithForgery(forge, property, target)
+                is BoolForgery -> processPropertyWithBooleanForgery(forge, annotation, property, target)
+                is IntForgery -> processPropertyWithIntForgery(forge, annotation, property, target)
+                is LongForgery -> processPropertyWithLongForgery(forge, annotation, property, target)
+                is FloatForgery -> processPropertyWithFloatForgery(forge, annotation, property, target)
+                is DoubleForgery -> processPropertyWithDoubleForgery(forge, annotation, property, target)
+                is StringForgery -> processPropertyWithStringForgery(forge, annotation, property, target)
+                is RegexForgery -> processPropertyWithRegexForgery(forge, annotation, property, target)
             }
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun processPropertyWithForgery(
         forge: Forge,
         property: KMutableProperty<*>,
@@ -86,6 +122,142 @@ class DefaultForgeryInjector : ForgeryInjector {
         val forgery = forgeProperty(property.returnType, forge)
                 ?: throw ForgeryInjectorException("Unable to forge $property.")
 
+        property.setter.invokePrivate(target, forgery)
+    }
+
+    private fun processPropertyWithBooleanForgery(
+        forge: Forge,
+        annotation: BoolForgery,
+        property: KMutableProperty<*>,
+        target: Any
+    ) {
+        check(annotation.probability >= 0f) {
+            "You can only use an BoolForgery with a probability between 0f and 1f"
+        }
+        check(annotation.probability <= 1f) {
+            "You can only use an BoolForgery with a probability between 0f and 1f"
+        }
+        val forgery = forge.aBool(annotation.probability)
+        property.setter.invokePrivate(target, forgery)
+    }
+
+    private fun processPropertyWithIntForgery(
+        forge: Forge,
+        annotation: IntForgery,
+        property: KMutableProperty<*>,
+        target: Any
+    ) {
+        val forgery = if (annotation.standardDeviation >= 0) {
+            check(annotation.min == Int.MIN_VALUE) {
+                "You can only use an IntForgery with min and max or with mean and standardDeviation"
+            }
+            check(annotation.max == Int.MAX_VALUE) {
+                "You can only use an IntForgery with min and max or with mean and standardDeviation"
+            }
+            forge.aGaussianInt(annotation.mean, annotation.standardDeviation)
+        } else {
+            check(annotation.mean == 0) {
+                "You can only use an IntForgery with min and max or with mean and standardDeviation"
+            }
+            forge.anInt(annotation.min, annotation.max)
+        }
+        property.setter.invokePrivate(target, forgery)
+    }
+
+    private fun processPropertyWithLongForgery(
+        forge: Forge,
+        annotation: LongForgery,
+        property: KMutableProperty<*>,
+        target: Any
+    ) {
+        val forgery = if (annotation.standardDeviation >= 0) {
+            check(annotation.min == Long.MIN_VALUE) {
+                "You can only use an LongForgery with min and max or with mean and standardDeviation"
+            }
+            check(annotation.max == Long.MAX_VALUE) {
+                "You can only use an LongForgery with min and max or with mean and standardDeviation"
+            }
+            forge.aGaussianLong(annotation.mean, annotation.standardDeviation)
+        } else {
+            check(annotation.mean == 0L) {
+                "You can only use an LongForgery with min and max or with mean and standardDeviation"
+            }
+            forge.aLong(annotation.min, annotation.max)
+        }
+        property.setter.invokePrivate(target, forgery)
+    }
+
+    private fun processPropertyWithFloatForgery(
+        forge: Forge,
+        annotation: FloatForgery,
+        property: KMutableProperty<*>,
+        target: Any
+    ) {
+        val forgery = if (!annotation.standardDeviation.isNaN()) {
+            check(annotation.min == -Float.MAX_VALUE) {
+                "You can only use an FloatForgery with min and max or with mean and standardDeviation"
+            }
+            check(annotation.max == Float.MAX_VALUE) {
+                "You can only use an FloatForgery with min and max or with mean and standardDeviation"
+            }
+            forge.aGaussianFloat(annotation.mean, annotation.standardDeviation)
+        } else {
+            check(annotation.mean == 0f) {
+                "You can only use an FloatForgery with min and max or with mean and standardDeviation"
+            }
+            forge.aFloat(annotation.min, annotation.max)
+        }
+        property.setter.invokePrivate(target, forgery)
+    }
+
+    private fun processPropertyWithDoubleForgery(
+        forge: Forge,
+        annotation: DoubleForgery,
+        property: KMutableProperty<*>,
+        target: Any
+    ) {
+        val forgery = if (!annotation.standardDeviation.isNaN()) {
+            check(annotation.min == -Double.MAX_VALUE) {
+                "You can only use an DoubleForgery with min and max or with mean and standardDeviation"
+            }
+            check(annotation.max == Double.MAX_VALUE) {
+                "You can only use an DoubleForgery with min and max or with mean and standardDeviation"
+            }
+            forge.aGaussianDouble(annotation.mean, annotation.standardDeviation)
+        } else {
+            check(annotation.mean == 0.0) {
+                "You can only use an DoubleForgery with min and max or with mean and standardDeviation"
+            }
+            forge.aDouble(annotation.min, annotation.max)
+        }
+        property.setter.invokePrivate(target, forgery)
+    }
+
+    private fun processPropertyWithStringForgery(
+        forge: Forge,
+        annotation: StringForgery,
+        property: KMutableProperty<*>,
+        target: Any
+    ) {
+        val forgery = when (annotation.value) {
+            StringForgeryType.ALPHABETICAL -> forge.anAlphabeticalString(annotation.case)
+            StringForgeryType.ALPHA_NUMERICAL -> forge.anAlphaNumericalString(annotation.case)
+            StringForgeryType.NUMERICAL -> forge.aNumericalString()
+            StringForgeryType.HEXADECIMAL -> forge.anHexadecimalString(annotation.case)
+            StringForgeryType.WHITESPACE -> forge.aWhitespaceString()
+            StringForgeryType.ASCII -> forge.anAsciiString()
+            StringForgeryType.ASCII_EXTENDED -> forge.anExtendedAsciiString()
+        }
+        property.setter.invokePrivate(target, forgery)
+    }
+
+    private fun processPropertyWithRegexForgery(
+        forge: Forge,
+        annotation: RegexForgery,
+        property: KMutableProperty<*>,
+        target: Any
+    ) {
+        val forgery = forge.aStringMatching(annotation.value)
         property.setter.invokePrivate(target, forgery)
     }
 
