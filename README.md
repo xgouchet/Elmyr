@@ -105,25 +105,21 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Latest Release: `1.0.0-beta3` (2019/12/09)
+### Latest Release: `1.0.0` (2020/02/17)
 
 #### `core`
 
- - Add the nullable value forgeries
- - Add the enum forgeries
+ - Add the List/Set kotlin delegate forgeries
+ - Ensure gaussian forgeries stay within three time the standard deviation 
 
-#### `junit4`
+#### `inject`
 
- - Handle enums fields annotated with `@Forgery`
+ - Handle primitives fields / properties annotated with `@XxxForgery`, as well 
+    as String fields/properties annotated with `@StringForgery` and `@RegexForgery`
 
 #### `junit5`
 
- - Fix the error message when a test fails
- - Handle enums fields and parameters annotated with `@Forgery`
- 
-#### `jvm`
-
- - Improve the File forgery factory
+ - Handle String forgeries injection annotated with `@StringForgery` and `@RegexForgery`
 
 
 ## Donate

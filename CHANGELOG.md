@@ -1,6 +1,12 @@
 # Changelog
 
-### next version (????/??/??)
+### 1.0.0 (2020/02/17)
+
+#### `core`
+
+ - Add Primitives and List/Set kotlin delegate forgeries
+ - Create a Sequence forgery (eg: `Forge.aSequence { aString() }`)
+ - Ensure gaussian forgeries stay within three time the standard deviation 
 
 #### `inject`
 
