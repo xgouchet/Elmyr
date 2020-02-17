@@ -6,9 +6,15 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import fr.xgouchet.elmyr.dummy.Bar
 import fr.xgouchet.elmyr.dummy.Foo
-import fr.xgouchet.elmyr.kotlin.booleanForgery
-import fr.xgouchet.elmyr.kotlin.factoryForgery
-import fr.xgouchet.elmyr.kotlin.nullableForgery
+import fr.xgouchet.elmyr.kotlin.BooleanProperty.Companion.booleanForgery
+import fr.xgouchet.elmyr.kotlin.DoubleProperty.Companion.doubleForgery
+import fr.xgouchet.elmyr.kotlin.FactoryListProperty.Companion.factoryListForgery
+import fr.xgouchet.elmyr.kotlin.FactoryProperty.Companion.factoryForgery
+import fr.xgouchet.elmyr.kotlin.FactorySetProperty.Companion.factorySetForgery
+import fr.xgouchet.elmyr.kotlin.FloatProperty.Companion.floatForgery
+import fr.xgouchet.elmyr.kotlin.IntProperty.Companion.intForgery
+import fr.xgouchet.elmyr.kotlin.LongProperty.Companion.longForgery
+import fr.xgouchet.elmyr.kotlin.NullableProperty.Companion.nullableForgery
 import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -19,6 +25,8 @@ class ForgeDelegateSpek : Spek({
         val forge = Forge()
         var seed: Long
 
+        val testRepeatCountSmall = 16
+
         beforeEachTest {
             seed = System.nanoTime()
             forge.seed = seed
@@ -26,7 +34,28 @@ class ForgeDelegateSpek : Spek({
 
         // region common delegates rules
 
-        // TODO test value same until seed is changed
+        context("in a class with delegate properties") {
+
+            it("forges a new value when the forge seed changes") {
+
+                val temp = WithPrimitives(forge)
+                val first = temp.forgedInt
+
+                forge.seed = System.currentTimeMillis()
+                val second = temp.forgedInt
+
+                assertThat(second).isNotEqualTo(first)
+            }
+
+            it("reuses the same value when the same forge seed is used") {
+
+                val temp = WithPrimitives(forge)
+                val first = temp.forgedInt
+                val second = temp.forgedInt
+
+                assertThat(second).isEqualTo(first)
+            }
+        }
 
         // endregion
 
@@ -67,15 +96,47 @@ class ForgeDelegateSpek : Spek({
             }
         }
 
-        context("in a class with boolean properties") {
+        context("in a class with primitive properties") {
 
             it("forges a boolean instance") {
                 val probability = forge.aFloat(0f, 1f)
                 verifyProbability(
                         expectedProbability = probability
                 ) {
-                    val temp = WithBoolean(forge, probability)
+                    val temp = WithPrimitives(forge, probability)
                     temp.forgedBoolean
+                }
+            }
+
+            it("forges an int instance") {
+                repeat(testRepeatCountSmall) {
+                    val temp = WithPrimitives(forge)
+                    assertThat(temp.forgedInt)
+                        .isBetween(13, 42)
+                }
+            }
+
+            it("forges a long instance") {
+                repeat(testRepeatCountSmall) {
+                    val temp = WithPrimitives(forge)
+                    assertThat(temp.forgedLong)
+                        .isBetween(1337L, 4815162342L)
+                }
+            }
+
+            it("forges a float instance") {
+                repeat(testRepeatCountSmall) {
+                    val temp = WithPrimitives(forge)
+                    assertThat(temp.forgedFloat)
+                        .isBetween(2.7f, 3.142f)
+                }
+            }
+
+            it("forges a double instance") {
+                repeat(testRepeatCountSmall) {
+                    val temp = WithPrimitives(forge)
+                    assertThat(temp.forgedDouble)
+                        .isBetween(2.7, 3.142)
                 }
             }
         }
@@ -90,6 +151,24 @@ class ForgeDelegateSpek : Spek({
 
                 val temp = WithFactory(forge)
                 assertThat(temp.forgedFoo).isSameAs(fakeFoo)
+            }
+
+            it("forges a list") {
+                val fakeFoo = Foo(forge.anInt())
+                whenever(mockFooFactory.getForgery(any())) doReturn fakeFoo
+
+                val temp = WithFactory(forge)
+                assertThat(temp.forgedFooList)
+                        .containsOnly(fakeFoo)
+            }
+
+            it("forges a set") {
+                val fakeFoo = Foo(forge.anInt())
+                whenever(mockFooFactory.getForgery(any())) doReturn fakeFoo
+
+                val temp = WithFactory(forge)
+                assertThat(temp.forgedFooSet)
+                        .containsOnly(fakeFoo)
             }
 
             it("fails when factory not available") {
@@ -119,12 +198,20 @@ class WithNullable(
     internal val forgedNullableInt: Int? by nullableForgery(probability) { aTinyInt() }
 }
 
-class WithBoolean(
+class WithPrimitives(
     override val forge: Forge,
-    probability: Float
+    probability: Float = 0.5f
 ) : ForgeryAware {
 
     internal val forgedBoolean: Boolean by booleanForgery(probability)
+
+    internal val forgedInt: Int by intForgery(13, 42)
+
+    internal val forgedLong: Long by longForgery(1337L, 4815162342L)
+
+    internal val forgedFloat: Float by floatForgery(2.718281f, 3.141592f)
+
+    internal val forgedDouble: Double by doubleForgery(2.718281, 3.141592)
 }
 
 class WithFactory(
@@ -134,4 +221,8 @@ class WithFactory(
     internal val forgedFoo: Foo by factoryForgery()
 
     internal val forgedBar: Bar by factoryForgery()
+
+    internal val forgedFooList: List<Foo> by factoryListForgery()
+
+    internal val forgedFooSet: Set<Foo> by factorySetForgery()
 }

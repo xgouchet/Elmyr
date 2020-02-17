@@ -17,11 +17,15 @@ class FactoryProperty<T : Any>(
     override fun getForgery(forge: Forge): T {
         return forge.getForgery(clazz)
     }
-}
 
-/**
- * Creates a [ReadOnlyProperty] that will forge a random object with a factory provided to the [Forge].
- *
- * @param T the type of the object to forge
- */
-inline fun <reified T : Any> factoryForgery(): ForgeryProperty<T> = FactoryProperty(T::class.java)
+    companion object {
+
+        /**
+         * Creates a [ReadOnlyProperty] that will forge a random object with a factory provided to the [Forge].
+         *
+         * @param T the type of the object to forge
+         */
+        inline fun <reified T : Any> factoryForgery():
+            ForgeryProperty<T> = FactoryProperty(T::class.java)
+    }
+}
