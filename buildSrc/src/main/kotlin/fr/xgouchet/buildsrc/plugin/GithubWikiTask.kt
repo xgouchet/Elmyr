@@ -4,6 +4,7 @@ import java.io.File
 import java.io.PrintWriter
 import java.nio.charset.Charset
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
@@ -30,6 +31,7 @@ open class GithubWikiTask : DefaultTask() {
         }
     }
 
+    @InputDirectory
     internal fun getInputDir(): File {
         return File(projectDokkaDir, projectName)
     }
@@ -85,15 +87,15 @@ open class GithubWikiTask : DefaultTask() {
         }
 
         outputFile.printWriter(Charsets.UTF_8)
-                .use { writer ->
-                    header.forEach {
-                        writer.println(it)
-                    }
-
-                    sectionNames.forEach {
-                        combineSectionFiles(writer, sections[it], it, typeName)
-                    }
+            .use { writer ->
+                header.forEach {
+                    writer.println(it)
                 }
+
+                sectionNames.forEach {
+                    combineSectionFiles(writer, sections[it], it, typeName)
+                }
+            }
     }
 
     private fun combineSectionFiles(
@@ -188,11 +190,12 @@ open class GithubWikiTask : DefaultTask() {
     companion object {
 
         private val sectionNames = listOf(
-                "Constructors",
-                "Properties",
-                "Enum Values",
-                "Functions",
-                "Types"
+            "Constructors",
+            "Properties",
+            "Enum Values",
+            "Functions",
+            "Companion Object Functions",
+            "Types"
         )
 
         private val indexLinkRegex = Regex("\\| \\[[\\w_\\-&;]+]\\(([\\w_-]+.md)\\) \\| .* \\|")
