@@ -95,9 +95,12 @@ fun verifyGaussianDistribution(
     val count = 2048
     var sum = 0.0
     var squareSum = 0.0
+    val maxDeviation = expectedStandardDev * 3.05 // add some margin for float precision errors
 
     for (i in 0 until count) {
         val x = provider(i)
+        assertThat(x)
+                .isBetween(expectedMean - maxDeviation, expectedMean + maxDeviation)
         sum += x
         squareSum += x * x
     }

@@ -4,6 +4,8 @@ import fr.xgouchet.elmyr.kotlin.ForgedSequence
 import fr.xgouchet.elmyr.regex.RegexParser
 import java.util.Random
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.round
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -199,7 +201,9 @@ open class Forge {
         return if (standardDeviation == 0) {
             mean
         } else {
-            round((rng.nextGaussian() * standardDeviation)).toInt() + mean
+            val trueGaussian = round((rng.nextGaussian() * standardDeviation)).toInt() + mean
+            val maxDeviation = standardDeviation * MAX_DEVIATION_RATIO
+            max(min(trueGaussian, mean + maxDeviation), mean - maxDeviation)
         }
     }
 
@@ -266,7 +270,9 @@ open class Forge {
         return if (standardDeviation == 0L) {
             mean
         } else {
-            (rng.nextGaussian() * standardDeviation).roundToLong() + mean
+            val trueGaussian = (rng.nextGaussian() * standardDeviation).roundToLong() + mean
+            val maxDeviation = standardDeviation * MAX_DEVIATION_RATIO
+            max(min(trueGaussian, mean + maxDeviation), mean - maxDeviation)
         }
     }
 
@@ -336,7 +342,9 @@ open class Forge {
         return if (standardDeviation == 0f) {
             mean
         } else {
-            (rng.nextGaussian().toFloat() * standardDeviation) + mean
+            val trueGaussian = (rng.nextGaussian().toFloat() * standardDeviation) + mean
+            val maxDeviation = standardDeviation * MAX_DEVIATION_RATIO
+            max(min(trueGaussian, mean + maxDeviation), mean - maxDeviation)
         }
     }
 
@@ -406,7 +414,9 @@ open class Forge {
         return if (standardDeviation == 0.0) {
             mean
         } else {
-            (rng.nextGaussian() * standardDeviation) + mean
+            val trueGaussian = (rng.nextGaussian() * standardDeviation) + mean
+            val maxDeviation = standardDeviation * MAX_DEVIATION_RATIO
+            max(min(trueGaussian, mean + maxDeviation), mean - maxDeviation)
         }
     }
 
@@ -1024,6 +1034,7 @@ open class Forge {
         internal val MEAN_THRESHOLD_FLOAT = sqrt(Float.MAX_VALUE.toDouble()).toFloat()
         @JvmField
         internal val MEAN_THRESHOLD_DOUBLE = sqrt(Double.MAX_VALUE)
+        internal const val MAX_DEVIATION_RATIO = 3
 
         // Char
         internal const val MIN_PRINTABLE = 0x20.toChar()
