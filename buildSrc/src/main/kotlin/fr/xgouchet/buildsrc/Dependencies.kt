@@ -7,12 +7,12 @@ object Dependencies {
         const val Kotlin = "1.3.61"
 
         // Tests
-        const val JUnit4 = "4.12"
-        const val JUnitJupiter = "5.5.2"
-        const val JUnitPlatform = "1.5.2"
-        const val JUnitVintage = "5.5.2"
+        const val JUnit4 = "4.13"
+        const val JUnitJupiter = "5.6.0"
+        const val JUnitPlatform = "1.6.0"
+        const val JUnitVintage = "5.6.0"
 
-        const val Spek2 = "2.0.8"
+        const val Spek2 = "2.0.9"
         const val AssertJ = "0.2.1"
         const val MockitoKotlin = "2.2.0"
         const val Jacoco = "0.8.4"
@@ -23,7 +23,7 @@ object Dependencies {
         const val DependencyVersion = "0.27.0"
 
         const val SystemRules = "1.19.0"
-        const val MockitoExt = "3.2.0"
+        const val MockitoExt = "3.2.4"
 
         // Docs
         const val Dokka = "0.10.0"
