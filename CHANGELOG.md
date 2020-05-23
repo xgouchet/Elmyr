@@ -1,5 +1,11 @@
 # Changelog
 
+### 1.?.? 
+
+#### `core`
+
+ - Fix float and double forgeries (they sometimes returned values out of the requested range)
+
 ### 1.0.0 (2020/02/17)
 
 #### `core`

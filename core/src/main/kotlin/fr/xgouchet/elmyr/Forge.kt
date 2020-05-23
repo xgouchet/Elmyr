@@ -203,7 +203,7 @@ open class Forge {
         } else {
             val trueGaussian = round((rng.nextGaussian() * standardDeviation)).toInt() + mean
             val maxDeviation = standardDeviation * MAX_DEVIATION_RATIO
-            max(min(trueGaussian, mean + maxDeviation), mean - maxDeviation)
+            trueGaussian.coerceIn(mean - maxDeviation, mean + maxDeviation)
         }
     }
 
@@ -272,7 +272,7 @@ open class Forge {
         } else {
             val trueGaussian = (rng.nextGaussian() * standardDeviation).roundToLong() + mean
             val maxDeviation = standardDeviation * MAX_DEVIATION_RATIO
-            max(min(trueGaussian, mean + maxDeviation), mean - maxDeviation)
+            trueGaussian.coerceIn(mean - maxDeviation, mean + maxDeviation)
         }
     }
 
@@ -290,15 +290,16 @@ open class Forge {
     fun aFloat(min: Float = -Float.MAX_VALUE, max: Float = Float.MAX_VALUE): Float {
         require(min <= max) {
             "The ‘min’ boundary ($min) of the range should be less than (or equal to) " +
-                    "the ‘max’ boundary ($max)"
+                "the ‘max’ boundary ($max)"
         }
 
         val range = max - min
-        return if (range == Float.POSITIVE_INFINITY) {
+        val trueRandom = if (range == Float.POSITIVE_INFINITY) {
             (rng.nextFloat() - HALF_PROBABILITY) * Float.MAX_VALUE * 2
         } else {
             (rng.nextFloat() * range) + min
         }
+        return trueRandom.coerceIn(min, max)
     }
 
     /**
@@ -344,7 +345,7 @@ open class Forge {
         } else {
             val trueGaussian = (rng.nextGaussian().toFloat() * standardDeviation) + mean
             val maxDeviation = standardDeviation * MAX_DEVIATION_RATIO
-            max(min(trueGaussian, mean + maxDeviation), mean - maxDeviation)
+            trueGaussian.coerceIn(mean - maxDeviation, mean + maxDeviation)
         }
     }
 
@@ -362,15 +363,16 @@ open class Forge {
     fun aDouble(min: Double = -Double.MAX_VALUE, max: Double = Double.MAX_VALUE): Double {
         require(min <= max) {
             "The ‘min’ boundary ($min) of the range should be less than (or equal to) " +
-                    "the ‘max’ boundary ($max)"
+                "the ‘max’ boundary ($max)"
         }
 
         val range = max - min
-        return if (range == Double.POSITIVE_INFINITY) {
+        val trueRandom = if (range == Double.POSITIVE_INFINITY) {
             (rng.nextDouble() - HALF_PROBABILITY) * Double.MAX_VALUE * 2
         } else {
             (rng.nextDouble() * range) + min
         }
+        return trueRandom.coerceIn(min, max)
     }
 
     /**
@@ -416,7 +418,7 @@ open class Forge {
         } else {
             val trueGaussian = (rng.nextGaussian() * standardDeviation) + mean
             val maxDeviation = standardDeviation * MAX_DEVIATION_RATIO
-            max(min(trueGaussian, mean + maxDeviation), mean - maxDeviation)
+            trueGaussian.coerceIn(mean - maxDeviation, mean + maxDeviation)
         }
     }
 
@@ -810,7 +812,7 @@ open class Forge {
 
             numberOfItemsToChooseFrom = inputSize - i
             val probabilityToSelectCurrent =
-                    numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
+                numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
             val randomProbability = rng.nextDouble()
 
             if (randomProbability < probabilityToSelectCurrent) {
@@ -853,7 +855,7 @@ open class Forge {
 
             numberOfItemsToChooseFrom = inputSize - i
             val probabilityToSelectCurrent =
-                    numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
+                numberOfItemsToSelect.toDouble() / numberOfItemsToChooseFrom.toDouble()
             val randomProbability = rng.nextDouble()
 
             if (randomProbability < probabilityToSelectCurrent) {
@@ -1028,10 +1030,13 @@ open class Forge {
         // Gaussians
         @JvmField
         internal val MEAN_THRESHOLD_INT = sqrt(Int.MAX_VALUE.toDouble()).roundToInt()
+
         @JvmField
         internal val MEAN_THRESHOLD_LONG = sqrt(Long.MAX_VALUE.toDouble()).roundToLong()
+
         @JvmField
         internal val MEAN_THRESHOLD_FLOAT = sqrt(Float.MAX_VALUE.toDouble()).toFloat()
+
         @JvmField
         internal val MEAN_THRESHOLD_DOUBLE = sqrt(Double.MAX_VALUE)
         internal const val MAX_DEVIATION_RATIO = 3
