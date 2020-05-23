@@ -5,6 +5,10 @@
 #### `core`
 
  - Fix float and double forgeries (they sometimes returned values out of the requested range)
+ 
+#### `inject`
+
+ - Add default String type (i.e.: `ALPHABETICAL`) to the `@StringForgery` annotation
 
 ### 1.0.0 (2020/02/17)
 
