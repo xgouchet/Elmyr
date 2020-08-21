@@ -18,7 +18,7 @@ class ForgeFactorySpek : Spek({
         var seed: Long
 
         beforeEachTest {
-            seed = System.nanoTime()
+            seed = Forge.seed()
             forge.seed = seed
         }
 

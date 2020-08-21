@@ -13,7 +13,7 @@ class ForgeLongSpek : Spek({
         val testRepeatCountSmall = 1024
 
         beforeEachTest {
-            seed = System.nanoTime()
+            seed = Forge.seed()
             forge.seed = seed
         }
 
