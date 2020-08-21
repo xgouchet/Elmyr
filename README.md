@@ -49,7 +49,7 @@ You can instantiate a `ForgeRule` instance, which extends the `Forge` class,
 add factories to it, and then annotate fields on your test class with `@Forgery`.
 
 ```kotlin
-class FoonTest {
+class FooTest {
 
     @Rule
     @JvmField
@@ -76,7 +76,7 @@ test methods.
 ```kotlin
 @ExtendWith(ForgeExtension::class)
 @ForgeConfiguration(KotlinAnnotationTest.Configurator::class)
-open class FooTest {
+internal class FooTest {
 
     @Forgery
     internal lateinit var fakeBar: Bar
@@ -91,9 +91,39 @@ open class FooTest {
 }
 ```
 
+
+
+### `spek` forgeries
+
+You can create a custom Forge instance with `spekForge` to be able to 
+add reproducibility to Spek tests.
+
+```kotlin
+class CalculatorSpek : Spek({
+
+    val forge = spekForge(
+        seeds = mapOf(
+            "CalculatorSpek/A calculator/addition/returns the sum of its arguments" to 0x1337L
+        )
+    )
+
+    describe("A calculator") {
+        val calculator by memoized { Calculator() }
+        
+        describe("addition") {
+            it("returns the sum of its arguments") {
+                val a = forge.anInt()
+                val b = forge.anInt()
+                assertEquals(calculator.add(a, b), a + b)
+            }
+        }
+    }
+})
+```
+
 ## Documentation
 
-The full documentation will be comming shortly
+The full documentation will be coming shortly
 
 ## Contributing 
 
@@ -101,7 +131,7 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
  - [x] All public classes, methods and fields must be documented
  - [x] All code must be unit tested (duh…)
- - [x] All code should be useable with and without the Android SDK, from Java and Kotlin
+ - [x] All code should be usable with and without the Android SDK, from Java and Kotlin
 
 ## Release History
 
