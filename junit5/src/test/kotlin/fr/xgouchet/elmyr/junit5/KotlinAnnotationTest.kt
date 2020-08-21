@@ -24,7 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(ForgeExtension::class)
 @ForgeConfiguration(KotlinAnnotationTest.Configurator::class)
-open class KotlinAnnotationTest {
+internal open class KotlinAnnotationTest {
 
     @Forgery
     lateinit var fakeFoo: Foo

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(ForgeExtension::class)
-open class KotlinAnnotationNoConfigTest {
+internal open class KotlinAnnotationNoConfigTest {
 
     // region Forge
 

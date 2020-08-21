@@ -14,7 +14,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnit
 import org.mockito.quality.Strictness
 
-class ForgeStatementTest {
+internal class ForgeStatementTest {
 
     @Rule @JvmField val forge = ForgeRule()
     @Rule @JvmField val mockito = MockitoJUnit.rule().strictness(Strictness.LENIENT)
