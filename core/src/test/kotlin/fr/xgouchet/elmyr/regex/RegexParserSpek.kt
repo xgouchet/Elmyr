@@ -15,7 +15,7 @@ class RegexParserSpek : Spek({
         val testRepeatCountSmall = 16
 
         beforeEachTest {
-            seed = System.nanoTime()
+            seed = Forge.seed()
             forge.seed = seed
         }
 

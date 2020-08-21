@@ -16,7 +16,7 @@ class ForgeCollectionSpek : Spek({
         val arraySize = 32 + forge.aTinyInt()
 
         beforeEachTest {
-            seed = System.nanoTime()
+            seed = Forge.seed()
             forge.seed = seed
         }
 

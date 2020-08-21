@@ -67,7 +67,7 @@ class ForgeRule(
     // region Internal
 
     private fun resetSeed() {
-        seed = if (ruleSeed == 0L) (System.nanoTime() and SEED_MASK) else ruleSeed
+        seed = if (ruleSeed == 0L) seed() else ruleSeed
     }
 
     // endregion

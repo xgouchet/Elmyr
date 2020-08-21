@@ -156,7 +156,7 @@ class ForgeExtension :
         val configurations = getConfigurations(context)
         val seed = configurations.map { it.seed }
                 .firstOrNull { it != 0L }
-        instanceForge.seed = seed ?: (System.nanoTime() and SEED_MASK)
+        instanceForge.seed = seed ?: Forge.seed()
     }
 
     private fun getConfigurations(context: ExtensionContext): List<ForgeConfiguration> {
@@ -191,9 +191,4 @@ class ForgeExtension :
 
     // endregion
 
-    companion object {
-        private val NAMESPACE = ExtensionContext.Namespace.create(ForgeExtension::class.java)
-
-        private const val SEED_MASK = 0x7FFFFFFFL
-    }
 }
