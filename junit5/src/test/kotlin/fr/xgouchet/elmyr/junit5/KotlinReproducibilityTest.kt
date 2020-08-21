@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(ForgeExtension::class)
 @ForgeConfiguration(value = KotlinReproducibilityTest.Configurator::class, seed = KotlinReproducibilityTest.SEED)
-class KotlinReproducibilityTest {
+internal class KotlinReproducibilityTest {
 
     @Forgery
     private lateinit var fakeFoo: Foo

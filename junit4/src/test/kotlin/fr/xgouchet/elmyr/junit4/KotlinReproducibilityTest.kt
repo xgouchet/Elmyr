@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class KotlinReproducibilityTest {
+internal class KotlinReproducibilityTest {
 
     @Rule
     @JvmField

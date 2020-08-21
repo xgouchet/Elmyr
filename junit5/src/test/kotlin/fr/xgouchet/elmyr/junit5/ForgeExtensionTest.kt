@@ -31,7 +31,7 @@ import org.mockito.quality.Strictness
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class ForgeExtensionTest {
+internal class ForgeExtensionTest {
 
     lateinit var testedExtension: ForgeExtension
 
@@ -399,7 +399,7 @@ class ForgeExtensionTest {
 }
 
 @Suppress("unused", "UNUSED_PARAMETER")
-class Reflekta(@Forgery s: String) {
+internal class Reflekta(@Forgery s: String) {
 
     fun withStringForgery(@Forgery s: String) {
     }

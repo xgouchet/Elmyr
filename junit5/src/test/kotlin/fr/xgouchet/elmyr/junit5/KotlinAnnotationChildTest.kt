@@ -5,7 +5,7 @@ import fr.xgouchet.elmyr.junit5.dummy.Foo
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class KotlinAnnotationChildTest : KotlinAnnotationTest() {
+internal class KotlinAnnotationChildTest : KotlinAnnotationTest() {
 
     @Test
     fun withForgeryFromParentClass(@Forgery foo: Foo) {
