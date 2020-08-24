@@ -135,22 +135,19 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Latest Release: `1.0.0` (2020/02/17)
+### Latest Release: `1.1.0` (2020/08/24)
 
 #### `core`
 
- - Add the List/Set kotlin delegate forgeries
- - Ensure gaussian forgeries stay within three time the standard deviation 
-
+ - Fix float and double forgeries (they sometimes returned values out of the requested range)
+ 
 #### `inject`
 
- - Handle primitives fields / properties annotated with `@XxxForgery`, as well 
-    as String fields/properties annotated with `@StringForgery` and `@RegexForgery`
+ - Add default String type (i.e.: `ALPHABETICAL`) to the `@StringForgery` annotationy
 
-#### `junit5`
+#### `spek`
 
- - Handle String forgeries injection annotated with `@StringForgery` and `@RegexForgery`
-
+ - Implement a `spekForge` helper method to add reproducibility in Spek tests
 
 ## Donate
 

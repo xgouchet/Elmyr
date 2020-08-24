@@ -1,6 +1,6 @@
 # Changelog
 
-### 1.?.? 
+### `1.1.0` (2020/08/24)
 
 #### `core`
 
@@ -9,6 +9,10 @@
 #### `inject`
 
  - Add default String type (i.e.: `ALPHABETICAL`) to the `@StringForgery` annotation
+ 
+#### `spek`
+
+ - Implement a `spekForge` helper method to add reproducibility in Spek tests
 
 ### 1.0.0 (2020/02/17)
 
