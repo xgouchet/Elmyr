@@ -51,8 +51,7 @@ add factories to it, and then annotate fields on your test class with `@Forgery`
 ```kotlin
 class FooTest {
 
-    @Rule
-    @JvmField
+    @get:Rule
     val forge = ForgeRule()
             .withFactory(FooFactory())
             .withFactory(BarFactory())

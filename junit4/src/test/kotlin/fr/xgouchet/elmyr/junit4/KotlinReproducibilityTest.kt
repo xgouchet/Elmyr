@@ -1,5 +1,7 @@
 package fr.xgouchet.elmyr.junit4
 
+import fr.xgouchet.elmyr.Forge
+import fr.xgouchet.elmyr.ForgeConfigurator
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.junit4.dummy.Bar
 import fr.xgouchet.elmyr.junit4.dummy.BarFactory
@@ -14,12 +16,11 @@ internal class KotlinReproducibilityTest {
 
     @Rule
     @JvmField
-    val forge = ForgeRule(SEED)
-            .withFactory(FooFactory())
-            .withFactory(BarFactory())
+    val forge = ForgeRule(SEED).apply { Configurator().configure(this) }
 
     @Forgery
     internal lateinit var fakeFoo: Foo
+
     @Forgery
     internal lateinit var fakeBar: Bar
 
@@ -49,6 +50,13 @@ internal class KotlinReproducibilityTest {
     }
 
     // endregion
+
+    class Configurator : ForgeConfigurator {
+        override fun configure(forge: Forge) {
+            forge.addFactory(FooFactory())
+            forge.addFactory(BarFactory())
+        }
+    }
 
     companion object {
         const val SEED = 0x3A563C60126L

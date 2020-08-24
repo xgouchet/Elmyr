@@ -33,7 +33,6 @@ commonConfig()
 
 githubWiki {
     types = listOf(
-            "fr.xgouchet.elmyr.junit5.ForgeExtension",
-            "fr.xgouchet.elmyr.junit5.ForgeConfiguration"
+            "fr.xgouchet.elmyr.spek.ForgeLifecycleListener"
     )
 }

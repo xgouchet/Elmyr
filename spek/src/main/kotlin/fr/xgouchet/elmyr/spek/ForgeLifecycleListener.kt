@@ -100,7 +100,7 @@ class ForgeLifecycleListener(
     }
 
     companion object {
-        const val TEST_FAIL_MESSAGE = "<%s> failed with Forge seed 0x%xL\n" +
+        private const val TEST_FAIL_MESSAGE = "<%s> failed with Forge seed 0x%xL\n" +
             "Add the following seeds to your Spek class :\n\n" +
             "\tval forge = spekForge(\n" +
             "\t\tmapOf(\n" +
