@@ -2,35 +2,17 @@ package fr.xgouchet.elmyr.junit5.params
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.IntForgery
-import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ParameterContext
 
 internal class IntForgeryParamResolver :
-        ForgeryResolver {
+    PrimitiveForgeryParamResolver<IntForgery>(
+        java.lang.Integer.TYPE,
+        java.lang.Integer::class.java,
+        IntForgery::class.java
+    ) {
 
-    /** @inheritdoc */
-    override fun supportsParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
-    ): Boolean {
-        val annotated = parameterContext.isAnnotated(IntForgery::class.java)
-        return if (annotated) {
-            check(parameterContext.parameter.type == Int::class.java) {
-                "@IntForgery can only be used on a Java int or Integer, or a Kotlin Int"
-            }
-            true
-        } else {
-            false
-        }
-    }
+    // region PrimitiveForgeryParamResolver
 
-    /** @inheritdoc */
-    override fun resolveParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext,
-        forge: Forge
-    ): Any? {
-        val annotation = parameterContext.findAnnotation(IntForgery::class.java).get()
+    override fun forgePrimitive(annotation: IntForgery, forge: Forge): Any? {
         return if (annotation.standardDeviation >= 0) {
             check(annotation.min == Int.MIN_VALUE) {
                 "You can only use an IntForgery with min and max or with mean and standardDeviation"
@@ -46,4 +28,6 @@ internal class IntForgeryParamResolver :
             forge.anInt(annotation.min, annotation.max)
         }
     }
+
+    // endregion
 }

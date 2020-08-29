@@ -2,35 +2,17 @@ package fr.xgouchet.elmyr.junit5.params
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.BoolForgery
-import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ParameterContext
 
 internal class BooleanForgeryParamResolver :
-        ForgeryResolver {
+    PrimitiveForgeryParamResolver<BoolForgery>(
+        java.lang.Boolean.TYPE,
+        java.lang.Boolean::class.java,
+        BoolForgery::class.java
+    ) {
 
-    /** @inheritdoc */
-    override fun supportsParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
-    ): Boolean {
-        val annotated = parameterContext.isAnnotated(BoolForgery::class.java)
-        return if (annotated) {
-            check(parameterContext.parameter.type == Boolean::class.java) {
-                "@BoolForgery can only be used on a Java bool or Boolean, or a Kotlin Boolean"
-            }
-            true
-        } else {
-            false
-        }
-    }
+    // region PrimitiveForgeryParamResolver
 
-    /** @inheritdoc */
-    override fun resolveParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext,
-        forge: Forge
-    ): Any? {
-        val annotation = parameterContext.findAnnotation(BoolForgery::class.java).get()
+    override fun forgePrimitive(annotation: BoolForgery, forge: Forge): Any? {
         check(annotation.probability >= 0f) {
             "You can only use an BoolForgery with a probability between 0f and 1f"
         }
@@ -39,4 +21,6 @@ internal class BooleanForgeryParamResolver :
         }
         return forge.aBool(annotation.probability)
     }
+
+    // endregion
 }

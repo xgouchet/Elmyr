@@ -10,12 +10,13 @@ import fr.xgouchet.elmyr.annotation.FloatForgery
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.annotation.LongForgery
+import fr.xgouchet.elmyr.annotation.RegexForgery
+import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.junit5.dummy.Foo
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.PrintStream
 import java.lang.reflect.Method
-import kotlin.Comparator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -37,8 +38,10 @@ internal class ForgeExtensionTest {
 
     @Mock
     lateinit var mockExtensionContext: ExtensionContext
+
     @Mock
     lateinit var mockParameterContext: ParameterContext
+
     @Mock
     lateinit var mockTarget: Any
 
@@ -84,8 +87,80 @@ internal class ForgeExtensionTest {
     }
 
     @Test
+    fun `supportsParameter with BoolForgery {List}`() {
+        prepareContext("withBoolList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with BoolForgery {Set}`() {
+        prepareContext("withBoolSet")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with BoolForgery {Collection}`() {
+        prepareContext("withBoolCollection")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with BoolForgery {NestedList}`() {
+        prepareContext("withBoolNestedList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
     fun `supportsParameter with IntForgery`() {
         prepareContext("withInt")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with IntForgery {List}`() {
+        prepareContext("withIntList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with IntForgery {Set}`() {
+        prepareContext("withIntSet")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with IntForgery {Collection}`() {
+        prepareContext("withIntCollection")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with IntForgery {NestedList}`() {
+        prepareContext("withIntNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -102,6 +177,42 @@ internal class ForgeExtensionTest {
     }
 
     @Test
+    fun `supportsParameter with LongForgery {List}`() {
+        prepareContext("withLongList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with LongForgery {Set}`() {
+        prepareContext("withLongSet")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with LongForgery {Collection}`() {
+        prepareContext("withLongCollection")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with LongForgery {NestedList}`() {
+        prepareContext("withLongNestedList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
     fun `supportsParameter with FloatForgery`() {
         prepareContext("withFloat")
 
@@ -111,8 +222,170 @@ internal class ForgeExtensionTest {
     }
 
     @Test
+    fun `supportsParameter with FloatForgery {List}`() {
+        prepareContext("withFloatList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with FloatForgery {Set}`() {
+        prepareContext("withFloatSet")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with FloatForgery {Collection}`() {
+        prepareContext("withFloatCollection")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with FloatForgery {NestedList}`() {
+        prepareContext("withFloatNestedList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
     fun `supportsParameter with DoubleForgery`() {
         prepareContext("withDouble")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with DoubleForgery {List}`() {
+        prepareContext("withDoubleList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with DoubleForgery {Set}`() {
+        prepareContext("withDoubleSet")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with DoubleForgery {Collection}`() {
+        prepareContext("withDoubleCollection")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with DoubleForgery {NestedList}`() {
+        prepareContext("withDoubleNestedList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with StringForgery`() {
+        prepareContext("withString")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with StringForgery {List}`() {
+        prepareContext("withStringList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with StringForgery {Set}`() {
+        prepareContext("withStringSet")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with StringForgery {Collection}`() {
+        prepareContext("withStringCollection")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with StringForgery {NestedList}`() {
+        prepareContext("withStringNestedList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with RegexForgery`() {
+        prepareContext("withRegex")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with RegexForgery {List}`() {
+        prepareContext("withRegexList")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with RegexForgery {Set}`() {
+        prepareContext("withRegexSet")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with RegexForgery {Collection}`() {
+        prepareContext("withRegexCollection")
+
+        val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `supportsParameter with RegexForgery {NestedList}`() {
+        prepareContext("withRegexNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -149,7 +422,7 @@ internal class ForgeExtensionTest {
     }
 
     @Test
-    fun `supportsParameter Fails on BoolForger param not Bool`() {
+    fun `supportsParameter Fails on BoolForgery param not Bool`() {
         prepareContext("withNotBool")
 
         assertThrows<IllegalStateException> {
@@ -193,9 +466,355 @@ internal class ForgeExtensionTest {
         }
     }
 
+    @Test
+    fun `supportsParameter Fails on StringForgery param not String`() {
+        prepareContext("withNotString")
+
+        assertThrows<IllegalStateException> {
+            testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+        }
+    }
+
+    @Test
+    fun `supportsParameter Fails on RegexForgery param not Regex`() {
+        prepareContext("withNotRegex")
+
+        assertThrows<IllegalStateException> {
+            testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
+        }
+    }
+
     // endregion
 
     // region ParameterResolver.resolveParameter
+
+    @Test
+    fun `resolveParameter {Forge}`() {
+        prepareContext("withForge")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).isSameAs(testedExtension.instanceForge)
+    }
+
+    @Test
+    fun `resolveParameter {Bool}`() {
+        prepareContext("withBool")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is Boolean }
+    }
+
+    @Test
+    fun `resolveParameter {Bool list}`() {
+        prepareContext("withBoolList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is Boolean }
+    }
+
+    @Test
+    fun `resolveParameter {Bool set}`() {
+        prepareContext("withBoolSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is Boolean }
+    }
+
+    @Test
+    fun `resolveParameter {Bool collection}`() {
+        prepareContext("withBoolCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is Boolean }
+    }
+
+    @Test
+    fun `resolveParameter {Bool nested list}`() {
+        prepareContext("withBoolNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch { it is Set<*> && it.all { b -> b is Boolean } }
+    }
+
+    @Test
+    fun `resolveParameter {Int}`() {
+        prepareContext("withInt")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is Int }
+    }
+
+    @Test
+    fun `resolveParameter {Int list}`() {
+        prepareContext("withIntList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is Int }
+    }
+
+    @Test
+    fun `resolveParameter {Int set}`() {
+        prepareContext("withIntSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is Int }
+    }
+
+    @Test
+    fun `resolveParameter {Int collection}`() {
+        prepareContext("withIntCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is Int }
+    }
+
+    @Test
+    fun `resolveParameter {Int nested list}`() {
+        prepareContext("withIntNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch { it is Set<*> && it.all { b -> b is Int } }
+    }
+
+    @Test
+    fun `resolveParameter {Long}`() {
+        prepareContext("withLong")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is Long }
+    }
+
+    @Test
+    fun `resolveParameter {Long list}`() {
+        prepareContext("withLongList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is Long }
+    }
+
+    @Test
+    fun `resolveParameter {Long set}`() {
+        prepareContext("withLongSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is Long }
+    }
+
+    @Test
+    fun `resolveParameter {Long collection}`() {
+        prepareContext("withLongCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is Long }
+    }
+
+    @Test
+    fun `resolveParameter {Long nested list}`() {
+        prepareContext("withLongNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch { it is Set<*> && it.all { b -> b is Long } }
+    }
+
+    @Test
+    fun `resolveParameter {Float}`() {
+        prepareContext("withFloat")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is Float }
+    }
+
+    @Test
+    fun `resolveParameter {Float list}`() {
+        prepareContext("withFloatList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is Float }
+    }
+
+    @Test
+    fun `resolveParameter {Float set}`() {
+        prepareContext("withFloatSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is Float }
+    }
+
+    @Test
+    fun `resolveParameter {Float collection}`() {
+        prepareContext("withFloatCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is Float }
+    }
+
+    @Test
+    fun `resolveParameter {Float nested list}`() {
+        prepareContext("withFloatNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch { it is Set<*> && it.all { b -> b is Float } }
+    }
+
+    @Test
+    fun `resolveParameter {Double}`() {
+        prepareContext("withDouble")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is Double }
+    }
+
+    @Test
+    fun `resolveParameter {Double list}`() {
+        prepareContext("withDoubleList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is Double }
+    }
+
+    @Test
+    fun `resolveParameter {Double set}`() {
+        prepareContext("withDoubleSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is Double }
+    }
+
+    @Test
+    fun `resolveParameter {Double collection}`() {
+        prepareContext("withDoubleCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is Double }
+    }
+
+    @Test
+    fun `resolveParameter {Double nested list}`() {
+        prepareContext("withDoubleNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch { it is Set<*> && it.all { b -> b is Double } }
+    }
+
+    @Test
+    fun `resolveParameter {String}`() {
+        prepareContext("withString")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is String }
+    }
+
+    @Test
+    fun `resolveParameter {String list}`() {
+        prepareContext("withStringList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is String }
+    }
+
+    @Test
+    fun `resolveParameter {String set}`() {
+        prepareContext("withStringSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is String }
+    }
+
+    @Test
+    fun `resolveParameter {String collection}`() {
+        prepareContext("withStringCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is String }
+    }
+
+    @Test
+    fun `resolveParameter {String nested list}`() {
+        prepareContext("withStringNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch { it is Set<*> && it.all { b -> b is String } }
+    }
+
+    @Test
+    fun `resolveParameter {Regex}`() {
+        prepareContext("withRegex")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is String }
+    }
+
+    @Test
+    fun `resolveParameter {Regex list}`() {
+        prepareContext("withRegexList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is String }
+    }
+
+    @Test
+    fun `resolveParameter {Regex set}`() {
+        prepareContext("withRegexSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is String }
+    }
+
+    @Test
+    fun `resolveParameter {Regex collection}`() {
+        prepareContext("withRegexCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is String }
+    }
+
+    @Test
+    fun `resolveParameter {Regex nested list}`() {
+        prepareContext("withRegexNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch { it is Set<*> && it.all { b -> b is String } }
+    }
+
+    // endregion
+
+    // region ParameterResolver.resolveParameter (failing)
 
     @Test
     fun `resolveParameter Fails on unknown parameterized type`() {
@@ -207,7 +826,7 @@ internal class ForgeExtensionTest {
     }
 
     @Test
-    fun `resolveParameter Fails on BoolForgery param invalid min + stDev`() {
+    fun `resolveParameter Fails on BoolForgery param invalid probability lt 0`() {
         prepareContext("withBoolInvalid1")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
@@ -215,7 +834,7 @@ internal class ForgeExtensionTest {
     }
 
     @Test
-    fun `resolveParameter Fails on BoolForgery param invalid max + stDev`() {
+    fun `resolveParameter Fails on BoolForgery param invalid probability gt 1`() {
         prepareContext("withBoolInvalid2")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
@@ -362,8 +981,8 @@ internal class ForgeExtensionTest {
 
         val caught: Throwable? = try {
             testedExtension.handleTestExecutionException(
-                    mockExtensionContext,
-                    thrown
+                mockExtensionContext,
+                thrown
             )
             null
         } catch (e: IOException) {
@@ -374,14 +993,14 @@ internal class ForgeExtensionTest {
 
         val forge = testedExtension.instanceForge
         assertThat(errStreamContent.toString())
-                .isEqualTo(
-                        "<${mockTarget.javaClass.simpleName}.${fakeMethod.name}()> failed " +
-                                "with Forge seed 0x${forge.seed.toString(16)}L\n" +
-                                "Add the following @ForgeConfiguration annotation to your test class :\n" +
-                                "\n" +
-                                "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
-                                "\n"
-                )
+            .isEqualTo(
+                "<${mockTarget.javaClass.simpleName}.${fakeMethod.name}()> failed " +
+                    "with Forge seed 0x${forge.seed.toString(16)}L\n" +
+                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                    "\n" +
+                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                    "\n"
+            )
     }
 
     // endregion
@@ -424,6 +1043,18 @@ internal class Reflekta(@Forgery s: String) {
     fun withBoolInvalid2(@BoolForgery(probability = 2f) b: Boolean) {
     }
 
+    fun withBoolList(@BoolForgery b: List<Boolean>) {
+    }
+
+    fun withBoolSet(@BoolForgery b: Set<Boolean>) {
+    }
+
+    fun withBoolCollection(@BoolForgery b: Collection<Boolean>) {
+    }
+
+    fun withBoolNestedList(@BoolForgery b: List<Set<Boolean>>) {
+    }
+
     // endregion 
 
     // region int
@@ -444,6 +1075,18 @@ internal class Reflekta(@Forgery s: String) {
     }
 
     fun withIntInvalid4(@IntForgery(max = 0, mean = 10) i: Int) {
+    }
+
+    fun withIntList(@IntForgery b: List<Int>) {
+    }
+
+    fun withIntSet(@IntForgery b: Set<Int>) {
+    }
+
+    fun withIntCollection(@IntForgery b: Collection<Int>) {
+    }
+
+    fun withIntNestedList(@IntForgery b: List<Set<Int>>) {
     }
 
     // endregion 
@@ -468,6 +1111,18 @@ internal class Reflekta(@Forgery s: String) {
     fun withLongInvalid4(@LongForgery(max = 0L, mean = 10L) l: Long) {
     }
 
+    fun withLongList(@LongForgery b: List<Long>) {
+    }
+
+    fun withLongSet(@LongForgery b: Set<Long>) {
+    }
+
+    fun withLongCollection(@LongForgery b: Collection<Long>) {
+    }
+
+    fun withLongNestedList(@LongForgery b: List<Set<Long>>) {
+    }
+
     // endregion 
 
     // region float
@@ -488,6 +1143,18 @@ internal class Reflekta(@Forgery s: String) {
     }
 
     fun withFloatInvalid4(@FloatForgery(max = 0f, mean = 10F) f: Float) {
+    }
+
+    fun withFloatList(@FloatForgery b: List<Float>) {
+    }
+
+    fun withFloatSet(@FloatForgery b: Set<Float>) {
+    }
+
+    fun withFloatCollection(@FloatForgery b: Collection<Float>) {
+    }
+
+    fun withFloatNestedList(@FloatForgery b: List<Set<Float>>) {
     }
 
     // endregion 
@@ -512,7 +1179,63 @@ internal class Reflekta(@Forgery s: String) {
     fun withDoubleInvalid4(@DoubleForgery(max = 0.0, mean = 10.0) d: Double) {
     }
 
-    // endregion 
+    fun withDoubleList(@DoubleForgery b: List<Double>) {
+    }
+
+    fun withDoubleSet(@DoubleForgery b: Set<Double>) {
+    }
+
+    fun withDoubleCollection(@DoubleForgery b: Collection<Double>) {
+    }
+
+    fun withDoubleNestedList(@DoubleForgery b: List<Set<Double>>) {
+    }
+
+    // endregion
+
+    // region string
+
+    fun withString(@StringForgery s: String) {
+    }
+
+    fun withNotString(@StringForgery b: Boolean) {
+    }
+
+    fun withStringList(@StringForgery b: List<String>) {
+    }
+
+    fun withStringSet(@StringForgery b: Set<String>) {
+    }
+
+    fun withStringCollection(@StringForgery b: Collection<String>) {
+    }
+
+    fun withStringNestedList(@StringForgery b: List<Set<String>>) {
+    }
+
+    // endregion
+
+    // region Regex
+
+    fun withRegex(@RegexForgery("[a-z]+") s: String) {
+    }
+
+    fun withNotRegex(@RegexForgery("[a-z]+") f: Float) {
+    }
+
+    fun withRegexList(@RegexForgery("[a-z]+") b: List<String>) {
+    }
+
+    fun withRegexSet(@RegexForgery("[a-z]+") b: Set<String>) {
+    }
+
+    fun withRegexCollection(@RegexForgery("[a-z]+") b: Collection<String>) {
+    }
+
+    fun withRegexNestedList(@RegexForgery("[a-z]+") b: List<Set<String>>) {
+    }
+
+    // endregion
 
     fun withParameterized(@Forgery c: Comparator<Foo>) {
     }

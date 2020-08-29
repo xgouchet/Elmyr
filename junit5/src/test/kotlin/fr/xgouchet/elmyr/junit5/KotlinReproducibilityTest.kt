@@ -20,6 +20,7 @@ internal class KotlinReproducibilityTest {
 
     @Forgery
     private lateinit var fakeFoo: Foo
+
     @Forgery
     private lateinit var fakeBar: Bar
 
@@ -64,6 +65,7 @@ internal class KotlinReproducibilityTest {
             forge.addFactory(Bar::class.java, BarFactory())
         }
     }
+
     companion object {
         const val SEED = 0xD774670189EL
     }

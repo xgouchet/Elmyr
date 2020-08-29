@@ -2,35 +2,17 @@ package fr.xgouchet.elmyr.junit5.params
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.FloatForgery
-import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ParameterContext
 
 internal class FloatForgeryParamResolver :
-        ForgeryResolver {
+    PrimitiveForgeryParamResolver<FloatForgery>(
+        java.lang.Float.TYPE,
+        java.lang.Float::class.java,
+        FloatForgery::class.java
+    ) {
 
-    /** @inheritdoc */
-    override fun supportsParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
-    ): Boolean {
-        val annotated = parameterContext.isAnnotated(FloatForgery::class.java)
-        return if (annotated) {
-            check(parameterContext.parameter.type == Float::class.java) {
-                "@FloatForgery can only be used on a Java float or Float, or a Kotlin Float"
-            }
-            true
-        } else {
-            false
-        }
-    }
+    // region PrimitiveForgeryParamResolver
 
-    /** @inheritdoc */
-    override fun resolveParameter(
-        parameterContext: ParameterContext,
-        extensionContext: ExtensionContext,
-        forge: Forge
-    ): Any? {
-        val annotation = parameterContext.findAnnotation(FloatForgery::class.java).get()
+    override fun forgePrimitive(annotation: FloatForgery, forge: Forge): Any? {
         return if (!annotation.standardDeviation.isNaN()) {
             check(annotation.min == -Float.MAX_VALUE) {
                 "You can only use an FloatForgery with min and max or with mean and standardDeviation"
@@ -46,4 +28,6 @@ internal class FloatForgeryParamResolver :
             forge.aFloat(annotation.min, annotation.max)
         }
     }
+
+    // endregion
 }
