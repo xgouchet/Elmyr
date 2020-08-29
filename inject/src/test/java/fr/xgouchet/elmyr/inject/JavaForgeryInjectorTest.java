@@ -103,6 +103,35 @@ class JavaForgeryInjectorTest {
         assertThat(injected.privateFooCollection).isNotNull().isNotEmpty();
     }
 
+    @Test
+    void injectsPrimitives(){
+        JavaInjectedPrimitives injected = new JavaInjectedPrimitives();
+
+        injector.inject(forge, injected);
+
+        assertThat(injected.publicInt).isNotEqualTo(0);
+        assertThat(injected.publicLong).isNotEqualTo(0L);
+        assertThat(injected.publicFloat).isNotEqualTo(0f);
+        assertThat(injected.publicDouble).isNotEqualTo(0.0);
+
+        assertThat(injected.publicIntList).isNotEmpty();
+        assertThat(injected.publicLongSet).isNotEmpty();
+        assertThat(injected.publicFloatCollection).isNotEmpty();
+        assertThat(injected.publicDoubleSetList).isNotEmpty();
+    }
+
+    @Test
+    void injectsStrings(){
+        JavaInjectedStrings injected = new JavaInjectedStrings();
+
+        injector.inject(forge, injected);
+
+        assertThat(injected.publicHexaString).matches("[0-9a-zA-z]+");
+        assertThat(injected.publicNumericalStringSet).isNotEmpty();
+        assertThat(injected.publicRegex).matches("[abc]+");
+        assertThat(injected.publicUUIDList).isNotEmpty();
+    }
+
     @Test()
     void failsWhenMissingFactory() {
         JavaInjectedMissingFactory injected = new JavaInjectedMissingFactory();

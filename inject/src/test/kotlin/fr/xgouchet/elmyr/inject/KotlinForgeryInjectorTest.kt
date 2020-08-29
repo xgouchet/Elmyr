@@ -17,6 +17,7 @@ import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedRegex
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedStrings
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedUnknownAnnotation
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedUnknownGeneric
+import org.assertj.core.api.AbstractAssert
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
 import org.junit.jupiter.api.BeforeEach
@@ -80,16 +81,16 @@ class KotlinForgeryInjectorTest {
         injector.inject(forge, injected)
 
         assertThat(injected.publicFoo)
-                .isNotSameAs(injected.internalFoo)
-                .isNotSameAs(injected.retrieveProtectedFoo())
-                .isNotSameAs(injected.retrievePrivateFoo())
+            .isNotSameAs(injected.internalFoo)
+            .isNotSameAs(injected.retrieveProtectedFoo())
+            .isNotSameAs(injected.retrievePrivateFoo())
 
         assertThat(injected.internalFoo)
-                .isNotSameAs(injected.retrieveProtectedFoo())
-                .isNotSameAs(injected.retrievePrivateFoo())
+            .isNotSameAs(injected.retrieveProtectedFoo())
+            .isNotSameAs(injected.retrievePrivateFoo())
 
         assertThat(injected.retrieveProtectedFoo())
-                .isNotSameAs(injected.retrievePrivateFoo())
+            .isNotSameAs(injected.retrievePrivateFoo())
     }
 
     @Test
@@ -163,6 +164,17 @@ class KotlinForgeryInjectorTest {
     }
 
     @Test
+    fun injectPrimitiveBoolean() {
+        val injected = KotlinInjectedPrimitives()
+
+        injector.inject(forge, injected)
+
+        assertThat(injected.publicBoolList).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicBoolSet).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicBoolCollection).isNotEmpty().hasDistinctValues()
+    }
+
+    @Test
     fun injectPrimitiveInt() {
         val injected = KotlinInjectedPrimitives()
 
@@ -174,6 +186,9 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.internalInt).isNotEqualTo(0)
         assertThat(injected.retrieveProtectedInt()).isNotEqualTo(0)
         assertThat(injected.retrievePrivateInt()).isNotEqualTo(0)
+        assertThat(injected.publicIntList).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicIntSet).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicIntCollection).isNotEmpty().hasDistinctValues()
     }
 
     @Test
@@ -188,6 +203,9 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.internalLong).isNotEqualTo(0)
         assertThat(injected.retrieveProtectedLong()).isNotEqualTo(0)
         assertThat(injected.retrievePrivateLong()).isNotEqualTo(0)
+        assertThat(injected.publicLongList).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicLongSet).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicLongCollection).isNotEmpty().hasDistinctValues()
     }
 
     @Test
@@ -202,6 +220,9 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.internalFloat).isNotEqualTo(0)
         assertThat(injected.retrieveProtectedFloat()).isNotEqualTo(0)
         assertThat(injected.retrievePrivateFloat()).isNotEqualTo(0)
+        assertThat(injected.publicFloatList).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicFloatSet).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicFloatCollection).isNotEmpty().hasDistinctValues()
     }
 
     @Test
@@ -216,6 +237,9 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.internalDouble).isNotEqualTo(0)
         assertThat(injected.retrieveProtectedDouble()).isNotEqualTo(0)
         assertThat(injected.retrievePrivateDouble()).isNotEqualTo(0)
+        assertThat(injected.publicDoubleList).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicDoubleSet).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicDoubleCollection).isNotEmpty().hasDistinctValues()
     }
 
     @Test
@@ -231,6 +255,16 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.publicDigitsString).matches("[0-9]+")
         assertThat(injected.retrieveProtectedHexString()).matches("[a-fA-F0-9]+")
         assertThat(injected.retrievePrivateWhitespaceString()).matches("\\s+")
+
+        assertThat(injected.publicAlphaStringList).isNotEmpty()
+            .hasDistinctValues()
+            .allMatch { it.matches(Regex("[a-zA-Z]+")) }
+        assertThat(injected.publicHexaStringSet.toList()).isNotEmpty()
+            .hasDistinctValues()
+            .allMatch { it.matches(Regex("[a-fA-F0-9]+")) }
+        assertThat(injected.publicNumStringCollection.toList()).isNotEmpty()
+            .hasDistinctValues()
+            .allMatch { it.matches(Regex("[0-9]+")) }
     }
 
     @Test
@@ -243,5 +277,19 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.internalDigitsString).matches("[0-9]+")
         assertThat(injected.retrieveProtectedBase64String()).matches("([a-zA-z0-9]{4})*[a-zA-z0-9]{2}==")
         assertThat(injected.retrievePrivatePhoneNumber()).matches("0\\d(-\\d\\d){4}")
+    }
+}
+
+private fun <
+    SELF : AbstractAssert<SELF, ACTUAL>,
+    ACTUAL : Collection<T>,
+    T : Comparable<T>
+    > AbstractAssert<SELF, ACTUAL>.hasDistinctValues(minLength: Int = 3): SELF {
+    return matches {
+        if (it.size > minLength) {
+            it.sorted().distinct().size > 1
+        } else {
+            true
+        }
     }
 }

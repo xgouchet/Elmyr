@@ -33,6 +33,13 @@ open class KotlinInjectedStrings {
     @StringForgery(StringForgeryType.WHITESPACE)
     private lateinit var privateWhitespaceString: String
 
+    @StringForgery
+    lateinit var publicAlphaStringList: List<String>
+    @StringForgery(StringForgeryType.HEXADECIMAL)
+    lateinit var publicHexaStringSet: Set<String>
+    @StringForgery(StringForgeryType.NUMERICAL)
+    lateinit var publicNumStringCollection: Collection<String>
+
     fun retrieveProtectedHexString(): String = protectedHexString
 
     fun retrievePrivateWhitespaceString(): String {

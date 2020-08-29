@@ -1,5 +1,11 @@
 # Changelog
 
+### `1.2.0` (2020/??/??)
+
+#### `inject`
+
+ - Allow injecting collections of primitives with `@BoolForgery`, `@IntForgery`, `@LongForgery`, `@FloatForgery`, `@DoubleForgery`, as well as `@StringForgery` and `RegexForgery`
+
 ### `1.1.0` (2020/08/24)
 
 #### `core`

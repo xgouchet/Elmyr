@@ -37,7 +37,7 @@ class ForgeryInjectorException(
         ) = ForgeryInjectorException(
                 "Impossible to inject forgery in class " +
                         "'${target.javaClass.canonicalName}' because of the following errors :\n\t" +
-                        throwables.joinToString("\n\t") { it.message ?: it.javaClass.canonicalName }
+                        throwables.joinToString("\n\t") { "${it.javaClass.canonicalName}: ${it.message} ${it.stackTrace.joinToString("\n\t\t")}" }
         )
     }
 }
