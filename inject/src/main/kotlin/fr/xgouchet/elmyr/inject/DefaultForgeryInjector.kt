@@ -1,6 +1,7 @@
 package fr.xgouchet.elmyr.inject
 
 import fr.xgouchet.elmyr.Forge
+import fr.xgouchet.elmyr.annotation.AdvancedForgery
 import fr.xgouchet.elmyr.annotation.BoolForgery
 import fr.xgouchet.elmyr.annotation.DoubleForgery
 import fr.xgouchet.elmyr.annotation.FloatForgery
@@ -68,7 +69,8 @@ class DefaultForgeryInjector : ForgeryInjector {
                         annotation is FloatForgery ||
                         annotation is DoubleForgery ||
                         annotation is StringForgery ||
-                        annotation is RegexForgery
+                        annotation is RegexForgery ||
+                        annotation is AdvancedForgery
                 }
             }
         when (invalidProperties.size) {
@@ -112,6 +114,7 @@ class DefaultForgeryInjector : ForgeryInjector {
                 is DoubleForgery -> processPropertyWithDoubleForgery(forge, annotation, property, target)
                 is StringForgery -> processPropertyWithStringForgery(forge, annotation, property, target)
                 is RegexForgery -> processPropertyWithRegexForgery(forge, annotation, property, target)
+                is AdvancedForgery -> processPropertyWithAdvancedForgery(forge, annotation, property, target)
             }
         }
     }
@@ -288,6 +291,30 @@ class DefaultForgeryInjector : ForgeryInjector {
             target,
             forgePrimitiveProperty(property.returnType, String::class, forge, forgery)
         )
+    }
+
+    private fun processPropertyWithAdvancedForgery(
+        forge: Forge,
+        annotation: AdvancedForgery,
+        property: KMutableProperty<*>,
+        target: Any
+    ) {
+        if (annotation.string.isNotEmpty()) {
+            val usingAnnotation = forge.anElementFrom(*annotation.string)
+            processPropertyWithStringForgery(forge, usingAnnotation, property, target)
+        } else if (annotation.int.isNotEmpty()) {
+            val usingAnnotation = forge.anElementFrom(*annotation.int)
+            processPropertyWithIntForgery(forge, usingAnnotation, property, target)
+        } else if (annotation.long.isNotEmpty()) {
+            val usingAnnotation = forge.anElementFrom(*annotation.long)
+            processPropertyWithLongForgery(forge, usingAnnotation, property, target)
+        } else if (annotation.float.isNotEmpty()) {
+            val usingAnnotation = forge.anElementFrom(*annotation.float)
+            processPropertyWithFloatForgery(forge, usingAnnotation, property, target)
+        } else if (annotation.double.isNotEmpty()) {
+            val usingAnnotation = forge.anElementFrom(*annotation.double)
+            processPropertyWithDoubleForgery(forge, usingAnnotation, property, target)
+        }
     }
 
     private fun forgeProperty(type: KType, forge: Forge): Any? {

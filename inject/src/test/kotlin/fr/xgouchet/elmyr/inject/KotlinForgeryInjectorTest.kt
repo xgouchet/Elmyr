@@ -7,6 +7,7 @@ import fr.xgouchet.elmyr.inject.dummy.BarFactory
 import fr.xgouchet.elmyr.inject.dummy.Foo
 import fr.xgouchet.elmyr.inject.dummy.FooFactory
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjected
+import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedAdvanced
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedChild
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedGenerics
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedImmutableVal
@@ -17,6 +18,7 @@ import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedRegex
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedStrings
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedUnknownAnnotation
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedUnknownGeneric
+import kotlin.math.abs
 import org.assertj.core.api.AbstractAssert
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
@@ -277,6 +279,23 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.internalDigitsString).matches("[0-9]+")
         assertThat(injected.retrieveProtectedBase64String()).matches("([a-zA-z0-9]{4})*[a-zA-z0-9]{2}==")
         assertThat(injected.retrievePrivatePhoneNumber()).matches("0\\d(-\\d\\d){4}")
+    }
+
+    @Test
+    fun injectAdvanced() {
+        val injected = KotlinInjectedAdvanced()
+
+        injector.inject(forge, injected)
+
+        assertThat(injected.publicAlphaOrNumString).matches("([a-zA-Z]+)|([0-9]+)")
+        assertThat(injected.publicMultipleRangesInt).matches { it in 20..30 || it in 100..110 }
+        assertThat(injected.publicMultipleMeansInt).matches { abs(abs(it) - 100) <= 30 }
+        assertThat(injected.publicMultipleRangesLong).matches { it in 20L..30L || it in 100L..110L }
+        assertThat(injected.publicMultipleMeansLong).matches { abs(abs(it) - 100L) <= 30L }
+        assertThat(injected.publicMultipleRangesFloat).matches { it in 20f..30f || it in 100f..110f }
+        assertThat(injected.publicMultipleMeansFloat).matches { abs(abs(it) - 100f) <= 30f }
+        assertThat(injected.publicMultipleRangesDouble).matches { it in 20.0..30.0 || it in 100.0..110.0 }
+        assertThat(injected.publicMultipleMeansDouble).matches { abs(abs(it) - 100.0) <= 30.0 }
     }
 }
 

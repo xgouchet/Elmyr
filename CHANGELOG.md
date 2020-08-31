@@ -5,6 +5,7 @@
 #### `inject`
 
  - Allow injecting collections of primitives with `@BoolForgery`, `@IntForgery`, `@LongForgery`, `@FloatForgery`, `@DoubleForgery`, as well as `@StringForgery` and `RegexForgery`
+ - Allow advanced injection using `@AdvancedForgery`
  
 #### `junit5`
 
