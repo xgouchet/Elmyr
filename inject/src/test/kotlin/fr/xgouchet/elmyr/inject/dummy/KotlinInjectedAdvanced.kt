@@ -81,4 +81,7 @@ class KotlinInjectedAdvanced {
         ]
     )
     var publicMultipleMeansDouble: Double = 0.0
+
+    @AdvancedForgery
+    lateinit var publicGeneric: Foo
 }

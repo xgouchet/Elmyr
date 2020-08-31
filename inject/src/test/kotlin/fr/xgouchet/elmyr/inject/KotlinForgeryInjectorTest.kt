@@ -12,6 +12,7 @@ import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedChild
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedGenerics
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedImmutableVal
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedInvalidPrimitives
+import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedMap
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedMissingFactory
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedPrimitives
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedRegex
@@ -296,6 +297,32 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.publicMultipleMeansFloat).matches { abs(abs(it) - 100f) <= 30f }
         assertThat(injected.publicMultipleRangesDouble).matches { it in 20.0..30.0 || it in 100.0..110.0 }
         assertThat(injected.publicMultipleMeansDouble).matches { abs(abs(it) - 100.0) <= 30.0 }
+        assertThat(injected.publicGeneric).isNotNull()
+    }
+
+    @Test
+    fun injectMap() {
+        val injected = KotlinInjectedMap()
+
+        injector.inject(forge, injected)
+
+        assertThat(injected.publicMap.entries)
+            .isNotEmpty()
+            .allMatch {
+                it.key.matches(Regex("[a-fA-F0-9]+")) && it.value > 0L
+            }
+        assertThat(injected.publicFooMap.entries)
+            .isNotEmpty()
+            .allMatch {
+                it.key.matches(Regex("[a-fA-F0-9]+")) && it.value != null
+            }
+        assertThat(injected.publicNestedFooMap.entries)
+            .isNotEmpty()
+            .allMatch {
+                it.key.matches(Regex("[0-9]+")) && it.value.isNotEmpty() && it.value.entries.all { nested ->
+                    nested.key >= -100 && nested.key <= 100 && nested.value != null
+                }
+            }
     }
 }
 
