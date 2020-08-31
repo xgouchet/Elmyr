@@ -38,13 +38,19 @@ class ForgeDelegateSpek : Spek({
 
             it("forges a new value when the forge seed changes") {
 
+                var same = 0
+                val count = 32
                 val temp = WithPrimitives(forge)
-                val first = temp.forgedInt
+                var previous = temp.forgedInt
 
-                forge.seed = System.currentTimeMillis()
-                val second = temp.forgedInt
+                repeat(count) {
+                    forge.seed = Forge.seed()
+                    val next = temp.forgedInt
+                    if (next == previous) same ++
+                    previous = next
+                }
 
-                assertThat(second).isNotEqualTo(first)
+                assertThat(same).isLessThan(count / 4)
             }
 
             it("reuses the same value when the same forge seed is used") {
@@ -101,7 +107,7 @@ class ForgeDelegateSpek : Spek({
             it("forges a boolean instance") {
                 val probability = forge.aFloat(0f, 1f)
                 verifyProbability(
-                        expectedProbability = probability
+                    expectedProbability = probability
                 ) {
                     val temp = WithPrimitives(forge, probability)
                     temp.forgedBoolean
@@ -159,7 +165,7 @@ class ForgeDelegateSpek : Spek({
 
                 val temp = WithFactory(forge)
                 assertThat(temp.forgedFooList)
-                        .containsOnly(fakeFoo)
+                    .containsOnly(fakeFoo)
             }
 
             it("forges a set") {
@@ -168,7 +174,7 @@ class ForgeDelegateSpek : Spek({
 
                 val temp = WithFactory(forge)
                 assertThat(temp.forgedFooSet)
-                        .containsOnly(fakeFoo)
+                    .containsOnly(fakeFoo)
             }
 
             it("fails when factory not available") {

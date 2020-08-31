@@ -52,8 +52,8 @@ class ForgeStringSpek : Spek({
 
                     string.forEach {
                         assertThat(it)
-                                .isGreaterThanOrEqualTo(Forge.MIN_PRINTABLE)
-                                .isLessThanOrEqualTo(Forge.MAX_ASCII)
+                            .isGreaterThanOrEqualTo(Forge.MIN_PRINTABLE)
+                            .isLessThanOrEqualTo(Forge.MAX_ASCII)
                     }
                 }
             }
@@ -64,8 +64,8 @@ class ForgeStringSpek : Spek({
 
                     string.forEach {
                         assertThat(it)
-                                .isGreaterThanOrEqualTo(Forge.MIN_PRINTABLE)
-                                .isLessThanOrEqualTo(Forge.MAX_ASCII_EXTENDED)
+                            .isGreaterThanOrEqualTo(Forge.MIN_PRINTABLE)
+                            .isLessThanOrEqualTo(Forge.MAX_ASCII_EXTENDED)
                     }
                 }
             }
@@ -75,8 +75,8 @@ class ForgeStringSpek : Spek({
                     val size = forge.aTinyInt()
                     val string = forge.anAlphabeticalString(size = size)
                     assertThat(string)
-                            .matches("[a-zA-Z]+")
-                            .hasSize(size)
+                        .matches("[a-zA-Z]+")
+                        .hasSize(size)
                 }
             }
 
@@ -106,8 +106,8 @@ class ForgeStringSpek : Spek({
                     val size = forge.aTinyInt()
                     val string = forge.anAlphaNumericalString(size = size)
                     assertThat(string)
-                            .matches("[a-zA-Z0-9]+")
-                            .hasSize(size)
+                        .matches("[a-zA-Z0-9]+")
+                        .hasSize(size)
                 }
             }
 
@@ -137,8 +137,8 @@ class ForgeStringSpek : Spek({
                     val size = forge.aTinyInt()
                     val string = forge.aNumericalString(size)
                     assertThat(string)
-                            .matches("[0-9]+")
-                            .hasSize(size)
+                        .matches("[0-9]+")
+                        .hasSize(size)
                 }
             }
 
@@ -154,8 +154,8 @@ class ForgeStringSpek : Spek({
                     val size = forge.aTinyInt()
                     val string = forge.anHexadecimalString(size = size)
                     assertThat(string)
-                            .matches("[a-fA-F0-9]+")
-                            .hasSize(size)
+                        .matches("[a-fA-F0-9]+")
+                        .hasSize(size)
                 }
             }
 
@@ -191,8 +191,8 @@ class ForgeStringSpek : Spek({
                     val size = forge.aTinyInt()
                     val string = forge.aWhitespaceString(size)
                     assertThat(string)
-                            .matches("\\s+")
-                            .hasSize(size)
+                        .matches("\\s+")
+                        .hasSize(size)
                 }
             }
         }
@@ -204,8 +204,8 @@ class ForgeStringSpek : Spek({
 
             // No need to be exhaustive, the regex package is heavily tested
             val regexes = arrayOf(
-                    "foo",
-                    "[a-fA-F0-9]+"
+                "foo",
+                "[a-fA-F0-9]+"
             )
 
             regexes.forEach {
@@ -215,11 +215,11 @@ class ForgeStringSpek : Spek({
                     repeat(testRepeatCountSmall) {
                         val res = forge.aStringMatching(regex)
                         assertThat(res)
-                                .matches(regex)
+                            .matches(regex)
 
                         val res2 = forge.aStringMatching(Regex(regex))
                         assertThat(res2)
-                                .matches(regex)
+                            .matches(regex)
                     }
                 }
             }
@@ -233,8 +233,10 @@ class ForgeStringSpek : Spek({
 
             it("randomizes a string case from lower") {
                 var isAllLower = 0
+                var isAllUpper = 0
                 repeat(testRepeatCountSmall) {
-                    val string = forge.anAlphabeticalString(Case.LOWER)
+                    val size = forge.anInt(32, 128)
+                    val string = forge.anAlphabeticalString(Case.LOWER, size = size)
 
                     val randomized = forge.randomizeCase { string }
 
@@ -244,15 +246,20 @@ class ForgeStringSpek : Spek({
                     assertThat(randomized).isEqualToIgnoringCase(string)
                     if (upper == 0) {
                         isAllLower++
+                    } else if (lower == 0) {
+                        isAllUpper++
                     }
                 }
                 assertThat(isAllLower).isLessThan(testRepeatCountSmall / 4)
+                assertThat(isAllUpper).isLessThan(testRepeatCountSmall / 4)
             }
 
             it("randomizes a string case from upper") {
                 var isAllLower = 0
+                var isAllUpper = 0
                 repeat(testRepeatCountSmall) {
-                    val string = forge.anAlphabeticalString(Case.UPPER)
+                    val size = forge.anInt(32, 128)
+                    val string = forge.anAlphabeticalString(Case.UPPER, size = size)
 
                     val randomized = forge.randomizeCase(string)
 
@@ -262,9 +269,12 @@ class ForgeStringSpek : Spek({
                     assertThat(randomized).isEqualToIgnoringCase(string)
                     if (upper == 0) {
                         isAllLower++
+                    } else if (lower == 0) {
+                        isAllUpper++
                     }
                 }
                 assertThat(isAllLower).isLessThan(testRepeatCountSmall / 4)
+                assertThat(isAllUpper).isLessThan(testRepeatCountSmall / 4)
             }
 
             it("creates a sub string from lambda") {

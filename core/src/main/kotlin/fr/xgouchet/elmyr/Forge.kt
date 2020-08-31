@@ -4,8 +4,6 @@ import fr.xgouchet.elmyr.kotlin.ForgedSequence
 import fr.xgouchet.elmyr.regex.RegexParser
 import java.util.Random
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.round
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong

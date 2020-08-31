@@ -169,9 +169,9 @@ class KotlinForgeryInjectorTest {
 
         injector.inject(forge, injected)
 
-        assertThat(injected.publicBoolList).isNotEmpty().hasDistinctValues()
-        assertThat(injected.publicBoolSet).isNotEmpty().hasDistinctValues()
-        assertThat(injected.publicBoolCollection).isNotEmpty().hasDistinctValues()
+        assertThat(injected.publicBoolList).isNotEmpty().hasDistinctValues(16)
+        assertThat(injected.publicBoolSet).isNotEmpty().hasDistinctValues(16)
+        assertThat(injected.publicBoolCollection).isNotEmpty().hasDistinctValues(16)
     }
 
     @Test
@@ -182,7 +182,7 @@ class KotlinForgeryInjectorTest {
 
         assertThat(injected.publicInt).isNotEqualTo(0)
         assertThat(injected.publicRangeInt).isBetween(3, 42)
-        assertThat(injected.publicGaussianInt).isCloseTo(1337, Offset.offset(20))
+        assertThat(injected.publicGaussianInt).isCloseTo(1337, Offset.offset(30))
         assertThat(injected.internalInt).isNotEqualTo(0)
         assertThat(injected.retrieveProtectedInt()).isNotEqualTo(0)
         assertThat(injected.retrievePrivateInt()).isNotEqualTo(0)
@@ -199,7 +199,7 @@ class KotlinForgeryInjectorTest {
 
         assertThat(injected.publicLong).isNotEqualTo(0)
         assertThat(injected.publicRangeLong).isBetween(3, 42)
-        assertThat(injected.publicGaussianLong).isCloseTo(1337L, Offset.offset(20L))
+        assertThat(injected.publicGaussianLong).isCloseTo(1337L, Offset.offset(30L))
         assertThat(injected.internalLong).isNotEqualTo(0)
         assertThat(injected.retrieveProtectedLong()).isNotEqualTo(0)
         assertThat(injected.retrievePrivateLong()).isNotEqualTo(0)
@@ -215,8 +215,8 @@ class KotlinForgeryInjectorTest {
         injector.inject(forge, injected)
 
         assertThat(injected.publicFloat).isNotEqualTo(0)
-        assertThat(injected.publicRangeFloat).isBetween(3f, 42f)
-        assertThat(injected.publicGaussianFloat).isCloseTo(1337f, Offset.offset(20f))
+        assertThat(injected.publicRangeFloat).isBetween(3f, 43f)
+        assertThat(injected.publicGaussianFloat).isCloseTo(1337f, Offset.offset(30f))
         assertThat(injected.internalFloat).isNotEqualTo(0)
         assertThat(injected.retrieveProtectedFloat()).isNotEqualTo(0)
         assertThat(injected.retrievePrivateFloat()).isNotEqualTo(0)
@@ -232,8 +232,8 @@ class KotlinForgeryInjectorTest {
         injector.inject(forge, injected)
 
         assertThat(injected.publicDouble).isNotEqualTo(0)
-        assertThat(injected.publicRangeDouble).isBetween(3.0, 42.0)
-        assertThat(injected.publicGaussianDouble).isCloseTo(1337.0, Offset.offset(20.0))
+        assertThat(injected.publicRangeDouble).isBetween(3.0, 43.0)
+        assertThat(injected.publicGaussianDouble).isCloseTo(1337.0, Offset.offset(30.0))
         assertThat(injected.internalDouble).isNotEqualTo(0)
         assertThat(injected.retrieveProtectedDouble()).isNotEqualTo(0)
         assertThat(injected.retrievePrivateDouble()).isNotEqualTo(0)
@@ -284,7 +284,7 @@ private fun <
     SELF : AbstractAssert<SELF, ACTUAL>,
     ACTUAL : Collection<T>,
     T : Comparable<T>
-    > AbstractAssert<SELF, ACTUAL>.hasDistinctValues(minLength: Int = 3): SELF {
+    > AbstractAssert<SELF, ACTUAL>.hasDistinctValues(minLength: Int = 4): SELF {
     return matches {
         if (it.size > minLength) {
             it.sorted().distinct().size > 1

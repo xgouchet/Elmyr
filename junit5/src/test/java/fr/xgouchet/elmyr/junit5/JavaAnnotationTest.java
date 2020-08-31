@@ -8,6 +8,7 @@ import fr.xgouchet.elmyr.junit5.dummy.Bar;
 import fr.xgouchet.elmyr.junit5.dummy.BarFactory;
 import fr.xgouchet.elmyr.junit5.dummy.Foo;
 import fr.xgouchet.elmyr.junit5.dummy.FooFactory;
+import org.assertj.core.data.Offset;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -134,13 +135,13 @@ class JavaAnnotationTest {
 
     @Test
     void injectFloatWithCustomRange(@FloatForgery(min = 13f, max = 42f) float f) {
-        assertThat(f).isBetween(13f, 41f);
+        assertThat(f).isBetween(13f, 42f);
         checkForgeryInjectedInField();
     }
 
     @Test
     void injectFloatWithGaussianDistribution(@FloatForgery(mean = 42f, standardDeviation = 7f) float f) {
-        assertThat(f).isBetween(-58f, 142f);
+        assertThat(f).isCloseTo(42f, Offset.offset(21f));
         checkForgeryInjectedInField();
     }
 
@@ -158,7 +159,7 @@ class JavaAnnotationTest {
 
     @Test
     void injectDoubleWithGaussianDistribution(@DoubleForgery(mean = 42.0, standardDeviation = 7.0) double d) {
-        assertThat(d).isBetween(-58.0, 142.0);
+        assertThat(d).isCloseTo(42.0, Offset.offset(21.0));
         checkForgeryInjectedInField();
     }
 

@@ -34,13 +34,14 @@ class FileForgeryFactoryTest {
         @Forgery file2: File
     ) {
         assertThat(file1.path)
-                .isNotEqualTo(file2.path)
+            .isNotEqualTo(file2.path)
     }
 
     @Test
     fun `forge many Files`(@Forgery files: List<File>) {
         // assuming we're on unix
         assumeTrue(File.separatorChar == '/')
+        if (files.size <= 1) return
         assumeTrue(files.size > 1)
 
         val absolute = files.count { it.path.startsWith("/") }
@@ -66,10 +67,10 @@ class FileForgeryFactoryTest {
                 if (it.path.startsWith('/')) {
                     val rootFolder = "/${it.path.split('/')[1]}"
                     assertThat(rootFolder)
-                            .overridingErrorMessage(
-                                    "Expecting root folder $rootFolder to be a known Mac root folder"
-                            )
-                            .isIn(FileForgeryFactory.LINUX_ROOTS)
+                        .overridingErrorMessage(
+                            "Expecting root folder $rootFolder to be a known Mac root folder"
+                        )
+                        .isIn(FileForgeryFactory.LINUX_ROOTS)
                 }
             }
         }
@@ -87,10 +88,10 @@ class FileForgeryFactoryTest {
                 if (it.path.startsWith('/')) {
                     val rootFolder = "/${it.path.split('/')[1]}"
                     assertThat(rootFolder)
-                            .overridingErrorMessage(
-                                    "Expecting root folder $rootFolder to be a known Mac root folder"
-                            )
-                            .isIn(FileForgeryFactory.LINUX_ROOTS)
+                        .overridingErrorMessage(
+                            "Expecting root folder $rootFolder to be a known Mac root folder"
+                        )
+                        .isIn(FileForgeryFactory.LINUX_ROOTS)
                 }
             }
         }
@@ -108,10 +109,10 @@ class FileForgeryFactoryTest {
                 if (it.path.startsWith('/')) {
                     val rootFolder = "/${it.path.split('/')[1]}"
                     assertThat(rootFolder)
-                            .overridingErrorMessage(
-                                    "Expecting root folder $rootFolder to be a known Mac root folder"
-                            )
-                            .isIn(FileForgeryFactory.LINUX_ROOTS)
+                        .overridingErrorMessage(
+                            "Expecting root folder $rootFolder to be a known Mac root folder"
+                        )
+                        .isIn(FileForgeryFactory.LINUX_ROOTS)
                 }
             }
         }
@@ -129,10 +130,10 @@ class FileForgeryFactoryTest {
                 if (it.path.startsWith('/')) {
                     val rootFolder = "/${it.path.split('/')[1]}"
                     assertThat(rootFolder)
-                            .overridingErrorMessage(
-                                    "Expecting root folder $rootFolder to be a known Mac root folder"
-                            )
-                            .isIn(FileForgeryFactory.MAC_ROOTS)
+                        .overridingErrorMessage(
+                            "Expecting root folder $rootFolder to be a known Mac root folder"
+                        )
+                        .isIn(FileForgeryFactory.MAC_ROOTS)
                 }
             }
         }
@@ -149,7 +150,7 @@ class FileForgeryFactoryTest {
             files.forEach {
                 if (!it.path.startsWith('.')) {
                     assertThat(it.path)
-                            .matches("[A-Z]:\\\\.*")
+                        .matches("[A-Z]:\\\\.*")
                 }
             }
         }

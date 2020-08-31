@@ -16,9 +16,17 @@ class TimeZoneForgeryFactoryTest {
     @Test
     fun `forges different values`(
         @Forgery timeZone1: TimeZone,
-        @Forgery timeZone2: TimeZone
+        @Forgery timeZone2: TimeZone,
+        @Forgery timeZone3: TimeZone,
+        @Forgery timeZone4: TimeZone
     ) {
-        assertThat(timeZone1.toZoneId().toString())
-                .isNotEqualTo(timeZone2.toZoneId().toString())
+        val distinctValues = setOf(
+            timeZone1.toZoneId().toString(),
+            timeZone2.toZoneId().toString(),
+            timeZone3.toZoneId().toString(),
+            timeZone4.toZoneId().toString()
+        )
+        assertThat(distinctValues.size)
+            .isGreaterThan(1)
     }
 }

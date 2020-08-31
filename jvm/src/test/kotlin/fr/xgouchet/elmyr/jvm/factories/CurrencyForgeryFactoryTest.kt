@@ -15,10 +15,18 @@ class CurrencyForgeryFactoryTest {
 
     @Test
     fun `forges different values`(
-        @Forgery cur1: Currency,
-        @Forgery cur2: Currency
+        @Forgery currency1: Currency,
+        @Forgery currency2: Currency,
+        @Forgery currency3: Currency,
+        @Forgery currency4: Currency
     ) {
-        assertThat(cur1.currencyCode)
-                .isNotEqualTo(cur2.currencyCode)
+        val distinctValues = setOf(
+            currency1.currencyCode,
+            currency2.currencyCode,
+            currency3.currencyCode,
+            currency4.currencyCode
+        )
+        assertThat(distinctValues.size)
+            .isGreaterThan(1)
     }
 }

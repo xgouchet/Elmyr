@@ -16,9 +16,17 @@ class LocaleForgeryFactoryTest {
     @Test
     fun `forges different values`(
         @Forgery locale1: Locale,
-        @Forgery locale2: Locale
+        @Forgery locale2: Locale,
+        @Forgery locale3: Locale,
+        @Forgery locale4: Locale
     ) {
-        assertThat(locale1.toString())
-                .isNotEqualTo(locale2.toString())
+        val distinctValues = setOf(
+            locale1.toString(),
+            locale2.toString(),
+            locale3.toString(),
+            locale4.toString()
+        )
+        assertThat(distinctValues.size)
+                .isGreaterThan(1)
     }
 }
