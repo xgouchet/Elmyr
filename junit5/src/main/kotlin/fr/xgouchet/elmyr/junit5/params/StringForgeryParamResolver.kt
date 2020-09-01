@@ -5,16 +5,18 @@ import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 
 internal class StringForgeryParamResolver :
-        PrimitiveForgeryParamResolver<StringForgery>(
-            null,
-            java.lang.String::class.java,
-            StringForgery::class.java
-        ) {
+    PrimitiveForgeryParamResolver<StringForgery>(
+        null,
+        java.lang.String::class.java,
+        StringForgery::class.java
+    ) {
 
     // region PrimitiveForgeryParamResolver
 
     override fun forgePrimitive(annotation: StringForgery, forge: Forge): Any? {
-        return when (annotation.value) {
+        return if (annotation.regex.isNotEmpty()) {
+            forge.aStringMatching(annotation.regex)
+        } else when (annotation.type) {
             StringForgeryType.ALPHABETICAL -> forge.anAlphabeticalString(annotation.case)
             StringForgeryType.ALPHA_NUMERICAL -> forge.anAlphaNumericalString(annotation.case)
             StringForgeryType.NUMERICAL -> forge.aNumericalString()

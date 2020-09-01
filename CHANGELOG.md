@@ -2,6 +2,10 @@
 
 ### `1.2.0` (2020/??/??)
 
+#### `core`
+
+- Allow using the `@StringForgery` annotation to forge Strings based on Regex
+
 #### `inject`
 
  - Allow injecting collections of primitives with `@BoolForgery`, `@IntForgery`, `@LongForgery`, `@FloatForgery`, `@DoubleForgery`, as well as `@StringForgery` and `RegexForgery`

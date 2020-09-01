@@ -19,6 +19,7 @@ import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedRegex
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedStrings
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedUnknownAnnotation
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedUnknownGeneric
+import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedUnknownPrimitiveGeneric
 import kotlin.math.abs
 import org.assertj.core.api.AbstractAssert
 import org.assertj.core.api.Assertions.assertThat
@@ -158,6 +159,15 @@ class KotlinForgeryInjectorTest {
     }
 
     @Test
+    fun failsWhenUnknownPrimitiveGeneric() {
+        val injected = KotlinInjectedUnknownPrimitiveGeneric()
+
+        assertThrows<ForgeryInjectorException> {
+            injector.inject(forge, injected)
+        }
+    }
+
+    @Test
     fun ignoresWhenUnknownAnnotation() {
         val injected = KotlinInjectedUnknownAnnotation()
 
@@ -280,6 +290,7 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.internalDigitsString).matches("[0-9]+")
         assertThat(injected.retrieveProtectedBase64String()).matches("([a-zA-z0-9]{4})*[a-zA-z0-9]{2}==")
         assertThat(injected.retrievePrivatePhoneNumber()).matches("0\\d(-\\d\\d){4}")
+        assertThat(injected.publicEmail).matches("[a-z]+@[a-z]+\\.[a-z]{3}")
     }
 
     @Test

@@ -768,12 +768,59 @@ internal class ForgeExtensionTest {
     }
 
     @Test
+    fun `resolveParameter {StringRegex}`() {
+        prepareContext("withStringRegex")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is String && it.matches(Regex("[abc]+")) }
+    }
+
+    @Test
+    fun `resolveParameter {StringRegex list}`() {
+        prepareContext("withStringRegexList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+    }
+
+    @Test
+    fun `resolveParameter {StringRegex set}`() {
+        prepareContext("withStringRegexSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+    }
+
+    @Test
+    fun `resolveParameter {StringRegex collection}`() {
+        prepareContext("withStringRegexCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+    }
+
+    @Test
+    fun `resolveParameter {StringRegex nested list}`() {
+        prepareContext("withStringRegexNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch {
+            it is Set<*> && it.all { b -> b is String && b.matches(Regex("[abc]+")) }
+        }
+    }
+
+    @Test
     fun `resolveParameter {Regex}`() {
         prepareContext("withRegex")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result).matches { it is String }
+        assertThat(result).matches { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -782,7 +829,7 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as List<*>).isNotEmpty().allMatch { it is String }
+        assertThat(result as List<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -791,7 +838,7 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as Set<*>).isNotEmpty().allMatch { it is String }
+        assertThat(result as Set<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -800,7 +847,7 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is String }
+        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -809,7 +856,9 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as List<*>).allMatch { it is Set<*> && it.all { b -> b is String } }
+        assertThat(result as List<*>).allMatch {
+            it is Set<*> && it.all { b -> b is String && b.matches(Regex("[abc]+")) }
+        }
     }
 
     // endregion
@@ -1213,26 +1262,44 @@ internal class Reflekta(@Forgery s: String) {
     fun withStringNestedList(@StringForgery b: List<Set<String>>) {
     }
 
+    fun withStringRegex(@StringForgery(regex = "[abc]+") s: String) {
+    }
+
+    fun withNotStringRegex(@StringForgery(regex = "[abc]+") f: Float) {
+    }
+
+    fun withStringRegexList(@StringForgery(regex = "[abc]+") b: List<String>) {
+    }
+
+    fun withStringRegexSet(@StringForgery(regex = "[abc]+") b: Set<String>) {
+    }
+
+    fun withStringRegexCollection(@StringForgery(regex = "[abc]+") b: Collection<String>) {
+    }
+
+    fun withStringRegexNestedList(@StringForgery(regex = "[abc]+") b: List<Set<String>>) {
+    }
+
     // endregion
 
     // region Regex
 
-    fun withRegex(@RegexForgery("[a-z]+") s: String) {
+    fun withRegex(@RegexForgery("[a-c]+") s: String) {
     }
 
-    fun withNotRegex(@RegexForgery("[a-z]+") f: Float) {
+    fun withNotRegex(@RegexForgery("[a-c]+") f: Float) {
     }
 
-    fun withRegexList(@RegexForgery("[a-z]+") b: List<String>) {
+    fun withRegexList(@RegexForgery("[a-c]+") b: List<String>) {
     }
 
-    fun withRegexSet(@RegexForgery("[a-z]+") b: Set<String>) {
+    fun withRegexSet(@RegexForgery("[a-c]+") b: Set<String>) {
     }
 
-    fun withRegexCollection(@RegexForgery("[a-z]+") b: Collection<String>) {
+    fun withRegexCollection(@RegexForgery("[a-c]+") b: Collection<String>) {
     }
 
-    fun withRegexNestedList(@RegexForgery("[a-z]+") b: List<Set<String>>) {
+    fun withRegexNestedList(@RegexForgery("[a-c]+") b: List<Set<String>>) {
     }
 
     // endregion

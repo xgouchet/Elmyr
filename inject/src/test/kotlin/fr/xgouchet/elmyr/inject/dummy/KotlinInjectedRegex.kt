@@ -1,6 +1,7 @@
 package fr.xgouchet.elmyr.inject.dummy
 
 import fr.xgouchet.elmyr.annotation.RegexForgery
+import fr.xgouchet.elmyr.annotation.StringForgery
 
 open class KotlinInjectedRegex {
 
@@ -15,6 +16,9 @@ open class KotlinInjectedRegex {
 
     @RegexForgery("0\\d(-\\d\\d){4}")
     private lateinit var privatePhoneNumber: String
+
+    @StringForgery(regex = "[a-z]+@[a-z]+\\.[a-z]{3}")
+    lateinit var publicEmail: String
 
     fun retrieveProtectedBase64String(): String = protectedBase64String
 

@@ -13,8 +13,8 @@ import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 import fr.xgouchet.elmyr.inject.reflect.invokePrivate
-import java.lang.IllegalStateException
 import kotlin.reflect.KClass
+import kotlin.reflect.KClassifier
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
@@ -66,16 +66,7 @@ class DefaultForgeryInjector : ForgeryInjector {
             .filter { it !is KMutableProperty }
             .filter {
                 it.annotations.any { annotation ->
-                    annotation is Forgery ||
-                        annotation is BoolForgery ||
-                        annotation is IntForgery ||
-                        annotation is LongForgery ||
-                        annotation is FloatForgery ||
-                        annotation is DoubleForgery ||
-                        annotation is StringForgery ||
-                        annotation is RegexForgery ||
-                        annotation is AdvancedForgery ||
-                        annotation is MapForgery
+                    annotation.annotationClass in knownAnnotations
                 }
             }
         when (invalidProperties.size) {
@@ -135,9 +126,8 @@ class DefaultForgeryInjector : ForgeryInjector {
     private fun getForgery(
         forge: Forge,
         property: KMutableProperty<*>
-    ): Any? {
+    ): Any {
         return getGenericForgery(property.returnType, forge)
-            ?: uninjectable(property)
     }
 
     private fun getBooleanForgery(
@@ -152,8 +142,7 @@ class DefaultForgeryInjector : ForgeryInjector {
             "You can only use an BoolForgery with a probability between 0f and 1f"
         }
         val forgery: Forge.() -> Boolean = { aBool(annotation.probability) }
-        val result = getPrimitiveForgery(property.returnType, Boolean::class, forge, forgery)
-        return result ?: uninjectable(property)
+        return getPrimitiveForgery(property.returnType, Boolean::class, forge, forgery)
     }
 
     private fun getIntForgery(
@@ -176,8 +165,7 @@ class DefaultForgeryInjector : ForgeryInjector {
             }
             forgery = { anInt(annotation.min, annotation.max) }
         }
-        val result = getPrimitiveForgery(property.returnType, Int::class, forge, forgery)
-        return result ?: uninjectable(property)
+        return getPrimitiveForgery(property.returnType, Int::class, forge, forgery)
     }
 
     private fun getLongForgery(
@@ -200,8 +188,7 @@ class DefaultForgeryInjector : ForgeryInjector {
             }
             forgery = { aLong(annotation.min, annotation.max) }
         }
-        val result = getPrimitiveForgery(property.returnType, Long::class, forge, forgery)
-        return result ?: uninjectable(property)
+        return getPrimitiveForgery(property.returnType, Long::class, forge, forgery)
     }
 
     private fun getFloatForgery(
@@ -225,8 +212,7 @@ class DefaultForgeryInjector : ForgeryInjector {
             forgery = { aFloat(annotation.min, annotation.max) }
         }
 
-        val result = getPrimitiveForgery(property.returnType, Float::class, forge, forgery)
-        return result ?: uninjectable(property)
+        return getPrimitiveForgery(property.returnType, Float::class, forge, forgery)
     }
 
     private fun getDoubleForgery(
@@ -250,8 +236,7 @@ class DefaultForgeryInjector : ForgeryInjector {
             forgery = { aDouble(annotation.min, annotation.max) }
         }
 
-        val result = getPrimitiveForgery(property.returnType, Double::class, forge, forgery)
-        return result ?: uninjectable(property)
+        return getPrimitiveForgery(property.returnType, Double::class, forge, forgery)
     }
 
     private fun getStringForgery(
@@ -259,17 +244,21 @@ class DefaultForgeryInjector : ForgeryInjector {
         annotation: StringForgery,
         property: KMutableProperty<*>
     ): Any {
-        val forgery: Forge.() -> String = when (annotation.value) {
-            StringForgeryType.ALPHABETICAL -> { -> anAlphabeticalString(annotation.case) }
-            StringForgeryType.ALPHA_NUMERICAL -> { -> anAlphaNumericalString(annotation.case) }
-            StringForgeryType.NUMERICAL -> { -> aNumericalString() }
-            StringForgeryType.HEXADECIMAL -> { -> anHexadecimalString(annotation.case) }
-            StringForgeryType.WHITESPACE -> { -> aWhitespaceString() }
-            StringForgeryType.ASCII -> { -> anAsciiString() }
-            StringForgeryType.ASCII_EXTENDED -> { -> anExtendedAsciiString() }
+        val forgery: Forge.() -> String
+        if (annotation.regex.isNotEmpty()) {
+            forgery = { aStringMatching(annotation.regex) }
+        } else {
+            forgery = when (annotation.type) {
+                StringForgeryType.ALPHABETICAL -> { -> anAlphabeticalString(annotation.case) }
+                StringForgeryType.ALPHA_NUMERICAL -> { -> anAlphaNumericalString(annotation.case) }
+                StringForgeryType.NUMERICAL -> { -> aNumericalString() }
+                StringForgeryType.HEXADECIMAL -> { -> anHexadecimalString(annotation.case) }
+                StringForgeryType.WHITESPACE -> { -> aWhitespaceString() }
+                StringForgeryType.ASCII -> { -> anAsciiString() }
+                StringForgeryType.ASCII_EXTENDED -> { -> anExtendedAsciiString() }
+            }
         }
-        val result = getPrimitiveForgery(property.returnType, String::class, forge, forgery)
-        return result ?: uninjectable(property)
+        return getPrimitiveForgery(property.returnType, String::class, forge, forgery)
     }
 
     private fun getRegexForgery(
@@ -278,8 +267,7 @@ class DefaultForgeryInjector : ForgeryInjector {
         property: KMutableProperty<*>
     ): Any {
         val forgery: Forge.() -> String = { aStringMatching(annotation.value) }
-        val result = getPrimitiveForgery(property.returnType, String::class, forge, forgery)
-        return result ?: uninjectable(property)
+        return getPrimitiveForgery(property.returnType, String::class, forge, forgery)
     }
 
     private fun getAdvancedForgery(
@@ -287,26 +275,34 @@ class DefaultForgeryInjector : ForgeryInjector {
         annotation: AdvancedForgery,
         property: KMutableProperty<*>
     ): Any? {
-        return if (annotation.string.isNotEmpty()) {
-            val usingAnnotation = forge.anElementFrom(*annotation.string)
-            getStringForgery(forge, usingAnnotation, property)
-        } else if (annotation.int.isNotEmpty()) {
-            val usingAnnotation = forge.anElementFrom(*annotation.int)
-            getIntForgery(forge, usingAnnotation, property)
-        } else if (annotation.long.isNotEmpty()) {
-            val usingAnnotation = forge.anElementFrom(*annotation.long)
-            getLongForgery(forge, usingAnnotation, property)
-        } else if (annotation.float.isNotEmpty()) {
-            val usingAnnotation = forge.anElementFrom(*annotation.float)
-            getFloatForgery(forge, usingAnnotation, property)
-        } else if (annotation.double.isNotEmpty()) {
-            val usingAnnotation = forge.anElementFrom(*annotation.double)
-            getDoubleForgery(forge, usingAnnotation, property)
-        } else if (annotation.map.isNotEmpty()) {
-            val usingAnnotation = forge.anElementFrom(*annotation.map)
-            getMapForgery(forge, usingAnnotation, property)
-        } else {
-            getForgery(forge, property)
+        return when {
+            annotation.string.isNotEmpty() -> {
+                val usingAnnotation = forge.anElementFrom(*annotation.string)
+                getStringForgery(forge, usingAnnotation, property)
+            }
+            annotation.int.isNotEmpty() -> {
+                val usingAnnotation = forge.anElementFrom(*annotation.int)
+                getIntForgery(forge, usingAnnotation, property)
+            }
+            annotation.long.isNotEmpty() -> {
+                val usingAnnotation = forge.anElementFrom(*annotation.long)
+                getLongForgery(forge, usingAnnotation, property)
+            }
+            annotation.float.isNotEmpty() -> {
+                val usingAnnotation = forge.anElementFrom(*annotation.float)
+                getFloatForgery(forge, usingAnnotation, property)
+            }
+            annotation.double.isNotEmpty() -> {
+                val usingAnnotation = forge.anElementFrom(*annotation.double)
+                getDoubleForgery(forge, usingAnnotation, property)
+            }
+            annotation.map.isNotEmpty() -> {
+                val usingAnnotation = forge.anElementFrom(*annotation.map)
+                getMapForgery(forge, usingAnnotation, property)
+            }
+            else -> {
+                getForgery(forge, property)
+            }
         }
     }
 
@@ -320,10 +316,10 @@ class DefaultForgeryInjector : ForgeryInjector {
 
         val keyAnnotation = annotation.key
         val keyType = mapType.arguments[0].type ?: uninjectable(property)
-        val keyProperty = KMapProperty<Any>(keyType)
+        val keyProperty = KMapProperty<Any>(property.name, keyType)
         val valueAnnotation = annotation.value
         val valueType = mapType.arguments[1].type ?: uninjectable(property)
-        val valueProperty = KMapProperty<Any>(valueType)
+        val valueProperty = KMapProperty<Any>(property.name, valueType)
 
         return forge.aMap {
             val forgedKey = getAdvancedForgery(forge, keyAnnotation, keyProperty)
@@ -332,10 +328,10 @@ class DefaultForgeryInjector : ForgeryInjector {
         }
     }
 
-    private fun getGenericForgery(type: KType, forge: Forge): Any? {
+    private fun getGenericForgery(type: KType, forge: Forge): Any {
         val arguments = type.arguments
         val classifier = type.classifier
-        if (classifier !is KClass<*>) return null
+        if (classifier !is KClass<*>) uninjectable(classifier)
 
         return if (arguments.isEmpty()) {
             forge.getForgery(classifier.java)
@@ -349,7 +345,7 @@ class DefaultForgeryInjector : ForgeryInjector {
         forge: Forge,
         arguments: List<KTypeProjection>,
         classifier: KClass<*>
-    ): Any? {
+    ): Any {
         return when (classifier) {
             in knownLists -> forge.aList { getGenericForgery(arguments[0].type!!, forge) }
             in knownSets -> forge.aList { getGenericForgery(arguments[0].type!!, forge) }.toSet()
@@ -358,9 +354,7 @@ class DefaultForgeryInjector : ForgeryInjector {
                 val value = getGenericForgery(arguments[1].type!!, forge)
                 key to value
             }
-            else -> {
-                null
-            }
+            else -> uninjectable(classifier)
         }
     }
 
@@ -368,18 +362,15 @@ class DefaultForgeryInjector : ForgeryInjector {
         type: KType,
         klass: KClass<*>,
         forge: Forge,
-        forgery: Forge.() -> Any?
-    ): Any? {
+        forgery: Forge.() -> Any
+    ): Any {
         val arguments = type.arguments
         val classifier = type.classifier
-        if (classifier !is KClass<*>) return null
+        check(classifier is KClass<*>)
 
         return if (arguments.isEmpty()) {
-            if (classifier == klass || classifier.java == klass.java) {
-                forge.forgery()
-            } else {
-                throw IllegalStateException("Unable to forge primitive $klass on proprety with type $type")
-            }
+            check(classifier == klass || classifier.java == klass.java)
+            forge.forgery()
         } else {
             getParameterizedPrimitiveForgery(arguments, classifier, klass, forge, forgery)
         }
@@ -391,12 +382,12 @@ class DefaultForgeryInjector : ForgeryInjector {
         classifier: KClass<*>,
         klass: KClass<*>,
         forge: Forge,
-        forgery: Forge.() -> Any?
-    ): Any? {
+        forgery: Forge.() -> Any
+    ): Any {
         return when (classifier) {
             in knownLists -> forge.aList { getPrimitiveForgery(arguments[0].type!!, klass, forge, forgery) }
             in knownSets -> forge.aList { getPrimitiveForgery(arguments[0].type!!, klass, forge, forgery) }.toSet()
-            else -> null
+            else -> uninjectable(classifier)
         }
     }
 
@@ -404,48 +395,46 @@ class DefaultForgeryInjector : ForgeryInjector {
         throw ForgeryInjectorException("Unable to forge $property.")
     }
 
+    private fun uninjectable(klass: KClassifier?): Nothing {
+        throw ForgeryInjectorException("Unable to forge property with class $klass.")
+    }
+
+    @Suppress("NotImplementedDeclaration")
     private class KMapProperty<R>(
+        override val name: String,
         override val returnType: KType
     ) : KMutableProperty<R> {
-        override val annotations: List<Annotation>
-            get() = TODO("Not yet implemented")
+        override val annotations: List<Annotation> = emptyList()
+        override val isAbstract: Boolean = false
+        override val isConst: Boolean = false
+        override val isFinal: Boolean = false
+        override val isLateinit: Boolean = true
+        override val isOpen: Boolean = false
+        override val isSuspend: Boolean = false
+        override val parameters: List<KParameter> = emptyList()
+        override val typeParameters: List<KTypeParameter> = emptyList()
+        override val visibility: KVisibility? = KVisibility.PUBLIC
         override val getter: KProperty.Getter<R>
-            get() = TODO("Not yet implemented")
-        override val isAbstract: Boolean
-            get() = TODO("Not yet implemented")
-        override val isConst: Boolean
-            get() = TODO("Not yet implemented")
-        override val isFinal: Boolean
-            get() = TODO("Not yet implemented")
-        override val isLateinit: Boolean
-            get() = TODO("Not yet implemented")
-        override val isOpen: Boolean
-            get() = TODO("Not yet implemented")
-        override val isSuspend: Boolean
-            get() = TODO("Not yet implemented")
-        override val name: String
-            get() = TODO("Not yet implemented")
-        override val parameters: List<KParameter>
-            get() = TODO("Not yet implemented")
+            get() = TODO()
         override val setter: KMutableProperty.Setter<R>
-            get() = TODO("Not yet implemented")
-        override val typeParameters: List<KTypeParameter>
-            get() = TODO("Not yet implemented")
-        override val visibility: KVisibility?
-            get() = TODO("Not yet implemented")
+            get() = TODO()
 
         override fun call(vararg args: Any?): R {
-            TODO("Not yet implemented")
+            TODO()
         }
 
         override fun callBy(args: Map<KParameter, Any?>): R {
-            TODO("Not yet implemented")
+            TODO()
         }
     }
 
     // endregion
 
     companion object {
+        private val knownAnnotations = setOf<KClass<*>>(
+            Forgery::class, BoolForgery::class, IntForgery::class, LongForgery::class, FloatForgery::class,
+            DoubleForgery::class, StringForgery::class, RegexForgery::class, AdvancedForgery::class, MapForgery::class
+        )
         private val knownLists = setOf<KClass<*>>(
             List::class, Collection::class
         )

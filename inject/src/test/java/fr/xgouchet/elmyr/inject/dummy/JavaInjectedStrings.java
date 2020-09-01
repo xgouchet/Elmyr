@@ -8,10 +8,10 @@ import java.util.Set;
 
 public class JavaInjectedStrings {
 
-    @StringForgery(StringForgeryType.HEXADECIMAL)
+    @StringForgery(type = StringForgeryType.HEXADECIMAL)
     public String publicHexaString;
 
-    @StringForgery(StringForgeryType.NUMERICAL)
+    @StringForgery(type = StringForgeryType.NUMERICAL)
     public Set<String> publicNumericalStringSet;
 
     @RegexForgery("[abc]+")
@@ -20,5 +20,9 @@ public class JavaInjectedStrings {
     // 110e8400-e29b-11d4-a716-446655440000
     @RegexForgery("\\d{8}-\\d{4}-\\d{4}-\\d{4}-\\d{12}")
     public List<String> publicUUIDList;
+
+
+    @StringForgery(regex = "[a-z]+@[a-z]+\\.[a-z]{3}")
+    public String publicEmail;
 
 }

@@ -24,4 +24,4 @@ dependencies {
     testCompile(Dependencies.Libraries.TestTools)
 }
 
-commonConfig()
+commonConfig(0.9)

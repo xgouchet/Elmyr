@@ -130,6 +130,7 @@ class JavaForgeryInjectorTest {
         assertThat(injected.publicNumericalStringSet).isNotEmpty();
         assertThat(injected.publicRegex).matches("[abc]+");
         assertThat(injected.publicUUIDList).isNotEmpty();
+        assertThat(injected.publicEmail).matches("[a-z]+@[a-z]+\\.[a-z]{3}");
     }
 
     @Test()
