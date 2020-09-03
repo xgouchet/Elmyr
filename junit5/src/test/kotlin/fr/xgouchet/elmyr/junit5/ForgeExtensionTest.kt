@@ -2,6 +2,7 @@ package fr.xgouchet.elmyr.junit5
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
+import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeryFactoryMissingException
 import fr.xgouchet.elmyr.annotation.BoolForgery
@@ -12,6 +13,7 @@ import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.annotation.LongForgery
 import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
+import fr.xgouchet.elmyr.annotation.StringForgeryType
 import fr.xgouchet.elmyr.junit5.dummy.Foo
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -728,7 +730,7 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result).matches { it is String }
+        assertThat(result).matches { it is String && it.matches(Regex("[A-Z0-9]{42}")) }
     }
 
     @Test
@@ -1244,7 +1246,13 @@ internal class Reflekta(@Forgery s: String) {
 
     // region string
 
-    fun withString(@StringForgery s: String) {
+    fun withString(
+        @StringForgery(
+            StringForgeryType.HEXADECIMAL,
+            Case.UPPER,
+            42
+        ) s: String
+    ) {
     }
 
     fun withNotString(@StringForgery b: Boolean) {

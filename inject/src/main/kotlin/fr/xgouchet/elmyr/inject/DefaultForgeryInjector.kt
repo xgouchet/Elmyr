@@ -249,13 +249,13 @@ class DefaultForgeryInjector : ForgeryInjector {
             forgery = { aStringMatching(annotation.regex) }
         } else {
             forgery = when (annotation.type) {
-                StringForgeryType.ALPHABETICAL -> { -> anAlphabeticalString(annotation.case) }
-                StringForgeryType.ALPHA_NUMERICAL -> { -> anAlphaNumericalString(annotation.case) }
-                StringForgeryType.NUMERICAL -> { -> aNumericalString() }
-                StringForgeryType.HEXADECIMAL -> { -> anHexadecimalString(annotation.case) }
-                StringForgeryType.WHITESPACE -> { -> aWhitespaceString() }
-                StringForgeryType.ASCII -> { -> anAsciiString() }
-                StringForgeryType.ASCII_EXTENDED -> { -> anExtendedAsciiString() }
+                StringForgeryType.ALPHABETICAL -> { -> anAlphabeticalString(annotation.case, annotation.size) }
+                StringForgeryType.ALPHA_NUMERICAL -> { -> anAlphaNumericalString(annotation.case, annotation.size) }
+                StringForgeryType.NUMERICAL -> { -> aNumericalString(annotation.size) }
+                StringForgeryType.HEXADECIMAL -> { -> anHexadecimalString(annotation.case, annotation.size) }
+                StringForgeryType.WHITESPACE -> { -> aWhitespaceString(annotation.size) }
+                StringForgeryType.ASCII -> { -> anAsciiString(annotation.size) }
+                StringForgeryType.ASCII_EXTENDED -> { -> anExtendedAsciiString(annotation.size) }
             }
         }
         return getPrimitiveForgery(property.returnType, String::class, forge, forgery)

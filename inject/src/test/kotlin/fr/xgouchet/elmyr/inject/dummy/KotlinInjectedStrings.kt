@@ -15,7 +15,7 @@ open class KotlinInjectedStrings {
     @StringForgery(StringForgeryType.ALPHABETICAL, Case.UPPER)
     lateinit var publicAplhaUpperString: String
 
-    @StringForgery(StringForgeryType.ALPHA_NUMERICAL)
+    @StringForgery(StringForgeryType.ALPHA_NUMERICAL, size = 42)
     lateinit var publicAplhaNumString: String
 
     @StringForgery(StringForgeryType.NUMERICAL)
@@ -35,8 +35,10 @@ open class KotlinInjectedStrings {
 
     @StringForgery
     lateinit var publicAlphaStringList: List<String>
+
     @StringForgery(StringForgeryType.HEXADECIMAL)
     lateinit var publicHexaStringSet: Set<String>
+
     @StringForgery(StringForgeryType.NUMERICAL)
     lateinit var publicNumStringCollection: Collection<String>
 

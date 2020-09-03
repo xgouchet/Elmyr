@@ -264,7 +264,7 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.publicAplhaString).matches("[a-zA-Z]+")
         assertThat(injected.publicAplhaLowerString).matches("[a-z]+")
         assertThat(injected.publicAplhaUpperString).matches("[A-Z]+")
-        assertThat(injected.publicAplhaNumString).matches("[a-zA-Z0-9]+")
+        assertThat(injected.publicAplhaNumString).matches("[a-zA-Z0-9]{42}")
         assertThat(injected.publicDigitsString).matches("[0-9]+")
         assertThat(injected.retrieveProtectedHexString()).matches("[a-fA-F0-9]+")
         assertThat(injected.retrievePrivateWhitespaceString()).matches("\\s+")

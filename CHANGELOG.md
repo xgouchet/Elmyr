@@ -5,6 +5,7 @@
 #### `core`
 
 - Allow using the `@StringForgery` annotation to forge Strings based on Regex
+- Allow setting a size in `@StringForgery` annotation
 
 #### `inject`
 

@@ -11,7 +11,7 @@ public class JavaInjectedStrings {
     @StringForgery(type = StringForgeryType.HEXADECIMAL)
     public String publicHexaString;
 
-    @StringForgery(type = StringForgeryType.NUMERICAL)
+    @StringForgery(type = StringForgeryType.NUMERICAL, size = 42)
     public Set<String> publicNumericalStringSet;
 
     @RegexForgery("[abc]+")

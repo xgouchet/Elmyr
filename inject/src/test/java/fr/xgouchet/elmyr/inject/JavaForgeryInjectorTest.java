@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.util.function.Predicate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -127,7 +129,9 @@ class JavaForgeryInjectorTest {
         injector.inject(forge, injected);
 
         assertThat(injected.publicHexaString).matches("[0-9a-zA-z]+");
-        assertThat(injected.publicNumericalStringSet).isNotEmpty();
+        assertThat(injected.publicNumericalStringSet)
+                .isNotEmpty()
+                .allMatch(s -> s.length() == 42 && s.matches("[0-9]+"), "numerical with size 42");
         assertThat(injected.publicRegex).matches("[abc]+");
         assertThat(injected.publicUUIDList).isNotEmpty();
         assertThat(injected.publicEmail).matches("[a-z]+@[a-z]+\\.[a-z]{3}");

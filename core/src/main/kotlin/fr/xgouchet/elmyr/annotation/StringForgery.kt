@@ -6,20 +6,23 @@ import fr.xgouchet.elmyr.Case
  * Mark a field, property or method parameter as a String forgery.
  *
  * @param type the [StringForgeryType] of String to forge ([StringForgeryType.ALPHABETICAL] by default)
- * @param case the case to use ([Case.ANY] by default). This will only be used for the following types :
+ * @param case the case to use ([Case.ANY] by default, doesn't apply to regex). This will only be used for the
+ * following types :
  * [StringForgeryType.ALPHABETICAL], [StringForgeryType.ALPHA_NUMERICAL], [StringForgeryType.NUMERICAL],
  * [StringForgeryType.HEXADECIMAL]
- * @param regex the regex pattern to match (leave empty to use the type and case instead).
+ * @param size the size of the String, or -1 for a random size (doesn't apply to regex).
+ * @param regex the regex pattern to match (leave empty to use the type, case and size instead).
  */
 @Target(
-        AnnotationTarget.VALUE_PARAMETER,
-        AnnotationTarget.FIELD,
-        AnnotationTarget.PROPERTY
+    AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.FIELD,
+    AnnotationTarget.PROPERTY
 )
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 annotation class StringForgery(
     val type: StringForgeryType = StringForgeryType.ALPHABETICAL,
     val case: Case = Case.ANY,
+    val size: Int = -1,
     val regex: String = ""
 )
