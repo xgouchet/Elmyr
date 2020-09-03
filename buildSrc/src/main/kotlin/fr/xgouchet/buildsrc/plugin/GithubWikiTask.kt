@@ -13,6 +13,8 @@ open class GithubWikiTask : DefaultTask() {
     init {
         group = "documentation"
         description = "generates a Github compatible wiki reference"
+
+        outputs.upToDateWhen { false }
     }
 
     internal var projectDokkaDir: File = File("./dokka")

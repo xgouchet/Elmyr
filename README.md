@@ -134,19 +134,22 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Latest Release: `1.1.0` (2020/08/24)
+### Latest Release: `1.2.0` (2020/09/03)
 
 #### `core`
 
- - Fix float and double forgeries (they sometimes returned values out of the requested range)
- 
+- Allow using the `@StringForgery` annotation to forge Strings based on Regex
+- Allow setting a size in `@StringForgery` annotation
+
 #### `inject`
 
- - Add default String type (i.e.: `ALPHABETICAL`) to the `@StringForgery` annotationy
+ - Allow injecting collections of primitives with `@BoolForgery`, `@IntForgery`, `@LongForgery`, `@FloatForgery`, `@DoubleForgery`, as well as `@StringForgery` and `RegexForgery`
+ - Allow advanced forgery injections using `@AdvancedForgery` and `@MapForgery`
+ 
+#### `junit5`
 
-#### `spek`
-
- - Implement a `spekForge` helper method to add reproducibility in Spek tests
+ - Allow injecting collections of primitives with `@BoolForgery`, `@IntForgery`, `@LongForgery`, `@FloatForgery`, `@DoubleForgery`, as well as `@StringForgery` and `RegexForgery`
+ - Allow advanced forgery injections using `@AdvancedForgery` and `@MapForgery`
 
 ## Donate
 
