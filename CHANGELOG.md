@@ -15,6 +15,7 @@
 #### `junit5`
 
  - Allow injecting collections of primitives with `@BoolForgery`, `@IntForgery`, `@LongForgery`, `@FloatForgery`, `@DoubleForgery`, as well as `@StringForgery` and `RegexForgery`
+ - Allow advanced forgery injections using `@AdvancedForgery` and `@MapForgery`
 
 ### `1.1.0` (2020/08/24)
 

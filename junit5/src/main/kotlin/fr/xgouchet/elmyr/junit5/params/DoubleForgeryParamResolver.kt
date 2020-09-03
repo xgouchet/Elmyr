@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr.junit5.params
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.DoubleForgery
 
-internal class DoubleForgeryParamResolver :
+internal object DoubleForgeryParamResolver :
     PrimitiveForgeryParamResolver<DoubleForgery>(
         java.lang.Double.TYPE,
         java.lang.Double::class.java,

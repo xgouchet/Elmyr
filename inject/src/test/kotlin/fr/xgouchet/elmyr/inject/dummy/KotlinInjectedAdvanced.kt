@@ -19,6 +19,14 @@ class KotlinInjectedAdvanced {
     lateinit var publicAlphaOrNumString: String
 
     @AdvancedForgery(
+        string = [
+            StringForgery(StringForgeryType.NUMERICAL),
+            StringForgery(StringForgeryType.ALPHABETICAL)
+        ]
+    )
+    lateinit var publicAlphaOrNumStringList: List<String>
+
+    @AdvancedForgery(
         int = [
             IntForgery(20, 30),
             IntForgery(100, 110)

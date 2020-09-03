@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr.junit5.params
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.FloatForgery
 
-internal class FloatForgeryParamResolver :
+internal object FloatForgeryParamResolver :
     PrimitiveForgeryParamResolver<FloatForgery>(
         java.lang.Float.TYPE,
         java.lang.Float::class.java,

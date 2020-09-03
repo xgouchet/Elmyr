@@ -3,12 +3,14 @@ package fr.xgouchet.elmyr.junit5
 import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeConfigurator
+import fr.xgouchet.elmyr.annotation.AdvancedForgery
 import fr.xgouchet.elmyr.annotation.BoolForgery
 import fr.xgouchet.elmyr.annotation.DoubleForgery
 import fr.xgouchet.elmyr.annotation.FloatForgery
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.annotation.LongForgery
+import fr.xgouchet.elmyr.annotation.MapForgery
 import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
@@ -158,11 +160,17 @@ internal open class KotlinAnnotationTest {
     }
 
     @Test
+    fun injectStringWithRegex2(@StringForgery(regex = TEST_REGEX) s: String) {
+        assertThat(s).matches(TEST_REGEX)
+        checkForgeryInjectedInField()
+    }
+
+    @Test
     fun injectAsciiString(@StringForgery(StringForgeryType.ASCII) s: String) {
         s.forEach {
             assertThat(it)
-                    .isGreaterThanOrEqualTo(MIN_PRINTABLE)
-                    .isLessThanOrEqualTo(MAX_ASCII)
+                .isGreaterThanOrEqualTo(MIN_PRINTABLE)
+                .isLessThanOrEqualTo(MAX_ASCII)
         }
         checkForgeryInjectedInField()
     }
@@ -171,13 +179,11 @@ internal open class KotlinAnnotationTest {
     fun injectAsciiExtendedString(@StringForgery(StringForgeryType.ASCII_EXTENDED) s: String) {
         s.forEach {
             assertThat(it)
-                    .isGreaterThanOrEqualTo(MIN_PRINTABLE)
-                    .isLessThanOrEqualTo(MAX_ASCII_EXTENDED)
+                .isGreaterThanOrEqualTo(MIN_PRINTABLE)
+                .isLessThanOrEqualTo(MAX_ASCII_EXTENDED)
         }
         checkForgeryInjectedInField()
     }
-
-    // TODO add case
 
     @Test
     fun injectAlphabeticalString(@StringForgery(StringForgeryType.ALPHABETICAL) s: String) {
@@ -204,6 +210,12 @@ internal open class KotlinAnnotationTest {
     @Test
     fun injectAlphaNumericalString(@StringForgery(StringForgeryType.ALPHA_NUMERICAL) s: String) {
         assertThat(s).matches("[a-zA-Z0-9]+")
+        checkForgeryInjectedInField()
+    }
+
+    @Test
+    fun injectAlphaNumericalStringWithSize(@StringForgery(StringForgeryType.ALPHA_NUMERICAL, size = 42) s: String) {
+        assertThat(s).matches("[a-zA-Z0-9]{42}")
         checkForgeryInjectedInField()
     }
 
@@ -264,7 +276,7 @@ internal open class KotlinAnnotationTest {
     @Test
     fun injectEnumForgery(@Forgery month: Month) {
         assertThat(month)
-                .isNotNull()
+            .isNotNull()
     }
 
     // endregion
@@ -330,7 +342,7 @@ internal open class KotlinAnnotationTest {
     }
 
     @Test
-    fun injectMap(@Forgery map: Map<Foo, Bar>) {
+    fun injectGenericMap(@Forgery map: Map<Foo, Bar>) {
         assertThat(map).isNotNull.isNotEmpty
 
         map.forEach {
@@ -338,6 +350,173 @@ internal open class KotlinAnnotationTest {
             assertThat(it.value).isInstanceOf(Bar::class.java)
         }
     }
+
+    // endregion
+
+    // region Advanced
+
+    @Test
+    fun injectAdvancedString(
+        @AdvancedForgery(
+            string = [StringForgery(StringForgeryType.ALPHABETICAL), StringForgery(StringForgeryType.NUMERICAL)]
+        ) s: String
+    ) {
+        assertThat(s).matches("([a-zA-Z]+)|([0-9]+)")
+    }
+
+    @Test
+    fun injectAdvancedStringList(
+        @AdvancedForgery(
+            string = [StringForgery(StringForgeryType.ALPHABETICAL), StringForgery(StringForgeryType.NUMERICAL)]
+        ) list: List<String>
+    ) {
+        assertThat(list).isNotNull.isNotEmpty
+
+        list.forEach {
+            assertThat(it).matches("([a-zA-Z]+)|([0-9]+)")
+        }
+    }
+
+    @Test
+    fun injectAdvancedInt(
+        @AdvancedForgery(
+            int = [IntForgery(4, 15), IntForgery(23, 42)]
+        ) i: Int
+    ) {
+        assertThat(i).matches { it in 4 until 15 || it in 23 until 42 }
+    }
+
+    @Test
+    fun injectAdvancedIntList(
+        @AdvancedForgery(
+            int = [IntForgery(4, 15), IntForgery(23, 42)]
+        ) list: List<Int>
+    ) {
+        assertThat(list).isNotNull.isNotEmpty
+
+        list.forEach { i ->
+            assertThat(i).matches { it in 4 until 15 || it in 23 until 42 }
+        }
+    }
+
+    @Test
+    fun injectAdvancedLong(
+        @AdvancedForgery(
+            long = [LongForgery(4L, 15L), LongForgery(23L, 42L)]
+        ) i: Long
+    ) {
+        assertThat(i).matches { it in 4L until 15L || it in 23L until 42L }
+    }
+
+    @Test
+    fun injectAdvancedLongList(
+        @AdvancedForgery(
+            long = [LongForgery(4L, 15L), LongForgery(23L, 42L)]
+        ) list: List<Long>
+    ) {
+        assertThat(list).isNotNull.isNotEmpty
+
+        list.forEach { i ->
+            assertThat(i).matches { it in 4L until 15L || it in 23L until 42L }
+        }
+    }
+
+    @Test
+    fun injectAdvancedFloat(
+        @AdvancedForgery(
+            float = [FloatForgery(4f, 15f), FloatForgery(23f, 42f)]
+        ) i: Float
+    ) {
+        assertThat(i).matches { it in 4f.rangeTo(15f) || it in 23f.rangeTo(42f) }
+    }
+
+    @Test
+    fun injectAdvancedFloatList(
+        @AdvancedForgery(
+            float = [FloatForgery(4f, 15f), FloatForgery(23f, 42f)]
+        ) list: List<Float>
+    ) {
+        assertThat(list).isNotNull.isNotEmpty
+
+        list.forEach { i ->
+            assertThat(i).matches { it in 4f.rangeTo(15f) || it in 23f.rangeTo(42f) }
+        }
+    }
+
+    @Test
+    fun injectAdvancedDouble(
+        @AdvancedForgery(
+            double = [DoubleForgery(4.0, 15.0), DoubleForgery(23.0, 42.0)]
+        ) i: Double
+    ) {
+        assertThat(i).matches { it in 4.0.rangeTo(15.0) || it in 23.0.rangeTo(42.0) }
+    }
+
+    @Test
+    fun injectAdvancedDoubleList(
+        @AdvancedForgery(
+            double = [DoubleForgery(4.0, 15.0), DoubleForgery(23.0, 42.0)]
+        ) list: List<Double>
+    ) {
+        assertThat(list).isNotNull.isNotEmpty
+
+        list.forEach { i ->
+            assertThat(i).matches { it in 4.0.rangeTo(15.0) || it in 23.0.rangeTo(42.0) }
+        }
+    }
+
+    @Test
+    fun injectMap(
+        @MapForgery(
+            key = AdvancedForgery(string = [StringForgery(StringForgeryType.HEXADECIMAL)]),
+            value = AdvancedForgery(long = [LongForgery(10L)])
+        ) map: Map<String, Long>
+    ) {
+        assertThat(map.entries)
+            .isNotEmpty()
+            .allMatch {
+                it.key.matches(Regex("[a-fA-F0-9]+")) && it.value > 0L
+            }
+    }
+
+    @Test
+    fun injectMapWithGenericValue(
+        @MapForgery(
+            key = AdvancedForgery(string = [StringForgery(regex = "\\w+@\\w+\\.[a-z]{3}")])
+        ) map: Map<String, Foo>
+    ) {
+        assertThat(map.entries)
+            .isNotEmpty()
+            .allMatch {
+                it.key.matches(Regex("\\w+@\\w+\\.[a-z]{3}")) && it.value != null
+            }
+    }
+
+    @Test
+    fun injectNestedMap(
+        @MapForgery(
+            key = AdvancedForgery(string = [StringForgery(StringForgeryType.NUMERICAL)]),
+            value = AdvancedForgery(
+                map = [
+                    MapForgery(
+                        key = AdvancedForgery(int = [IntForgery(-100, 100)])
+                    )
+                ]
+            )
+        ) map: Map<String, Map<Int, Foo>>
+    ) {
+        assertThat(map.entries)
+            .isNotEmpty()
+            .allMatch {
+                it.key.matches(Regex("[0-9]+")) && it.value.isNotEmpty() && it.value.entries.all { nested ->
+                    nested.key >= -100 && nested.key <= 100 && nested.value != null
+                }
+            }
+    }
+
+    // endregion
+
+    // region Map
 
     // endregion
 

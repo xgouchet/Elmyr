@@ -47,7 +47,7 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
         forge: Forge
     ): Any? {
         val annotation = parameterContext.findAnnotation(annotationClass).get()
-        return forgeParameter(annotation, parameterContext.parameter.parameterizedType, forge)
+        return resolveParameter(annotation, parameterContext.parameter.parameterizedType, forge)
     }
 
     // endregion
@@ -72,20 +72,20 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
         return false
     }
 
-    private fun forgeParameter(annotation: A, type: Type, forge: Forge): Any? {
+    internal fun resolveParameter(annotation: A, type: Type, forge: Forge): Any? {
         if (type == primitiveClass || type == primitiveBoxingClass) return forgePrimitive(annotation, forge)
 
         if (type is WildcardType) {
             val actualType = type.upperBounds.first { supportsParameter(it) }
-            return forgeParameter(annotation, actualType, forge)
+            return resolveParameter(annotation, actualType, forge)
         }
 
         check(type is ParameterizedType) { "Unable to forge a value with type $type" }
         val typeParam = type.actualTypeArguments
         return when (type.rawType) {
             List::class.java,
-            Collection::class.java -> forge.aList { forgeParameter(annotation, typeParam.first(), forge) }
-            Set::class.java -> forge.aList { forgeParameter(annotation, typeParam.first(), forge) }.toSet()
+            Collection::class.java -> forge.aList { resolveParameter(annotation, typeParam.first(), forge) }
+            Set::class.java -> forge.aList { resolveParameter(annotation, typeParam.first(), forge) }.toSet()
             else -> throw IllegalStateException("Unable to forge a value with type $type")
         }
     }

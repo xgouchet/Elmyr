@@ -4,8 +4,7 @@ import fr.xgouchet.elmyr.Forge
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 
-internal class ForgeParamResolver :
-        ForgeryResolver {
+internal object ForgeParamResolver : ForgeryResolver {
 
     /** @inheritdoc */
     override fun supportsParameter(

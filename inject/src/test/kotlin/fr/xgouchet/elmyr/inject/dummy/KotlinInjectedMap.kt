@@ -11,13 +11,13 @@ class KotlinInjectedMap {
 
     @MapForgery(
         key = AdvancedForgery(string = [StringForgery(StringForgeryType.HEXADECIMAL)]),
-        value = AdvancedForgery(long = [LongForgery(0)])
+        value = AdvancedForgery(long = [LongForgery(10)])
     )
     lateinit var publicMap: Map<String, Long>
 
     // TODO regex
     @MapForgery(
-        key = AdvancedForgery(string = [StringForgery(StringForgeryType.HEXADECIMAL)])
+        key = AdvancedForgery(string = [StringForgery(regex = "\\w+@\\w+\\.[a-z]{3}")])
     )
     lateinit var publicFooMap: Map<String, Foo>
 

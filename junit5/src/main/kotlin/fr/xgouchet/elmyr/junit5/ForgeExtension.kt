@@ -5,6 +5,7 @@ import fr.xgouchet.elmyr.ForgeConfigurator
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.inject.DefaultForgeryInjector
 import fr.xgouchet.elmyr.inject.ForgeryInjector
+import fr.xgouchet.elmyr.junit5.params.AdvancedForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.BooleanForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.DoubleForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.FloatForgeryParamResolver
@@ -12,6 +13,7 @@ import fr.xgouchet.elmyr.junit5.params.ForgeParamResolver
 import fr.xgouchet.elmyr.junit5.params.ForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.IntForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.LongForgeryParamResolver
+import fr.xgouchet.elmyr.junit5.params.MapForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.RegexForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.StringForgeryParamResolver
 import java.lang.reflect.Constructor
@@ -34,25 +36,27 @@ import org.junit.platform.commons.support.AnnotationSupport
  * @see Forge
  */
 class ForgeExtension :
-        BeforeAllCallback,
-        BeforeEachCallback,
-        BeforeTestExecutionCallback,
-        TestExecutionExceptionHandler,
-        ParameterResolver {
+    BeforeAllCallback,
+    BeforeEachCallback,
+    BeforeTestExecutionCallback,
+    TestExecutionExceptionHandler,
+    ParameterResolver {
 
     internal val instanceForge: Forge = Forge()
     private val injector: ForgeryInjector = DefaultForgeryInjector()
 
     private val parameterResolvers = listOf(
-            ForgeParamResolver(),
-            BooleanForgeryParamResolver(),
-            IntForgeryParamResolver(),
-            LongForgeryParamResolver(),
-            FloatForgeryParamResolver(),
-            DoubleForgeryParamResolver(),
-            StringForgeryParamResolver(),
-            RegexForgeryParamResolver(),
-            ForgeryParamResolver()
+        ForgeParamResolver,
+        BooleanForgeryParamResolver,
+        IntForgeryParamResolver,
+        LongForgeryParamResolver,
+        FloatForgeryParamResolver,
+        DoubleForgeryParamResolver,
+        StringForgeryParamResolver,
+        RegexForgeryParamResolver,
+        ForgeryParamResolver,
+        AdvancedForgeryParamResolver,
+        MapForgeryParamResolver
     )
 
     // region BeforeAllCallback
@@ -94,21 +98,21 @@ class ForgeExtension :
         val configuration = getConfigurations(context).firstOrNull()
         val message = if (configuration == null) {
             "<%s.%s()> failed with Forge seed 0x%xL\n" +
-                    "Add the following @ForgeConfiguration annotation to your test class :\n\n" +
-                    "\t@ForgeConfiguration(seed = 0x%xL)\n"
+                "Add the following @ForgeConfiguration annotation to your test class :\n\n" +
+                "\t@ForgeConfiguration(seed = 0x%xL)\n"
         } else {
             "<%s.%s()> failed with Forge seed 0x%xL\n" +
-                    "Add the seed in your @ForgeConfiguration annotation :\n\n" +
-                    "\t@ForgeConfiguration(value = ${configuration.value.simpleName}::class, seed = 0x%xL)\n"
+                "Add the seed in your @ForgeConfiguration annotation :\n\n" +
+                "\t@ForgeConfiguration(value = ${configuration.value.simpleName}::class, seed = 0x%xL)\n"
         }
         System.err.println(
-                message.format(
-                        Locale.US,
-                        context.requiredTestInstance.javaClass.simpleName,
-                        context.requiredTestMethod.name,
-                        instanceForge.seed,
-                        instanceForge.seed
-                )
+            message.format(
+                Locale.US,
+                context.requiredTestInstance.javaClass.simpleName,
+                context.requiredTestMethod.name,
+                instanceForge.seed,
+                instanceForge.seed
+            )
         )
 
         throw throwable
@@ -129,8 +133,8 @@ class ForgeExtension :
 
         if (isSupported && parameterContext.declaringExecutable is Constructor<*>) {
             throw IllegalStateException(
-                    "@Forgery is not supported on constructor parameters. " +
-                            "Please use field injection instead."
+                "@Forgery is not supported on constructor parameters. " +
+                    "Please use field injection instead."
             )
         }
 
@@ -155,7 +159,7 @@ class ForgeExtension :
     private fun resetSeed(context: ExtensionContext) {
         val configurations = getConfigurations(context)
         val seed = configurations.map { it.seed }
-                .firstOrNull { it != 0L }
+            .firstOrNull { it != 0L }
         instanceForge.seed = seed ?: Forge.seed()
     }
 
@@ -165,10 +169,10 @@ class ForgeExtension :
 
         while (currentContext != context.root) {
             val annotation = AnnotationSupport
-                    .findAnnotation<ForgeConfiguration>(
-                            currentContext.element,
-                            ForgeConfiguration::class.java
-                    )
+                .findAnnotation<ForgeConfiguration>(
+                    currentContext.element,
+                    ForgeConfiguration::class.java
+                )
 
             if (annotation.isPresent) {
                 result.add(annotation.get())
@@ -186,7 +190,7 @@ class ForgeExtension :
 
     private fun getConfigurators(context: ExtensionContext): List<ForgeConfigurator> {
         return getConfigurations(context)
-                .map { it.value.java.newInstance() }
+            .map { it.value.java.newInstance() }
     }
 
     // endregion

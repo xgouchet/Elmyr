@@ -300,6 +300,9 @@ class KotlinForgeryInjectorTest {
         injector.inject(forge, injected)
 
         assertThat(injected.publicAlphaOrNumString).matches("([a-zA-Z]+)|([0-9]+)")
+        assertThat(injected.publicAlphaOrNumStringList).allMatch {
+            it is String && it.matches(Regex("([a-zA-Z]+)|([0-9]+)"))
+        }
         assertThat(injected.publicMultipleRangesInt).matches { it in 20..30 || it in 100..110 }
         assertThat(injected.publicMultipleMeansInt).matches { abs(abs(it) - 100) <= 30 }
         assertThat(injected.publicMultipleRangesLong).matches { it in 20L..30L || it in 100L..110L }
@@ -325,7 +328,7 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.publicFooMap.entries)
             .isNotEmpty()
             .allMatch {
-                it.key.matches(Regex("[a-fA-F0-9]+")) && it.value != null
+                it.key.matches(Regex("\\w+@\\w+\\.[a-z]{3}")) && it.value != null
             }
         assertThat(injected.publicNestedFooMap.entries)
             .isNotEmpty()

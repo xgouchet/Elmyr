@@ -11,8 +11,8 @@ import java.util.Set
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 
-internal class ForgeryParamResolver :
-        ForgeryResolver {
+internal object ForgeryParamResolver :
+    ForgeryResolver {
 
     // region ForgeryResolver
 
@@ -32,52 +32,45 @@ internal class ForgeryParamResolver :
     ): Any? {
         val type = parameterContext.parameter.type
         val parameterizedType = parameterContext.parameter.parameterizedType
-        return if (parameterizedType is ParameterizedType) {
-            getParameterizedForgery(
-                    forge,
-                    parameterizedType.rawType,
-                    parameterizedType.actualTypeArguments
-            ) ?: forge.getForgery(type)
-        } else {
-            forge.getForgery(type)
-        }
+        return resolveParameter(parameterizedType ?: type, forge)
     }
 
     // endregion
 
     // region Internal
 
-    private fun getParameterizedForgery(
+    internal fun resolveParameter(
+        type: Type,
+        forge: Forge
+    ): Any? {
+        return when (type) {
+            is Class<*> -> forge.getForgery(type)
+            is WildcardType -> resolveParameter(type.upperBounds.first(), forge)
+            is ParameterizedType -> resolveParameterizedForgery(forge, type.rawType, type.actualTypeArguments)
+            else -> null
+        }
+    }
+
+    private fun resolveParameterizedForgery(
         forge: Forge,
         rawType: Type,
         typeArgs: Array<Type>
     ): Any? {
         return when (rawType) {
-            in listClasses -> forge.aList { getForgery(forge, typeArgs[0]) }
-            in setClasses -> forge.aList { getForgery(forge, typeArgs[0]) }.toSet()
+            in listClasses -> forge.aList { resolveParameter(typeArgs[0], forge) }
+            in setClasses -> forge.aList { resolveParameter(typeArgs[0], forge) }.toSet()
             in mapClasses -> forge.aList {
-                val key = getForgery(forge, typeArgs[0])
-                val value = getForgery(forge, typeArgs[1])
+                val key = resolveParameter(typeArgs[0], forge)
+                val value = resolveParameter(typeArgs[1], forge)
                 key to value
             }.toMap()
-            else -> null
-        }
-    }
-
-    private fun getForgery(forge: Forge, type: Type): Any? {
-        return when (type) {
-            is Class<*> -> forge.getForgery(type)
-            is WildcardType -> getForgery(forge, type.upperBounds.first())
-            is ParameterizedType -> getParameterizedForgery(forge, type.rawType, type.actualTypeArguments)
-            else -> null
+            else -> resolveParameter(rawType, forge)
         }
     }
 
     // endregion
 
-    companion object {
-        private val listClasses = arrayOf(List::class.java, Collection::class.java)
-        private val setClasses = arrayOf(Set::class.java)
-        private val mapClasses = arrayOf(Map::class.java)
-    }
+    private val listClasses = arrayOf(List::class.java, Collection::class.java)
+    private val setClasses = arrayOf(Set::class.java)
+    private val mapClasses = arrayOf(Map::class.java)
 }

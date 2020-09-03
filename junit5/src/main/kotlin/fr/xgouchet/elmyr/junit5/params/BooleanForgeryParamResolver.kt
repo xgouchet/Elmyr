@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr.junit5.params
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.BoolForgery
 
-internal class BooleanForgeryParamResolver :
+internal object BooleanForgeryParamResolver :
     PrimitiveForgeryParamResolver<BoolForgery>(
         java.lang.Boolean.TYPE,
         java.lang.Boolean::class.java,

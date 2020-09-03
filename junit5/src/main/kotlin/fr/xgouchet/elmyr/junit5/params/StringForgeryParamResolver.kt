@@ -4,7 +4,7 @@ import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 
-internal class StringForgeryParamResolver :
+internal object StringForgeryParamResolver :
     PrimitiveForgeryParamResolver<StringForgery>(
         null,
         java.lang.String::class.java,

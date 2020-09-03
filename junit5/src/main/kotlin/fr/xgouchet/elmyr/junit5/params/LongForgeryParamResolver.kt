@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr.junit5.params
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.LongForgery
 
-internal class LongForgeryParamResolver :
+internal object LongForgeryParamResolver :
     PrimitiveForgeryParamResolver<LongForgery>(
         java.lang.Long.TYPE,
         java.lang.Long::class.java,

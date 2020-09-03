@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr.junit5.params
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.RegexForgery
 
-internal class RegexForgeryParamResolver :
+internal object RegexForgeryParamResolver :
     PrimitiveForgeryParamResolver<RegexForgery>(
         null,
         java.lang.String::class.java,

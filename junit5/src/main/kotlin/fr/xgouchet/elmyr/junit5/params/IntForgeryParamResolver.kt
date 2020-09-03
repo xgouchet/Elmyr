@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr.junit5.params
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.IntForgery
 
-internal class IntForgeryParamResolver :
+internal object IntForgeryParamResolver :
     PrimitiveForgeryParamResolver<IntForgery>(
         java.lang.Integer.TYPE,
         java.lang.Integer::class.java,
