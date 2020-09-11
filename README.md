@@ -1,6 +1,6 @@
 # Elmyr
 
-> Elmyr is a Kotlin library providing tools to generate “random” values, specifically usefull for tests
+> Elmyr is a Kotlin library providing tools to generate “random” values, specifically useful for tests
 
 
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
