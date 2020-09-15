@@ -1012,6 +1012,23 @@ open class Forge {
 
     // endregion
 
+    // region Object
+
+    override fun toString(): String {
+        return "Forge(seed=0x${seed.toString(16)})"
+    }
+
+    override fun hashCode(): Int {
+        return seed.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return (other is Forge) and
+            (System.identityHashCode(other) == System.identityHashCode(this))
+    }
+
+    // endregion
+
     companion object {
 
         // Boolean
