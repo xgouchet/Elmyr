@@ -24,6 +24,14 @@ internal class KotlinReproducibilityTest {
     @Forgery
     private lateinit var fakeBar: Bar
 
+    fun getFoo(): Foo {
+        return fakeFoo
+    }
+
+    fun getBar(): Bar {
+        return fakeBar
+    }
+
     @BeforeEach
     fun setUp(forge: Forge) {
         checkSeedNotChanged(forge)

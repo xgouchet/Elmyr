@@ -14,7 +14,9 @@ import fr.xgouchet.elmyr.annotation.LongForgery
 import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
+import fr.xgouchet.elmyr.junit5.dummy.BarFactory
 import fr.xgouchet.elmyr.junit5.dummy.Foo
+import fr.xgouchet.elmyr.junit5.dummy.FooFactory
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.PrintStream
@@ -72,7 +74,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with Forgery`() {
-        prepareContext("withStringForgery")
+        prepareParamContext("withStringForgery")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -81,7 +83,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with BoolForgery`() {
-        prepareContext("withBool")
+        prepareParamContext("withBool")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -90,7 +92,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with BoolForgery {List}`() {
-        prepareContext("withBoolList")
+        prepareParamContext("withBoolList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -99,7 +101,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with BoolForgery {Set}`() {
-        prepareContext("withBoolSet")
+        prepareParamContext("withBoolSet")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -108,7 +110,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with BoolForgery {Collection}`() {
-        prepareContext("withBoolCollection")
+        prepareParamContext("withBoolCollection")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -117,7 +119,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with BoolForgery {NestedList}`() {
-        prepareContext("withBoolNestedList")
+        prepareParamContext("withBoolNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -126,7 +128,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with IntForgery`() {
-        prepareContext("withInt")
+        prepareParamContext("withInt")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -135,7 +137,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with IntForgery {List}`() {
-        prepareContext("withIntList")
+        prepareParamContext("withIntList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -144,7 +146,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with IntForgery {Set}`() {
-        prepareContext("withIntSet")
+        prepareParamContext("withIntSet")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -153,7 +155,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with IntForgery {Collection}`() {
-        prepareContext("withIntCollection")
+        prepareParamContext("withIntCollection")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -162,7 +164,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with IntForgery {NestedList}`() {
-        prepareContext("withIntNestedList")
+        prepareParamContext("withIntNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -171,7 +173,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with LongForgery`() {
-        prepareContext("withLong")
+        prepareParamContext("withLong")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -180,7 +182,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with LongForgery {List}`() {
-        prepareContext("withLongList")
+        prepareParamContext("withLongList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -189,7 +191,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with LongForgery {Set}`() {
-        prepareContext("withLongSet")
+        prepareParamContext("withLongSet")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -198,7 +200,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with LongForgery {Collection}`() {
-        prepareContext("withLongCollection")
+        prepareParamContext("withLongCollection")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -207,7 +209,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with LongForgery {NestedList}`() {
-        prepareContext("withLongNestedList")
+        prepareParamContext("withLongNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -216,7 +218,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with FloatForgery`() {
-        prepareContext("withFloat")
+        prepareParamContext("withFloat")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -225,7 +227,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with FloatForgery {List}`() {
-        prepareContext("withFloatList")
+        prepareParamContext("withFloatList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -234,7 +236,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with FloatForgery {Set}`() {
-        prepareContext("withFloatSet")
+        prepareParamContext("withFloatSet")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -243,7 +245,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with FloatForgery {Collection}`() {
-        prepareContext("withFloatCollection")
+        prepareParamContext("withFloatCollection")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -252,7 +254,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with FloatForgery {NestedList}`() {
-        prepareContext("withFloatNestedList")
+        prepareParamContext("withFloatNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -261,7 +263,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with DoubleForgery`() {
-        prepareContext("withDouble")
+        prepareParamContext("withDouble")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -270,7 +272,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with DoubleForgery {List}`() {
-        prepareContext("withDoubleList")
+        prepareParamContext("withDoubleList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -279,7 +281,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with DoubleForgery {Set}`() {
-        prepareContext("withDoubleSet")
+        prepareParamContext("withDoubleSet")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -288,7 +290,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with DoubleForgery {Collection}`() {
-        prepareContext("withDoubleCollection")
+        prepareParamContext("withDoubleCollection")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -297,7 +299,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with DoubleForgery {NestedList}`() {
-        prepareContext("withDoubleNestedList")
+        prepareParamContext("withDoubleNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -306,7 +308,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with StringForgery`() {
-        prepareContext("withString")
+        prepareParamContext("withString")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -315,7 +317,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with StringForgery {List}`() {
-        prepareContext("withStringList")
+        prepareParamContext("withStringList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -324,7 +326,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with StringForgery {Set}`() {
-        prepareContext("withStringSet")
+        prepareParamContext("withStringSet")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -333,7 +335,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with StringForgery {Collection}`() {
-        prepareContext("withStringCollection")
+        prepareParamContext("withStringCollection")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -342,7 +344,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with StringForgery {NestedList}`() {
-        prepareContext("withStringNestedList")
+        prepareParamContext("withStringNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -351,7 +353,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with RegexForgery`() {
-        prepareContext("withRegex")
+        prepareParamContext("withRegex")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -360,7 +362,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with RegexForgery {List}`() {
-        prepareContext("withRegexList")
+        prepareParamContext("withRegexList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -369,7 +371,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with RegexForgery {Set}`() {
-        prepareContext("withRegexSet")
+        prepareParamContext("withRegexSet")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -378,7 +380,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with RegexForgery {Collection}`() {
-        prepareContext("withRegexCollection")
+        prepareParamContext("withRegexCollection")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -387,7 +389,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter with RegexForgery {NestedList}`() {
-        prepareContext("withRegexNestedList")
+        prepareParamContext("withRegexNestedList")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -396,7 +398,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter returns true on un-annotated and Forge type`() {
-        prepareContext("withForge")
+        prepareParamContext("withForge")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -416,7 +418,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter returns false on un-annotated`() {
-        prepareContext("withUnannotatedString")
+        prepareParamContext("withUnannotatedString")
 
         val result = testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
 
@@ -425,7 +427,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter Fails on BoolForgery param not Bool`() {
-        prepareContext("withNotBool")
+        prepareParamContext("withNotBool")
 
         assertThrows<IllegalStateException> {
             testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
@@ -434,7 +436,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter Fails on IntForgery param not Int`() {
-        prepareContext("withNotInt")
+        prepareParamContext("withNotInt")
 
         assertThrows<IllegalStateException> {
             testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
@@ -443,7 +445,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter Fails on LongForgery param not Long`() {
-        prepareContext("withNotLong")
+        prepareParamContext("withNotLong")
 
         assertThrows<IllegalStateException> {
             testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
@@ -452,7 +454,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter Fails on FloatForgery param not Float`() {
-        prepareContext("withNotFloat")
+        prepareParamContext("withNotFloat")
 
         assertThrows<IllegalStateException> {
             testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
@@ -461,7 +463,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter Fails on DoubleForgery param not Double`() {
-        prepareContext("withNotDouble")
+        prepareParamContext("withNotDouble")
 
         assertThrows<IllegalStateException> {
             testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
@@ -470,7 +472,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter Fails on StringForgery param not String`() {
-        prepareContext("withNotString")
+        prepareParamContext("withNotString")
 
         assertThrows<IllegalStateException> {
             testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
@@ -479,7 +481,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `supportsParameter Fails on RegexForgery param not Regex`() {
-        prepareContext("withNotRegex")
+        prepareParamContext("withNotRegex")
 
         assertThrows<IllegalStateException> {
             testedExtension.supportsParameter(mockParameterContext, mockExtensionContext)
@@ -492,7 +494,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Forge}`() {
-        prepareContext("withForge")
+        prepareParamContext("withForge")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -501,7 +503,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Bool}`() {
-        prepareContext("withBool")
+        prepareParamContext("withBool")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -510,7 +512,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Bool list}`() {
-        prepareContext("withBoolList")
+        prepareParamContext("withBoolList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -519,7 +521,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Bool set}`() {
-        prepareContext("withBoolSet")
+        prepareParamContext("withBoolSet")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -528,7 +530,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Bool collection}`() {
-        prepareContext("withBoolCollection")
+        prepareParamContext("withBoolCollection")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -537,7 +539,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Bool nested list}`() {
-        prepareContext("withBoolNestedList")
+        prepareParamContext("withBoolNestedList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -546,7 +548,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Int}`() {
-        prepareContext("withInt")
+        prepareParamContext("withInt")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -555,7 +557,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Int list}`() {
-        prepareContext("withIntList")
+        prepareParamContext("withIntList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -564,7 +566,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Int set}`() {
-        prepareContext("withIntSet")
+        prepareParamContext("withIntSet")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -573,7 +575,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Int collection}`() {
-        prepareContext("withIntCollection")
+        prepareParamContext("withIntCollection")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -582,7 +584,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Int nested list}`() {
-        prepareContext("withIntNestedList")
+        prepareParamContext("withIntNestedList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -591,7 +593,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Long}`() {
-        prepareContext("withLong")
+        prepareParamContext("withLong")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -600,7 +602,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Long list}`() {
-        prepareContext("withLongList")
+        prepareParamContext("withLongList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -609,7 +611,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Long set}`() {
-        prepareContext("withLongSet")
+        prepareParamContext("withLongSet")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -618,7 +620,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Long collection}`() {
-        prepareContext("withLongCollection")
+        prepareParamContext("withLongCollection")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -627,7 +629,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Long nested list}`() {
-        prepareContext("withLongNestedList")
+        prepareParamContext("withLongNestedList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -636,7 +638,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Float}`() {
-        prepareContext("withFloat")
+        prepareParamContext("withFloat")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -645,7 +647,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Float list}`() {
-        prepareContext("withFloatList")
+        prepareParamContext("withFloatList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -654,7 +656,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Float set}`() {
-        prepareContext("withFloatSet")
+        prepareParamContext("withFloatSet")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -663,7 +665,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Float collection}`() {
-        prepareContext("withFloatCollection")
+        prepareParamContext("withFloatCollection")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -672,7 +674,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Float nested list}`() {
-        prepareContext("withFloatNestedList")
+        prepareParamContext("withFloatNestedList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -681,7 +683,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Double}`() {
-        prepareContext("withDouble")
+        prepareParamContext("withDouble")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -690,7 +692,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Double list}`() {
-        prepareContext("withDoubleList")
+        prepareParamContext("withDoubleList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -699,7 +701,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Double set}`() {
-        prepareContext("withDoubleSet")
+        prepareParamContext("withDoubleSet")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -708,7 +710,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Double collection}`() {
-        prepareContext("withDoubleCollection")
+        prepareParamContext("withDoubleCollection")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -717,7 +719,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Double nested list}`() {
-        prepareContext("withDoubleNestedList")
+        prepareParamContext("withDoubleNestedList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -726,7 +728,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {String}`() {
-        prepareContext("withString")
+        prepareParamContext("withString")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -735,7 +737,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {String list}`() {
-        prepareContext("withStringList")
+        prepareParamContext("withStringList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -744,7 +746,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {String set}`() {
-        prepareContext("withStringSet")
+        prepareParamContext("withStringSet")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -753,7 +755,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {String collection}`() {
-        prepareContext("withStringCollection")
+        prepareParamContext("withStringCollection")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -762,7 +764,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {String nested list}`() {
-        prepareContext("withStringNestedList")
+        prepareParamContext("withStringNestedList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -771,7 +773,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {StringRegex}`() {
-        prepareContext("withStringRegex")
+        prepareParamContext("withStringRegex")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -780,7 +782,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {StringRegex list}`() {
-        prepareContext("withStringRegexList")
+        prepareParamContext("withStringRegexList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -789,7 +791,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {StringRegex set}`() {
-        prepareContext("withStringRegexSet")
+        prepareParamContext("withStringRegexSet")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -798,7 +800,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {StringRegex collection}`() {
-        prepareContext("withStringRegexCollection")
+        prepareParamContext("withStringRegexCollection")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -807,7 +809,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {StringRegex nested list}`() {
-        prepareContext("withStringRegexNestedList")
+        prepareParamContext("withStringRegexNestedList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -818,7 +820,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Regex}`() {
-        prepareContext("withRegex")
+        prepareParamContext("withRegex")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -827,7 +829,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Regex list}`() {
-        prepareContext("withRegexList")
+        prepareParamContext("withRegexList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -836,7 +838,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Regex set}`() {
-        prepareContext("withRegexSet")
+        prepareParamContext("withRegexSet")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -845,7 +847,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Regex collection}`() {
-        prepareContext("withRegexCollection")
+        prepareParamContext("withRegexCollection")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -854,7 +856,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter {Regex nested list}`() {
-        prepareContext("withRegexNestedList")
+        prepareParamContext("withRegexNestedList")
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
@@ -869,7 +871,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on unknown parameterized type`() {
-        prepareContext("withParameterized")
+        prepareParamContext("withParameterized")
 
         assertThrows<ForgeryFactoryMissingException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
@@ -878,7 +880,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on BoolForgery param invalid probability lt 0`() {
-        prepareContext("withBoolInvalid1")
+        prepareParamContext("withBoolInvalid1")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -886,7 +888,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on BoolForgery param invalid probability gt 1`() {
-        prepareContext("withBoolInvalid2")
+        prepareParamContext("withBoolInvalid2")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -894,7 +896,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on IntForgery param invalid min + stDev`() {
-        prepareContext("withIntInvalid1")
+        prepareParamContext("withIntInvalid1")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -902,7 +904,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on IntForgery param invalid max + stDev`() {
-        prepareContext("withIntInvalid2")
+        prepareParamContext("withIntInvalid2")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -910,7 +912,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on IntForgery param invalid min + mean`() {
-        prepareContext("withIntInvalid3")
+        prepareParamContext("withIntInvalid3")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -918,7 +920,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on IntForgery param invalid max + mean`() {
-        prepareContext("withIntInvalid4")
+        prepareParamContext("withIntInvalid4")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -926,7 +928,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on LongForgery param invalid min + stDev`() {
-        prepareContext("withLongInvalid1")
+        prepareParamContext("withLongInvalid1")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -934,7 +936,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on LongForgery param invalid max + stDev`() {
-        prepareContext("withLongInvalid2")
+        prepareParamContext("withLongInvalid2")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -942,7 +944,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on LongForgery param invalid min + mean`() {
-        prepareContext("withLongInvalid3")
+        prepareParamContext("withLongInvalid3")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -950,7 +952,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on LongForgery param invalid max + mean`() {
-        prepareContext("withLongInvalid4")
+        prepareParamContext("withLongInvalid4")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -958,7 +960,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on FloatForgery param invalid min + stDev`() {
-        prepareContext("withFloatInvalid1")
+        prepareParamContext("withFloatInvalid1")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -966,7 +968,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on FloatForgery param invalid max + stDev`() {
-        prepareContext("withFloatInvalid2")
+        prepareParamContext("withFloatInvalid2")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -974,7 +976,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on FloatForgery param invalid min + mean`() {
-        prepareContext("withFloatInvalid3")
+        prepareParamContext("withFloatInvalid3")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -982,7 +984,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on FloatForgery param invalid max + mean`() {
-        prepareContext("withFloatInvalid4")
+        prepareParamContext("withFloatInvalid4")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -990,7 +992,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on DoubleForgery param invalid min + stDev`() {
-        prepareContext("withDoubleInvalid1")
+        prepareParamContext("withDoubleInvalid1")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -998,7 +1000,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on DoubleForgery param invalid max + stDev`() {
-        prepareContext("withDoubleInvalid2")
+        prepareParamContext("withDoubleInvalid2")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -1006,7 +1008,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on DoubleForgery param invalid min + mean`() {
-        prepareContext("withDoubleInvalid3")
+        prepareParamContext("withDoubleInvalid3")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -1014,7 +1016,7 @@ internal class ForgeExtensionTest {
 
     @Test
     fun `resolveParameter Fails on DoubleForgery param invalid max + mean`() {
-        prepareContext("withDoubleInvalid4")
+        prepareParamContext("withDoubleInvalid4")
         assertThrows<IllegalStateException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
@@ -1054,15 +1056,89 @@ internal class ForgeExtensionTest {
             )
     }
 
+    @Test
+    fun `handleException with verbose message parameter`() {
+        prepareParamContext("withInt")
+        whenever(mockExtensionContext.requiredTestInstance) doReturn mockTarget
+        val thrown: Throwable = IOException("Whatever")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+        val caught: Throwable? = try {
+            testedExtension.handleTestExecutionException(
+                mockExtensionContext,
+                thrown
+            )
+            null
+        } catch (e: IOException) {
+            e
+        }
+
+        assertThat(caught).isSameAs(thrown)
+
+        val forge = testedExtension.instanceForge
+        assertThat(errStreamContent.toString())
+            .isEqualTo(
+                "<${mockTarget.javaClass.simpleName}.withInt()> failed " +
+                    "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
+                    "\t- param withInt::arg0 = $result\n\n" +
+                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                    "\n" +
+                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                    "\n"
+            )
+    }
+
+    @Test
+    fun `handleException with verbose message property`() {
+        val target = KotlinReproducibilityTest()
+        val testClass = target.javaClass
+        val testMethod = testClass.getMethod("testRun1")
+        whenever(mockExtensionContext.requiredTestInstance) doReturn target
+        whenever(mockExtensionContext.requiredTestMethod) doReturn testMethod
+
+        testedExtension.instanceForge.apply {
+            addFactory(FooFactory())
+            addFactory(BarFactory())
+        }
+        testedExtension.beforeEach(mockExtensionContext)
+        val thrown: Throwable = IOException("Whatever")
+
+        val caught: Throwable? = try {
+            testedExtension.handleTestExecutionException(
+                mockExtensionContext,
+                thrown
+            )
+            null
+        } catch (e: IOException) {
+            e
+        }
+
+        assertThat(caught).isSameAs(thrown)
+
+        val forge = testedExtension.instanceForge
+        assertThat(errStreamContent.toString())
+            .isEqualTo(
+                "<KotlinReproducibilityTest.testRun1()> failed " +
+                    "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
+                    "\t- field KotlinReproducibilityTest::fakeBar = ${target.getBar()}\n" +
+                    "\t- field KotlinReproducibilityTest::fakeFoo = ${target.getFoo()}\n\n" +
+                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                    "\n" +
+                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                    "\n"
+            )
+    }
+
     // endregion
 
     // region Internal
 
-    fun prepareContext(methodName: String, parameterIndex: Int = 0) {
+    fun prepareParamContext(methodName: String, parameterIndex: Int = 0) {
         val javaClass = Reflekta::class.java
         val method = javaClass.declaredMethods.first { it.name == methodName }
         val parameter = method.parameters[parameterIndex]
         mockParameterContext = MockParameterContext(javaClass, method, parameter)
+        whenever(mockExtensionContext.requiredTestMethod) doReturn method
     }
 
     // endregion

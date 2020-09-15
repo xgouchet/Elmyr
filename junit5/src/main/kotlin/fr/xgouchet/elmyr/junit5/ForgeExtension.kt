@@ -17,6 +17,7 @@ import fr.xgouchet.elmyr.junit5.params.MapForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.RegexForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.StringForgeryParamResolver
 import java.lang.reflect.Constructor
+import java.lang.reflect.Type
 import java.util.Locale
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
@@ -40,10 +41,13 @@ class ForgeExtension :
     BeforeEachCallback,
     BeforeTestExecutionCallback,
     TestExecutionExceptionHandler,
-    ParameterResolver {
+    ParameterResolver,
+    ForgeryInjector.Listener {
 
     internal val instanceForge: Forge = Forge()
     private val injector: ForgeryInjector = DefaultForgeryInjector()
+
+    private val injectedData: MutableList<ForgeTarget<*>> = mutableListOf()
 
     private val parameterResolvers = listOf(
         ForgeParamResolver,
@@ -77,8 +81,9 @@ class ForgeExtension :
     /** @inheritdoc */
     override fun beforeEach(context: ExtensionContext) {
         resetSeed(context)
+        injectedData.clear()
         val target = context.requiredTestInstance
-        injector.inject(instanceForge, target)
+        injector.inject(instanceForge, target, this)
     }
 
     // endregion
@@ -96,23 +101,37 @@ class ForgeExtension :
     /** @inheritdoc */
     override fun handleTestExecutionException(context: ExtensionContext, throwable: Throwable) {
         val configuration = getConfigurations(context).firstOrNull()
-        val message = if (configuration == null) {
-            "<%s.%s()> failed with Forge seed 0x%xL\n" +
-                "Add the following @ForgeConfiguration annotation to your test class :\n\n" +
-                "\t@ForgeConfiguration(seed = 0x%xL)\n"
+        val errorMessage = "<%s.%s()> failed with Forge seed 0x%xL".format(
+            Locale.US,
+            context.requiredTestInstance.javaClass.simpleName,
+            context.requiredTestMethod.name,
+            instanceForge.seed
+        )
+
+        val injectedMessage = if (injectedData.isEmpty()) "" else {
+            injectedData.joinToString(
+                separator = "\n",
+                prefix = " and:\n",
+                postfix = "\n"
+            ) { "\t- ${it.type} ${it.parent}::${it.name} = ${it.value}" }
+        }
+
+        val helpMessage = if (configuration == null) {
+            "\nAdd the following @ForgeConfiguration annotation to your test class :\n\n" +
+                "\t@ForgeConfiguration(seed = 0x%xL)\n".format(
+                    Locale.US,
+                    instanceForge.seed
+                )
         } else {
-            "<%s.%s()> failed with Forge seed 0x%xL\n" +
-                "Add the seed in your @ForgeConfiguration annotation :\n\n" +
-                "\t@ForgeConfiguration(value = ${configuration.value.simpleName}::class, seed = 0x%xL)\n"
+            "\nAdd the seed in your @ForgeConfiguration annotation :\n\n" +
+                "\t@ForgeConfiguration(value = %s::class, seed = 0x%xL)\n".format(
+                    Locale.US,
+                    configuration.value.simpleName,
+                    instanceForge.seed
+                )
         }
         System.err.println(
-            message.format(
-                Locale.US,
-                context.requiredTestInstance.javaClass.simpleName,
-                context.requiredTestMethod.name,
-                instanceForge.seed,
-                instanceForge.seed
-            )
+            errorMessage + injectedMessage + helpMessage
         )
 
         throw throwable
@@ -149,7 +168,31 @@ class ForgeExtension :
         val resolver = parameterResolvers.firstOrNull {
             it.supportsParameter(parameterContext, extensionContext)
         }
-        return resolver?.resolveParameter(parameterContext, extensionContext, instanceForge)
+        val value = resolver?.resolveParameter(parameterContext, extensionContext, instanceForge)
+
+        val target = ForgeTarget.ForgeParamTarget(
+            parameterContext.parameter.declaringExecutable.name,
+            parameterContext.parameter.name,
+            value
+        )
+        injectedData.add(target)
+
+        return value
+    }
+
+    // endregion
+
+    // region ForgeryInjector.Listener
+
+    /** @inheritdoc */
+    override fun onFieldInjected(declaringClass: Class<*>, fieldType: Type, fieldName: String, value: Any?) {
+        injectedData.add(
+            ForgeTarget.ForgeFieldTarget(
+                declaringClass.simpleName,
+                fieldName,
+                value
+            )
+        )
     }
 
     // endregion

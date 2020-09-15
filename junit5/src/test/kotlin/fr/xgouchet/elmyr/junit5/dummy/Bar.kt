@@ -1,5 +1,5 @@
 package fr.xgouchet.elmyr.junit5.dummy
 
-internal class Bar(
+internal data class Bar(
     val s: String
 )

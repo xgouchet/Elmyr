@@ -6,6 +6,10 @@
 
  - Add a listener to the `ForgeryInjector` to be notified when an injection happens
 
+#### `junit5`
+
+- Make the error message more verbose
+
 ### `1.2.0` (2020/09/03)
 
 #### `core`
