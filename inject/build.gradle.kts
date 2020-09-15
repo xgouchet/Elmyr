@@ -20,6 +20,7 @@ dependencies {
 
     testCompile(Dependencies.Libraries.JUnit4)
     testCompile(Dependencies.Libraries.JUnit5)
+    testCompile(Dependencies.Libraries.JUnit5Extensions)
     testCompile(Dependencies.Libraries.Spek)
     testCompile(Dependencies.Libraries.TestTools)
 }

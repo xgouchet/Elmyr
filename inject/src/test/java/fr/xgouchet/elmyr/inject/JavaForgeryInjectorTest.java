@@ -5,17 +5,27 @@ import fr.xgouchet.elmyr.ForgeryException;
 import fr.xgouchet.elmyr.inject.dummy.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class JavaForgeryInjectorTest {
 
     private ForgeryInjector injector;
     private Forge forge;
+
+    @Mock
+    ForgeryInjector.Listener mockListener;
 
     @BeforeEach
     void setUp() {
@@ -29,7 +39,7 @@ class JavaForgeryInjectorTest {
     void injectsPublicField() {
         JavaInjected injected = new JavaInjected();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.getPublicFoo()).isNotNull();
     }
@@ -38,7 +48,7 @@ class JavaForgeryInjectorTest {
     void injectsPackageField() {
         JavaInjected injected = new JavaInjected();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.getPackageFoo()).isNotNull();
     }
@@ -47,7 +57,7 @@ class JavaForgeryInjectorTest {
     void injectsProtectedField() {
         JavaInjected injected = new JavaInjected();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.getProtectedFoo()).isNotNull();
     }
@@ -56,7 +66,7 @@ class JavaForgeryInjectorTest {
     void injectsPrivateField() {
         JavaInjected injected = new JavaInjected();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.getPrivateFoo()).isNotNull();
     }
@@ -65,7 +75,7 @@ class JavaForgeryInjectorTest {
     void injectsDifferentInstances() {
         JavaInjected injected = new JavaInjected();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.getPublicFoo())
                 .isNotSameAs(injected.getPackageFoo())
@@ -84,7 +94,7 @@ class JavaForgeryInjectorTest {
     void injectsPublicFieldFromParentClass() {
         JavaInjectedChild injected = new JavaInjectedChild();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.getPublicFoo()).isNotNull();
         assertThat(injected.getPackageFoo()).isNotNull();
@@ -97,7 +107,7 @@ class JavaForgeryInjectorTest {
     void injectsGenerics() {
         JavaInjectedGenerics injected = new JavaInjectedGenerics();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.privateFooList).isNotNull().isNotEmpty();
         assertThat(injected.privateFooSet).isNotNull().isNotEmpty();
@@ -109,7 +119,7 @@ class JavaForgeryInjectorTest {
     void injectsPrimitives(){
         JavaInjectedPrimitives injected = new JavaInjectedPrimitives();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.publicInt).isNotEqualTo(0);
         assertThat(injected.publicLong).isNotEqualTo(0L);
@@ -126,7 +136,7 @@ class JavaForgeryInjectorTest {
     void injectsStrings(){
         JavaInjectedStrings injected = new JavaInjectedStrings();
 
-        injector.inject(forge, injected);
+        injector.inject(forge, injected, mockListener);
 
         assertThat(injected.publicHexaString).matches("[0-9a-zA-z]+");
         assertThat(injected.publicNumericalStringSet)
@@ -142,7 +152,7 @@ class JavaForgeryInjectorTest {
         JavaInjectedMissingFactory injected = new JavaInjectedMissingFactory();
 
         assertThrows(ForgeryException.class, () -> {
-            injector.inject(forge, injected);
+            injector.inject(forge, injected, mockListener);
         });
     }
 
@@ -151,7 +161,7 @@ class JavaForgeryInjectorTest {
         JavaInjectedFinalField injected = new JavaInjectedFinalField();
 
         assertThrows(ForgeryInjectorException.class, () -> {
-            injector.inject(forge, injected);
+            injector.inject(forge, injected, mockListener);
         });
     }
 
@@ -160,7 +170,7 @@ class JavaForgeryInjectorTest {
         JavaInjectedUnknownGenerics injected = new JavaInjectedUnknownGenerics();
 
         assertThrows(ForgeryInjectorException.class, () -> {
-            injector.inject(forge, injected);
+            injector.inject(forge, injected, mockListener);
         });
     }
 }

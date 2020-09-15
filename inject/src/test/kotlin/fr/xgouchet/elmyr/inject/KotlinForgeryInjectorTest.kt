@@ -1,5 +1,7 @@
 package fr.xgouchet.elmyr.inject
 
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeryException
 import fr.xgouchet.elmyr.inject.dummy.Bar
@@ -27,11 +29,21 @@ import org.assertj.core.data.Offset
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.quality.Strictness
 
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class KotlinForgeryInjectorTest {
 
     private lateinit var injector: ForgeryInjector
     private lateinit var forge: Forge
+
+    @Mock
+    lateinit var mockListener: ForgeryInjector.Listener
 
     @BeforeEach
     fun setUp() {
@@ -46,7 +58,7 @@ class KotlinForgeryInjectorTest {
     fun injectsPublicProperty() {
         val injected = KotlinInjected()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicFoo).isNotNull()
     }
@@ -55,7 +67,7 @@ class KotlinForgeryInjectorTest {
     fun injectsPackageProperty() {
         val injected = KotlinInjected()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.internalFoo).isNotNull()
     }
@@ -64,7 +76,7 @@ class KotlinForgeryInjectorTest {
     fun injectsProtectedProperty() {
         val injected = KotlinInjected()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.retrieveProtectedFoo()).isNotNull()
     }
@@ -73,16 +85,49 @@ class KotlinForgeryInjectorTest {
     fun injectsPrivateProperty() {
         val injected = KotlinInjected()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.retrievePrivateFoo()).isNotNull()
+    }
+
+    @Test
+    fun callsListener() {
+        val injected = KotlinInjected()
+
+        injector.inject(forge, injected, mockListener)
+
+        verify(mockListener).onFieldInjected(
+            KotlinInjected::class.java,
+            Foo::class.java,
+            "publicFoo",
+            injected.publicFoo
+        )
+        verify(mockListener).onFieldInjected(
+            KotlinInjected::class.java,
+            Foo::class.java,
+            "internalFoo",
+            injected.internalFoo
+        )
+        verify(mockListener).onFieldInjected(
+            KotlinInjected::class.java,
+            Foo::class.java,
+            "protectedFoo",
+            injected.retrieveProtectedFoo()
+        )
+        verify(mockListener).onFieldInjected(
+            KotlinInjected::class.java,
+            Foo::class.java,
+            "privateFoo",
+            injected.retrievePrivateFoo()
+        )
+        verifyNoMoreInteractions(mockListener)
     }
 
     @Test
     fun injectsDifferentInstances() {
         val injected = KotlinInjected()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicFoo)
             .isNotSameAs(injected.internalFoo)
@@ -101,7 +146,7 @@ class KotlinForgeryInjectorTest {
     fun injectsPropertiesFromParentClass() {
         val injected = KotlinInjectedChild()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicFoo).isNotNull()
         assertThat(injected.internalFoo).isNotNull()
@@ -114,7 +159,7 @@ class KotlinForgeryInjectorTest {
     fun injectsGenerics() {
         val injected = KotlinInjectedGenerics()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicFooList).isNotNull.isNotEmpty
         assertThat(injected.publicFooSet).isNotNull.isNotEmpty
@@ -127,7 +172,7 @@ class KotlinForgeryInjectorTest {
         val injected = KotlinInjectedInvalidPrimitives()
 
         assertThrows<ForgeryException> {
-            injector.inject(forge, injected)
+            injector.inject(forge, injected, null)
         }
     }
 
@@ -136,7 +181,7 @@ class KotlinForgeryInjectorTest {
         val injected = KotlinInjectedMissingFactory()
 
         assertThrows<ForgeryException> {
-            injector.inject(forge, injected)
+            injector.inject(forge, injected, null)
         }
     }
 
@@ -145,7 +190,7 @@ class KotlinForgeryInjectorTest {
         val injected = KotlinInjectedImmutableVal()
 
         assertThrows<ForgeryInjectorException> {
-            injector.inject(forge, injected)
+            injector.inject(forge, injected, null)
         }
     }
 
@@ -154,7 +199,7 @@ class KotlinForgeryInjectorTest {
         val injected = KotlinInjectedUnknownGeneric()
 
         assertThrows<ForgeryInjectorException> {
-            injector.inject(forge, injected)
+            injector.inject(forge, injected, null)
         }
     }
 
@@ -163,7 +208,7 @@ class KotlinForgeryInjectorTest {
         val injected = KotlinInjectedUnknownPrimitiveGeneric()
 
         assertThrows<ForgeryInjectorException> {
-            injector.inject(forge, injected)
+            injector.inject(forge, injected, null)
         }
     }
 
@@ -171,7 +216,7 @@ class KotlinForgeryInjectorTest {
     fun ignoresWhenUnknownAnnotation() {
         val injected = KotlinInjectedUnknownAnnotation()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.retrieveFooOrNull()).isNull()
     }
@@ -180,7 +225,7 @@ class KotlinForgeryInjectorTest {
     fun injectPrimitiveBoolean() {
         val injected = KotlinInjectedPrimitives()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicBoolList).isNotEmpty().hasDistinctValues(16)
         assertThat(injected.publicBoolSet).isNotEmpty().hasDistinctValues(16)
@@ -191,7 +236,7 @@ class KotlinForgeryInjectorTest {
     fun injectPrimitiveInt() {
         val injected = KotlinInjectedPrimitives()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicInt).isNotEqualTo(0)
         assertThat(injected.publicRangeInt).isBetween(3, 42)
@@ -208,7 +253,7 @@ class KotlinForgeryInjectorTest {
     fun injectPrimitiveLong() {
         val injected = KotlinInjectedPrimitives()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicLong).isNotEqualTo(0)
         assertThat(injected.publicRangeLong).isBetween(3, 42)
@@ -225,7 +270,7 @@ class KotlinForgeryInjectorTest {
     fun injectPrimitiveFloat() {
         val injected = KotlinInjectedPrimitives()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicFloat).isNotEqualTo(0)
         assertThat(injected.publicRangeFloat).isBetween(3f, 43f)
@@ -242,7 +287,7 @@ class KotlinForgeryInjectorTest {
     fun injectPrimitiveDouble() {
         val injected = KotlinInjectedPrimitives()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicDouble).isNotEqualTo(0)
         assertThat(injected.publicRangeDouble).isBetween(3.0, 43.0)
@@ -259,7 +304,7 @@ class KotlinForgeryInjectorTest {
     fun injectStrings() {
         val injected = KotlinInjectedStrings()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicAplhaString).matches("[a-zA-Z]+")
         assertThat(injected.publicAplhaLowerString).matches("[a-z]+")
@@ -284,7 +329,7 @@ class KotlinForgeryInjectorTest {
     fun injectRegex() {
         val injected = KotlinInjectedRegex()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicAlphaString).matches("[a-z]+")
         assertThat(injected.internalDigitsString).matches("[0-9]+")
@@ -297,7 +342,7 @@ class KotlinForgeryInjectorTest {
     fun injectAdvanced() {
         val injected = KotlinInjectedAdvanced()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicAlphaOrNumString).matches("([a-zA-Z]+)|([0-9]+)")
         assertThat(injected.publicAlphaOrNumStringList).allMatch {
@@ -318,7 +363,7 @@ class KotlinForgeryInjectorTest {
     fun injectMap() {
         val injected = KotlinInjectedMap()
 
-        injector.inject(forge, injected)
+        injector.inject(forge, injected, null)
 
         assertThat(injected.publicMap.entries)
             .isNotEmpty()

@@ -24,6 +24,7 @@ import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.full.superclasses
+import kotlin.reflect.jvm.javaType
 
 /**
  * The default implementation of a [ForgeryInjector].
@@ -35,14 +36,18 @@ class DefaultForgeryInjector : ForgeryInjector {
 
     // region ForgeryInjector
 
-    override fun inject(forge: Forge, target: Any) {
+    override fun inject(
+        forge: Forge,
+        target: Any,
+        listener: ForgeryInjector.Listener?
+    ) {
         val classesToProcess = mutableSetOf<KClass<*>>()
         classesToProcess.add(target.javaClass.kotlin)
 
         while (classesToProcess.isNotEmpty()) {
             val classToProcess = classesToProcess.first()
             if (classToProcess != Any::class) {
-                injectInClass(forge, classToProcess, target)
+                injectInClass(forge, classToProcess, target, listener)
                 classToProcess.superclasses.forEach {
                     classesToProcess.add(it)
                 }
@@ -59,7 +64,8 @@ class DefaultForgeryInjector : ForgeryInjector {
     private fun injectInClass(
         forge: Forge,
         clazz: KClass<*>,
-        target: Any
+        target: Any,
+        listener: ForgeryInjector.Listener?
     ) {
         val invalidProperties = clazz.declaredMembers
             .filterIsInstance<KProperty<*>>()
@@ -70,21 +76,26 @@ class DefaultForgeryInjector : ForgeryInjector {
                 }
             }
         when (invalidProperties.size) {
-            0 -> injectInClassSafe(clazz, forge, target)
+            0 -> injectInClassSafe(clazz, forge, target, listener)
             1 -> throw ForgeryInjectorException.withProperty(target, invalidProperties.first())
             else -> throw ForgeryInjectorException.withProperties(target, invalidProperties)
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private fun injectInClassSafe(clazz: KClass<*>, forge: Forge, target: Any) {
+    private fun injectInClassSafe(
+        clazz: KClass<*>,
+        forge: Forge,
+        target: Any,
+        listener: ForgeryInjector.Listener?
+    ) {
         val mutableProperties = clazz.declaredMembers.filterIsInstance<KMutableProperty<*>>()
 
         val errors = mutableListOf<Throwable>()
 
         for (property in mutableProperties) {
             try {
-                injectInProperty(forge, property, target)
+                injectInProperty(forge, clazz, property, target, listener)
             } catch (e: Throwable) {
                 errors.add(e)
             }
@@ -97,8 +108,10 @@ class DefaultForgeryInjector : ForgeryInjector {
 
     private fun injectInProperty(
         forge: Forge,
+        clazz: KClass<*>,
         property: KMutableProperty<*>,
-        target: Any
+        target: Any,
+        listener: ForgeryInjector.Listener?
     ) {
         var value: Any? = null
         for (annotation in property.annotations) {
@@ -120,6 +133,7 @@ class DefaultForgeryInjector : ForgeryInjector {
 
         if (value != null) {
             property.setter.invokePrivate(target, value)
+            listener?.onFieldInjected(clazz.java, property.returnType.javaType, property.name, value)
         }
     }
 
