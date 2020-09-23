@@ -9,7 +9,8 @@
 
 #### `junit5`
 
-- Make the error message more verbose
+ - Make the error message more verbose
+ - Allow advanced forgery injections using `@PairForgery`
 
 ### `1.2.0` (2020/09/03)
 

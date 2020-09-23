@@ -45,6 +45,7 @@ internal object AdvancedForgeryParamResolver : ForgeryResolver {
             annotation.float.isNotEmpty() -> resolveFloatParameter(annotation, type, forge)
             annotation.double.isNotEmpty() -> resolveDoubleParameter(annotation, type, forge)
             annotation.map.isNotEmpty() -> resolveMapParameter(annotation, type, forge)
+            annotation.pair.isNotEmpty() -> resolvePairParameter(annotation, type, forge)
             else -> ForgeryParamResolver.resolveParameter(type, forge)
         }
     }
@@ -121,6 +122,19 @@ internal object AdvancedForgeryParamResolver : ForgeryResolver {
     ): Map<Any?, Any?> {
         val usingAnnotation = forge.anElementFrom(*annotation.map)
         return MapForgeryParamResolver.resolveMapParameter(
+            usingAnnotation,
+            type,
+            forge
+        )
+    }
+
+    private fun resolvePairParameter(
+        annotation: AdvancedForgery,
+        type: Type,
+        forge: Forge
+    ): Pair<Any?, Any?> {
+        val usingAnnotation = forge.anElementFrom(*annotation.pair)
+        return PairForgeryParamResolver.resolvePairParameter(
             usingAnnotation,
             type,
             forge

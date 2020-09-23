@@ -14,6 +14,7 @@ import fr.xgouchet.elmyr.junit5.params.ForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.IntForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.LongForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.MapForgeryParamResolver
+import fr.xgouchet.elmyr.junit5.params.PairForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.RegexForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.StringForgeryParamResolver
 import java.lang.reflect.Constructor
@@ -60,7 +61,8 @@ class ForgeExtension :
         RegexForgeryParamResolver,
         ForgeryParamResolver,
         AdvancedForgeryParamResolver,
-        MapForgeryParamResolver
+        MapForgeryParamResolver,
+        PairForgeryParamResolver
     )
 
     // region BeforeAllCallback

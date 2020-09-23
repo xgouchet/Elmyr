@@ -11,6 +11,7 @@ import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.annotation.LongForgery
 import fr.xgouchet.elmyr.annotation.MapForgery
+import fr.xgouchet.elmyr.annotation.PairForgery
 import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
@@ -465,6 +466,10 @@ internal open class KotlinAnnotationTest {
         }
     }
 
+    // endregion
+
+    // region Map
+
     @Test
     fun injectMap(
         @MapForgery(
@@ -499,7 +504,7 @@ internal open class KotlinAnnotationTest {
             value = AdvancedForgery(
                 map = [
                     MapForgery(
-                        key = AdvancedForgery(int = [IntForgery(-100, 100)])
+                        key = AdvancedForgery(int = [IntForgery(10, 100)])
                     )
                 ]
             )
@@ -509,14 +514,54 @@ internal open class KotlinAnnotationTest {
             .isNotEmpty()
             .allMatch {
                 it.key.matches(Regex("[0-9]+")) && it.value.isNotEmpty() && it.value.entries.all { nested ->
-                    nested.key >= -100 && nested.key <= 100 && nested.value != null
+                    nested.key >= 10 && nested.key <= 100 && nested.value != null
                 }
             }
     }
 
     // endregion
 
-    // region Map
+    // region Pair
+
+    @Test
+    fun injectPair(
+        @PairForgery(
+            first = AdvancedForgery(string = [StringForgery(StringForgeryType.HEXADECIMAL)]),
+            second = AdvancedForgery(long = [LongForgery(10L)])
+        ) pair: Pair<String, Long>
+    ) {
+        assertThat(pair.first).matches("[a-fA-F0-9]+")
+        assertThat(pair.second).isGreaterThan(10L)
+    }
+
+    @Test
+    fun injectPairWithGenericSecond(
+        @PairForgery(
+            first = AdvancedForgery(string = [StringForgery(regex = "\\w+@\\w+\\.[a-z]{3}")])
+        ) pair: Pair<String, Foo>
+    ) {
+        assertThat(pair.first).matches("\\w+@\\w+\\.[a-z]{3}")
+        assertThat(pair.second).isNotNull()
+    }
+
+    @Test
+    fun injectNestedPair(
+        @PairForgery(
+            first = AdvancedForgery(string = [StringForgery(StringForgeryType.NUMERICAL)]),
+            second = AdvancedForgery(
+                pair = [
+                    PairForgery(
+                        first = AdvancedForgery(int = [IntForgery(10, 100)])
+                    )
+                ]
+            )
+        ) pair: Pair<String, Pair<Int, Foo>>
+    ) {
+
+        assertThat(pair.first).matches("\\d+")
+        assertThat(pair.second.first).isBetween(10, 100)
+        assertThat(pair.second.second).isNotNull()
+    }
 
     // endregion
 
