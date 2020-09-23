@@ -3,6 +3,7 @@ package fr.xgouchet.elmyr.junit4
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.inject.DefaultForgeryInjector
 import fr.xgouchet.elmyr.inject.ForgeryInjector
+import java.lang.reflect.Type
 import java.util.Locale
 import org.junit.runners.model.FrameworkMethod
 import org.junit.runners.model.MultipleFailureException
@@ -13,9 +14,10 @@ internal class ForgeStatement(
     private val method: FrameworkMethod,
     private val target: Any,
     private val forge: Forge
-) : Statement() {
+) : Statement(), ForgeryInjector.Listener {
 
     private val injector: ForgeryInjector = DefaultForgeryInjector()
+    private val injectedData: MutableList<Triple<String, String, Any?>> = mutableListOf()
 
     // region Statement
 
@@ -27,7 +29,7 @@ internal class ForgeStatement(
         performQuietly(errors) { starting() }
 
         try {
-            injector.inject(forge, target)
+            injector.inject(forge, target, this)
             base.evaluate()
             performQuietly(errors) { succeeded() }
         } catch (e: org.junit.internal.AssumptionViolatedException) {
@@ -41,6 +43,21 @@ internal class ForgeStatement(
         }
 
         MultipleFailureException.assertEmpty(errors)
+    }
+
+    // endregion
+
+    // region ForgeryInjector.Listener
+
+    /** @inheritdoc */
+    override fun onFieldInjected(declaringClass: Class<*>, fieldType: Type, fieldName: String, value: Any?) {
+        injectedData.add(
+            Triple(
+                declaringClass.simpleName,
+                fieldName,
+                value
+            )
+        )
     }
 
     // endregion
@@ -72,17 +89,29 @@ internal class ForgeStatement(
     }
 
     private fun failed() {
-        val message = "<%s.%s()> failed with Forge seed 0x%xL\n" +
-                "Add this seed in the ForgeRule in your test class :\n\n" +
-                "\tForgeRule forge = new ForgeRule(0x%xL);\n"
-        System.err.println(
-                message.format(
-                        Locale.US,
-                        target.javaClass.simpleName,
-                        method.name,
-                        forge.seed,
-                        forge.seed
+        val errorMessage = "<%s.%s()> failed with Forge seed 0x%xL".format(
+            Locale.US,
+            target.javaClass.simpleName,
+            method.name,
+            forge.seed
+        )
+
+        val injectedMessage = if (injectedData.isEmpty()) "" else {
+            injectedData.joinToString(
+                separator = "\n",
+                prefix = " and:\n",
+                postfix = "\n"
+            ) { "\t- Field ${it.first}::${it.second} = ${it.third}" }
+        }
+
+        val helpMessage = "\nAdd this seed in the ForgeRule in your test class :\n\n" +
+                "\tForgeRule forge = new ForgeRule(0x%xL);\n".format(
+                    Locale.US,
+                    forge.seed
                 )
+
+        System.err.println(
+            errorMessage + injectedMessage + helpMessage
         )
     }
 
@@ -91,8 +120,4 @@ internal class ForgeStatement(
     }
 
     // endregion
-
-    companion object {
-        const val SEED_MASK = 0x7FFFFFFFL
-    }
 }

@@ -7,6 +7,10 @@
  - Add a listener to the `ForgeryInjector` to be notified when an injection happens
  - Allow advanced forgery injections using `@PairForgery`
 
+#### `junit4`
+
+ - Make the error message more verbose
+
 #### `junit5`
 
  - Make the error message more verbose
