@@ -16,6 +16,7 @@ import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedImmutableVal
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedInvalidPrimitives
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedMap
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedMissingFactory
+import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedPair
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedPrimitives
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedRegex
 import fr.xgouchet.elmyr.inject.dummy.KotlinInjectedStrings
@@ -379,9 +380,26 @@ class KotlinForgeryInjectorTest {
             .isNotEmpty()
             .allMatch {
                 it.key.matches(Regex("[0-9]+")) && it.value.isNotEmpty() && it.value.entries.all { nested ->
-                    nested.key >= -100 && nested.key <= 100 && nested.value != null
+                    nested.key >= 10 && nested.key <= 100 && nested.value != null
                 }
             }
+    }
+
+    @Test
+    fun injectPair() {
+        val injected = KotlinInjectedPair()
+
+        injector.inject(forge, injected, null)
+
+        assertThat(injected.publicPair.first).matches("[a-fA-F0-9]+")
+        assertThat(injected.publicPair.second).isGreaterThan(0L)
+
+        assertThat(injected.publicFooPair.first).matches("\\w+@\\w+\\.[a-z]{3}")
+        assertThat(injected.publicFooPair.second).isNotNull()
+
+        assertThat(injected.publicNestedFooPair.first).matches("[0-9]+")
+        assertThat(injected.publicNestedFooPair.second.first).isBetween(10, 100)
+        assertThat(injected.publicNestedFooPair.second.second).isNotNull()
     }
 }
 

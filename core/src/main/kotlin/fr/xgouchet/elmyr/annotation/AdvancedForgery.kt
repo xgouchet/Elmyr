@@ -7,11 +7,12 @@ package fr.xgouchet.elmyr.annotation
  * Only one of each parameter can be provided.
  *
  * @param string describes all the way a String can be forged
- * @param regex describes all the way a String can be forged with regex
  * @param int describes all the way a Int can be forged
  * @param long describes all the way a Long can be forged
  * @param float describes all the way a Float can be forged
  * @param double describes all the way a Double can be forged
+ * @param map describes all the way a Map can be forged
+ * @param pair describes all the way a Pair can be forged
  */
 @Target(
     AnnotationTarget.VALUE_PARAMETER,
@@ -26,5 +27,6 @@ annotation class AdvancedForgery(
     val long: Array<LongForgery> = emptyArray(),
     val float: Array<FloatForgery> = emptyArray(),
     val double: Array<DoubleForgery> = emptyArray(),
-    val map: Array<MapForgery> = emptyArray()
+    val map: Array<MapForgery> = emptyArray(),
+    val pair: Array<PairForgery> = emptyArray()
 )

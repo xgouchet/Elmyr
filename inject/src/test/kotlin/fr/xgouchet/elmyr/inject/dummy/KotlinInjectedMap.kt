@@ -15,7 +15,6 @@ class KotlinInjectedMap {
     )
     lateinit var publicMap: Map<String, Long>
 
-    // TODO regex
     @MapForgery(
         key = AdvancedForgery(string = [StringForgery(regex = "\\w+@\\w+\\.[a-z]{3}")])
     )
@@ -26,7 +25,7 @@ class KotlinInjectedMap {
         value = AdvancedForgery(
             map = [
                 MapForgery(
-                    key = AdvancedForgery(int = [IntForgery(-100, 100)])
+                    key = AdvancedForgery(int = [IntForgery(10, 100)])
                 )
             ]
         )

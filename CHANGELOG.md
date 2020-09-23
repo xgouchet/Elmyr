@@ -5,6 +5,7 @@
 #### `inject`
 
  - Add a listener to the `ForgeryInjector` to be notified when an injection happens
+ - Allow advanced forgery injections using `@PairForgery`
 
 #### `junit5`
 
@@ -14,8 +15,8 @@
 
 #### `core`
 
-- Allow using the `@StringForgery` annotation to forge Strings based on Regex
-- Allow setting a size in `@StringForgery` annotation
+ - Allow using the `@StringForgery` annotation to forge Strings based on Regex
+ - Allow setting a size in `@StringForgery` annotation
 
 #### `inject`
 

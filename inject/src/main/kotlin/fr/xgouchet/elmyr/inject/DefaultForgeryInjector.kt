@@ -9,6 +9,7 @@ import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.annotation.LongForgery
 import fr.xgouchet.elmyr.annotation.MapForgery
+import fr.xgouchet.elmyr.annotation.PairForgery
 import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
@@ -126,6 +127,7 @@ class DefaultForgeryInjector : ForgeryInjector {
                 is RegexForgery -> getRegexForgery(forge, annotation, property)
                 is AdvancedForgery -> getAdvancedForgery(forge, annotation, property)
                 is MapForgery -> getMapForgery(forge, annotation, property)
+                is PairForgery -> getPairForgery(forge, annotation, property)
                 else -> null
             }
             if (value != null) break
@@ -314,6 +316,10 @@ class DefaultForgeryInjector : ForgeryInjector {
                 val usingAnnotation = forge.anElementFrom(*annotation.map)
                 getMapForgery(forge, usingAnnotation, property)
             }
+            annotation.pair.isNotEmpty() -> {
+                val usingAnnotation = forge.anElementFrom(*annotation.pair)
+                getPairForgery(forge, usingAnnotation, property)
+            }
             else -> {
                 getForgery(forge, property)
             }
@@ -330,16 +336,36 @@ class DefaultForgeryInjector : ForgeryInjector {
 
         val keyAnnotation = annotation.key
         val keyType = mapType.arguments[0].type ?: uninjectable(property)
-        val keyProperty = KMapProperty<Any>(property.name, keyType)
+        val keyProperty = KInjectedProperty<Any>(property.name, keyType)
         val valueAnnotation = annotation.value
         val valueType = mapType.arguments[1].type ?: uninjectable(property)
-        val valueProperty = KMapProperty<Any>(property.name, valueType)
+        val valueProperty = KInjectedProperty<Any>(property.name, valueType)
 
         return forge.aMap {
             val forgedKey = getAdvancedForgery(forge, keyAnnotation, keyProperty)
             val forgedValue = getAdvancedForgery(forge, valueAnnotation, valueProperty)
             forgedKey to forgedValue
         }
+    }
+
+    private fun getPairForgery(
+        forge: Forge,
+        annotation: PairForgery,
+        property: KMutableProperty<*>
+    ): Pair<Any?, Any?> {
+        val pairType = property.returnType
+        check(pairType.classifier in knownPairs)
+
+        val firstAnnotation = annotation.first
+        val firstType = pairType.arguments[0].type ?: uninjectable(property)
+        val firstProperty = KInjectedProperty<Any>(property.name, firstType)
+        val secondAnnotation = annotation.second
+        val secondType = pairType.arguments[1].type ?: uninjectable(property)
+        val secondProperty = KInjectedProperty<Any>(property.name, secondType)
+
+        val forgedKey = getAdvancedForgery(forge, firstAnnotation, firstProperty)
+        val forgedValue = getAdvancedForgery(forge, secondAnnotation, secondProperty)
+        return forgedKey to forgedValue
     }
 
     private fun getGenericForgery(type: KType, forge: Forge): Any {
@@ -414,7 +440,7 @@ class DefaultForgeryInjector : ForgeryInjector {
     }
 
     @Suppress("NotImplementedDeclaration")
-    private class KMapProperty<R>(
+    private class KInjectedProperty<R>(
         override val name: String,
         override val returnType: KType
     ) : KMutableProperty<R> {
@@ -457,6 +483,9 @@ class DefaultForgeryInjector : ForgeryInjector {
         )
         private val knownMaps = setOf<KClass<*>>(
             Map::class
+        )
+        private val knownPairs = setOf<KClass<*>>(
+            Pair::class
         )
     }
 }
