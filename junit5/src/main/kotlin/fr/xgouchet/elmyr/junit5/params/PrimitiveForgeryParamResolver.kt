@@ -8,19 +8,19 @@ import java.lang.reflect.WildcardType
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 
-internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
+internal abstract class PrimitiveForgeryParamResolver<A : Annotation, C>(
     private val primitiveClass: Class<*>?,
     private val primitiveBoxingClass: Class<*>,
     private val annotationClass: Class<A>
-) :
-    ForgeryResolver {
+) : ForgeryResolver<C> {
 
     // region ForgeryResolver
 
     /** @inheritdoc */
     override fun supportsParameter(
         parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
+        extensionContext: ExtensionContext,
+        forgeryContext: C
     ): Boolean {
         val annotated = parameterContext.isAnnotated(annotationClass)
         return if (annotated) {
@@ -34,7 +34,7 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
                             "or a List, Set or Collection of on of those classes."
                 }
             }
-            true
+            supportsForgeryContext(forgeryContext)
         } else {
             false
         }
@@ -44,17 +44,31 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
     override fun resolveParameter(
         parameterContext: ParameterContext,
         extensionContext: ExtensionContext,
+        forgeryContext: C,
         forge: Forge
     ): Any? {
         val annotation = parameterContext.findAnnotation(annotationClass).get()
-        return resolveParameter(annotation, parameterContext.parameter.parameterizedType, forge)
+        return resolveParameter(
+            annotation,
+            parameterContext,
+            forgeryContext,
+            parameterContext.parameter.parameterizedType,
+            forge
+        )
     }
 
     // endregion
 
     // region PrimitiveForgeryParamResolver
 
-    protected abstract fun forgePrimitive(annotation: A, forge: Forge): Any?
+    protected abstract fun supportsForgeryContext(forgeryContext: C): Boolean
+
+    protected abstract fun forgePrimitive(
+        annotation: A,
+        parameterContext: ParameterContext,
+        forgeryContext: C,
+        forge: Forge
+    ): Any?
 
     // endregion
 
@@ -72,17 +86,20 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
         }
     }
 
-    internal fun resolveParameter(annotation: A, type: Type, forge: Forge): Any? {
+    internal fun resolveParameter(
+        annotation: A,
+        parameterContext: ParameterContext,
+        forgeryContext: C,
+        type: Type,
+        forge: Forge
+    ): Any? {
         if (type == primitiveClass || type == primitiveBoxingClass) {
-            return forgePrimitive(
-                annotation,
-                forge
-            )
+            return forgePrimitive(annotation, parameterContext, forgeryContext, forge)
         }
 
         if (type is WildcardType) {
             val actualType = type.upperBounds.first { supportsParameter(it) }
-            return resolveParameter(annotation, actualType, forge)
+            return resolveParameter(annotation, parameterContext, forgeryContext, actualType, forge)
         }
 
         check(type is ParameterizedType) { "Unable to forge a value with type $type" }
@@ -92,6 +109,8 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
             Collection::class.java -> forge.aList {
                 resolveParameter(
                     annotation,
+                    parameterContext,
+                    forgeryContext,
                     typeParam.first(),
                     forge
                 )
@@ -99,6 +118,8 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
             Set::class.java -> forge.aList {
                 resolveParameter(
                     annotation,
+                    parameterContext,
+                    forgeryContext,
                     typeParam.first(),
                     forge
                 )

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
 
-internal interface ForgeryResolver {
+internal interface ForgeryResolver<C> {
 
     /**
      * Determine if this resolver supports resolution of an argument for the
@@ -14,13 +14,15 @@ internal interface ForgeryResolver {
      *
      * @param parameterContext the context for the parameter;
      * @param extensionContext the extension context;
+     * @param forgeryContext the context used for Forgeries;
      * @return true if this resolver can resolve an argument for the parameter
      * @see ParameterContext
      * @see ParameterResolver
      */
     fun supportsParameter(
         parameterContext: ParameterContext,
-        extensionContext: ExtensionContext
+        extensionContext: ExtensionContext,
+        forgeryContext: C
     ): Boolean
 
     /**
@@ -30,6 +32,7 @@ internal interface ForgeryResolver {
      * @param parameterContext the context for the parameter; never {@code null}
      * @param extensionContext the extension context for the {@code Executable}
      * about to be invoked; never {@code null}
+     * @param forgeryContext the context used for Forgeries;
      * @param forge the [Forge] to use;
      * @return the resolved argument for the parameter; may only be {@code null} if the
      * parameter type is not a primitive
@@ -39,6 +42,7 @@ internal interface ForgeryResolver {
     fun resolveParameter(
         parameterContext: ParameterContext,
         extensionContext: ExtensionContext,
+        forgeryContext: C,
         forge: Forge
     ): Any?
 }
