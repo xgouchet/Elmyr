@@ -15,6 +15,7 @@
 
  - Make the error message more verbose
  - Allow advanced forgery injections using `@PairForgery`
+ - Add the forge to the global extension context store (use the `ForgeExtension.getForge(ExtensionContext)` method to retrieve it)
 
 ### `1.2.0` (2020/09/03)
 

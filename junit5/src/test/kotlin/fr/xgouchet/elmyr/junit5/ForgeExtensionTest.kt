@@ -1,6 +1,8 @@
 package fr.xgouchet.elmyr.junit5
 
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.Forge
@@ -786,7 +788,8 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as List<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+        assertThat(result as List<*>).isNotEmpty()
+            .allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -795,7 +798,8 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as Set<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+        assertThat(result as Set<*>).isNotEmpty()
+            .allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -804,7 +808,8 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+        assertThat(result as Collection<*>).isNotEmpty()
+            .allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -833,7 +838,8 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as List<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+        assertThat(result as List<*>).isNotEmpty()
+            .allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -842,7 +848,8 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as Set<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+        assertThat(result as Set<*>).isNotEmpty()
+            .allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -851,7 +858,8 @@ internal class ForgeExtensionTest {
 
         val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
 
-        assertThat(result as Collection<*>).isNotEmpty().allMatch { it is String && it.matches(Regex("[abc]+")) }
+        assertThat(result as Collection<*>).isNotEmpty()
+            .allMatch { it is String && it.matches(Regex("[abc]+")) }
     }
 
     @Test
@@ -1048,11 +1056,11 @@ internal class ForgeExtensionTest {
         assertThat(errStreamContent.toString())
             .isEqualTo(
                 "<${mockTarget.javaClass.simpleName}.${fakeMethod.name}()> failed " +
-                    "with Forge seed 0x${forge.seed.toString(16)}L\n" +
-                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
-                    "\n" +
-                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
-                    "\n"
+                        "with Forge seed 0x${forge.seed.toString(16)}L\n" +
+                        "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                        "\n" +
+                        "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                        "\n"
             )
     }
 
@@ -1079,12 +1087,12 @@ internal class ForgeExtensionTest {
         assertThat(errStreamContent.toString())
             .isEqualTo(
                 "<${mockTarget.javaClass.simpleName}.withInt()> failed " +
-                    "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
-                    "\t- param withInt::arg0 = $result\n\n" +
-                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
-                    "\n" +
-                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
-                    "\n"
+                        "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
+                        "\t- param withInt::arg0 = $result\n\n" +
+                        "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                        "\n" +
+                        "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                        "\n"
             )
     }
 
@@ -1119,14 +1127,46 @@ internal class ForgeExtensionTest {
         assertThat(errStreamContent.toString())
             .isEqualTo(
                 "<KotlinReproducibilityTest.testRun1()> failed " +
-                    "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
-                    "\t- field KotlinReproducibilityTest::fakeBar = ${target.getBar()}\n" +
-                    "\t- field KotlinReproducibilityTest::fakeFoo = ${target.getFoo()}\n\n" +
-                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
-                    "\n" +
-                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
-                    "\n"
+                        "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
+                        "\t- field KotlinReproducibilityTest::fakeBar = ${target.getBar()}\n" +
+                        "\t- field KotlinReproducibilityTest::fakeFoo = ${target.getFoo()}\n\n" +
+                        "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                        "\n" +
+                        "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                        "\n"
             )
+    }
+
+    // endregion
+
+    // region ExtensionContext Store
+
+    @Test
+    fun `stores the forge on beforeAll()`() {
+        // Given
+        val mockStore: ExtensionContext.Store = mock()
+        whenever(mockExtensionContext.getStore(ExtensionContext.Namespace.GLOBAL)) doReturn mockStore
+
+        // When
+        testedExtension.beforeAll(mockExtensionContext)
+
+        // Then
+        verify(mockStore).put(
+            ForgeExtension.EXTENSION_STORE_FORGE_KEY,
+            testedExtension.instanceForge
+        )
+    }
+
+    @Test
+    fun `retrieves the stored forge`() {
+        // Given
+        val mockStore: ExtensionContext.Store = mock()
+        whenever(mockExtensionContext.getStore(ExtensionContext.Namespace.GLOBAL)) doReturn mockStore
+        whenever(mockStore.get(ForgeExtension.EXTENSION_STORE_FORGE_KEY)) doReturn testedExtension.instanceForge
+
+        // When
+        assertThat(ForgeExtension.getForge(mockExtensionContext))
+            .isSameAs(testedExtension.instanceForge)
     }
 
     // endregion

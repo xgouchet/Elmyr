@@ -74,6 +74,9 @@ class ForgeExtension :
         configurators.forEach {
             it.configure(instanceForge)
         }
+
+        val globalStore = context.getStore(ExtensionContext.Namespace.GLOBAL)
+        globalStore.put(EXTENSION_STORE_FORGE_KEY, instanceForge)
     }
 
     // endregion
@@ -120,17 +123,17 @@ class ForgeExtension :
 
         val helpMessage = if (configuration == null) {
             "\nAdd the following @ForgeConfiguration annotation to your test class :\n\n" +
-                "\t@ForgeConfiguration(seed = 0x%xL)\n".format(
-                    Locale.US,
-                    instanceForge.seed
-                )
+                    "\t@ForgeConfiguration(seed = 0x%xL)\n".format(
+                        Locale.US,
+                        instanceForge.seed
+                    )
         } else {
             "\nAdd the seed in your @ForgeConfiguration annotation :\n\n" +
-                "\t@ForgeConfiguration(value = %s::class, seed = 0x%xL)\n".format(
-                    Locale.US,
-                    configuration.value.simpleName,
-                    instanceForge.seed
-                )
+                    "\t@ForgeConfiguration(value = %s::class, seed = 0x%xL)\n".format(
+                        Locale.US,
+                        configuration.value.simpleName,
+                        instanceForge.seed
+                    )
         }
         System.err.println(
             errorMessage + injectedMessage + helpMessage
@@ -155,7 +158,7 @@ class ForgeExtension :
         if (isSupported && parameterContext.declaringExecutable is Constructor<*>) {
             throw IllegalStateException(
                 "@Forgery is not supported on constructor parameters. " +
-                    "Please use field injection instead."
+                        "Please use field injection instead."
             )
         }
 
@@ -187,7 +190,12 @@ class ForgeExtension :
     // region ForgeryInjector.Listener
 
     /** @inheritdoc */
-    override fun onFieldInjected(declaringClass: Class<*>, fieldType: Type, fieldName: String, value: Any?) {
+    override fun onFieldInjected(
+        declaringClass: Class<*>,
+        fieldType: Type,
+        fieldName: String,
+        value: Any?
+    ) {
         injectedData.add(
             ForgeTarget.ForgeFieldTarget(
                 declaringClass.simpleName,
@@ -239,4 +247,25 @@ class ForgeExtension :
     }
 
     // endregion
+
+    companion object {
+
+        /**
+         * The key used to store the [Forge] in an [ExtensionContext]'s global store.
+         */
+        @JvmField
+        val EXTENSION_STORE_FORGE_KEY = "${ForgeExtension::class.java.canonicalName}.forge"
+
+        /**
+         * Retrieves the [Forge] stored in the given [ExtensionContext] global store.
+         * @param context the current [ExtensionContext].
+         * @return the valid forge for that context or null
+         */
+        @JvmStatic
+        fun getForge(context: ExtensionContext): Forge? {
+            val globalStore = context.getStore(ExtensionContext.Namespace.GLOBAL)
+            val storedForge = globalStore.get(EXTENSION_STORE_FORGE_KEY)
+            return storedForge as? Forge
+        }
+    }
 }
