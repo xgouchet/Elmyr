@@ -134,22 +134,22 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Latest Release: `1.2.0` (2020/09/03)
-
-#### `core`
-
-- Allow using the `@StringForgery` annotation to forge Strings based on Regex
-- Allow setting a size in `@StringForgery` annotation
+### Latest Release: `1.3.0` (2021/04/14)
 
 #### `inject`
 
- - Allow injecting collections of primitives with `@BoolForgery`, `@IntForgery`, `@LongForgery`, `@FloatForgery`, `@DoubleForgery`, as well as `@StringForgery` and `RegexForgery`
- - Allow advanced forgery injections using `@AdvancedForgery` and `@MapForgery`
- 
+- Add a listener to the `ForgeryInjector` to be notified when an injection happens
+- Allow advanced forgery injections using `@PairForgery`
+
+#### `junit4`
+
+- Make the error message more verbose
+
 #### `junit5`
 
- - Allow injecting collections of primitives with `@BoolForgery`, `@IntForgery`, `@LongForgery`, `@FloatForgery`, `@DoubleForgery`, as well as `@StringForgery` and `RegexForgery`
- - Allow advanced forgery injections using `@AdvancedForgery` and `@MapForgery`
+- Make the error message more verbose
+- Allow advanced forgery injections using `@PairForgery`
+- Add the forge to the global extension context store (use the `ForgeExtension.getForge(ExtensionContext)` method to retrieve it)
 
 ## Donate
 
