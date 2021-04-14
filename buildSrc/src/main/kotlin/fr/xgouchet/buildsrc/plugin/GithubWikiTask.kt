@@ -197,6 +197,7 @@ open class GithubWikiTask : DefaultTask() {
             "Enum Values",
             "Functions",
             "Companion Object Functions",
+            "Companion Object Properties",
             "Types"
         )
 

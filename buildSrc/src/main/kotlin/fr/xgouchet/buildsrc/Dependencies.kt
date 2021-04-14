@@ -26,7 +26,7 @@ object Dependencies {
         const val MockitoExt = "3.2.4"
 
         // Docs
-        const val Dokka = "0.10.0"
+        const val Dokka = "0.10.1"
     }
 
     object Libraries {
