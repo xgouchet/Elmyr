@@ -2,8 +2,12 @@ package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
 
+/**
+ * Describes a character class.
+ * e.g.: ```/[abc_]/```
+ */
 internal class CharacterClassNode(
-    private val isNegation: Boolean
+    internal val isNegation: Boolean
 ) : BaseParentNode() {
 
     private var isClosed: Boolean = false
@@ -25,9 +29,13 @@ internal class CharacterClassNode(
             val builder = StringBuilder()
             builder.append('[')
             children.forEach {
-                if (it is RawCharNode) {
-                    builder.append(it.rawChar)
+                val repr = when (it) {
+                    is RawCharNode -> it.escapedChar
+                    is CharacterRangeNode -> "${it.from}-${it.to}"
+                    is PredefinedCharacterClassNode -> "\\${it.shortcut}"
+                    else -> TODO("Can't handle $it")
                 }
+                builder.append(repr)
             }
             builder.append(']')
             negatedPattern = builder.toString()

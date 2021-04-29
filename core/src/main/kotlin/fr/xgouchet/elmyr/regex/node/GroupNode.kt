@@ -2,6 +2,10 @@ package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
 
+/**
+ * Describes a capturing group.
+ * e.g.: ```/ab(c*)/```
+ */
 internal class GroupNode(
     private val parentNode: ParentNode
 ) : BaseParentNode(), ChildNode {

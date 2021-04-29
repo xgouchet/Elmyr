@@ -14,7 +14,7 @@ internal class CharacterClassRangeState(
     override fun handleChar(c: Char): State {
         return when (c) {
             ']' -> {
-                classNode.add(RawCharNode('-'))
+                classNode.add(RawCharNode('-', "\\-"))
                 previousState.handleChar(c)
             }
             else -> {

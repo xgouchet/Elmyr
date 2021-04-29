@@ -3,6 +3,10 @@ package fr.xgouchet.elmyr.regex.node
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
+/**
+ * Describes a Quantify modifier.
+ * e.g.: ```/a+b*c?/```
+ */
 internal class QuantifiedNode(
     private val node: Node,
     private val quantifier: Quantifier

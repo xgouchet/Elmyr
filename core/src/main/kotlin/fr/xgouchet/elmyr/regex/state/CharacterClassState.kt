@@ -32,19 +32,19 @@ internal class CharacterClassState(
 
             // Character range
             '-' -> if (classNode.isEmpty()) {
-                classNode.add(RawCharNode(c))
+                classNode.add(RawCharNode(c, "\\-"))
             } else {
                 newState = CharacterClassRangeState(classNode, this)
             }
 
             // Negation
-            '^' -> if (classNode.isEmpty()) {
+            '^' -> if (classNode.isEmpty() && !classNode.isNegation) {
                 newState = CharacterClassState(ongoingNode, previousState, true)
             } else {
-                classNode.add(RawCharNode(c))
+                classNode.add(RawCharNode(c, "\\^"))
             }
 
-            else -> classNode.add(RawCharNode(c))
+            else -> classNode.add(RawCharNode(c, "$c"))
         }
 
         return newState

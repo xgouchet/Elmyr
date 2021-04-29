@@ -2,9 +2,13 @@ package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
 
+/**
+ * Describes a character range.
+ * e.g.: ```/[a-z]/```
+ */
 internal class CharacterRangeNode(
-    private val from: Char,
-    private val to: Char
+    internal val from: Char,
+    internal val to: Char
 ) : Node {
 
     // region Node

@@ -4,6 +4,7 @@ import fr.xgouchet.elmyr.Forge
 
 internal class PredefinedCharacterClassNode
 private constructor(
+    internal val shortcut: String,
     private val forging: Forge.() -> Char
 ) : Node {
 
@@ -17,40 +18,41 @@ private constructor(
 
     companion object {
 
-        fun digit() = PredefinedCharacterClassNode() {
+        fun digit() = PredefinedCharacterClassNode("\\d") {
             aNumericalChar()
         }
 
-        fun notDigit() = PredefinedCharacterClassNode() {
+        fun notDigit() = PredefinedCharacterClassNode("\\D") {
             anElementFrom(
-                    aChar(min = Forge.MIN_PRINTABLE, max = '0'),
-                    aChar(min = ':', max = Forge.MAX_UTF8)
+                aChar(min = Forge.MIN_PRINTABLE, max = '0'),
+                aChar(min = ':', max = Forge.MAX_UTF8)
             )
         }
 
-        fun word() = PredefinedCharacterClassNode() {
+        fun word() = PredefinedCharacterClassNode("\\w") {
             anElementFrom(
-                    aChar('a', 'z'),
-                    aChar('A', 'Z'),
-                    aChar('0', '9'),
-                    '_')
-        }
-
-        fun notWord() = PredefinedCharacterClassNode() {
-            anElementFrom(
-                    aChar(min = Forge.MIN_PRINTABLE, max = '0'),
-                    aChar(min = ':', max = 'A'),
-                    aChar(min = '[', max = '_'),
-                    '`',
-                    aChar(min = '{', max = Forge.MAX_UTF8)
+                aChar('a', 'z'),
+                aChar('A', 'Z'),
+                aChar('0', '9'),
+                '_'
             )
         }
 
-        fun whitespace() = PredefinedCharacterClassNode() {
+        fun notWord() = PredefinedCharacterClassNode("\\W") {
+            anElementFrom(
+                aChar(min = Forge.MIN_PRINTABLE, max = '0'),
+                aChar(min = ':', max = 'A'),
+                aChar(min = '[', max = '_'),
+                '`',
+                aChar(min = '{', max = Forge.MAX_UTF8)
+            )
+        }
+
+        fun whitespace() = PredefinedCharacterClassNode("\\w") {
             aWhitespaceChar()
         }
 
-        fun notWhitespace() = PredefinedCharacterClassNode() {
+        fun notWhitespace() = PredefinedCharacterClassNode("\\W") {
             aChar(min = '\u0021', max = Forge.MAX_UTF8)
         }
     }

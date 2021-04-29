@@ -43,15 +43,15 @@ internal class EscapeState(
         when (c) {
             // escapable characters
             '[', ']', '(', ')', '{', '}', '<', '>', '?', '+', '*',
-            '-', '=', '!', '.', '|', '^', '$', '\\' -> ongoingNode.add(RawCharNode(c))
+            '-', '=', '!', '.', '|', '^', '$', '\\' -> ongoingNode.add(RawCharNode(c, "\\$c"))
 
             // Whitespace
-            'n' -> ongoingNode.add(RawCharNode('\n'))
-            't' -> ongoingNode.add(RawCharNode('\t'))
-            'r' -> ongoingNode.add(RawCharNode('\r'))
-            'f' -> ongoingNode.add(RawCharNode('\u000C'))
-            'a' -> ongoingNode.add(RawCharNode('\u0007'))
-            'e' -> ongoingNode.add(RawCharNode('\u001B'))
+            'n' -> ongoingNode.add(RawCharNode('\n', "\\$c"))
+            't' -> ongoingNode.add(RawCharNode('\t', "\\$c"))
+            'r' -> ongoingNode.add(RawCharNode('\r', "\\$c"))
+            'f' -> ongoingNode.add(RawCharNode('\u000C', "\\$c"))
+            'a' -> ongoingNode.add(RawCharNode('\u0007', "\\$c"))
+            'e' -> ongoingNode.add(RawCharNode('\u001B', "\\$c"))
 
             // Predefined character classes
             'd' -> ongoingNode.add(PredefinedCharacterClassNode.digit())

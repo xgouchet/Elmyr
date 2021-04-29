@@ -2,8 +2,13 @@ package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
 
+/**
+ * Describes a raw character that doesn't have any specific meaning.
+ * e.g.: ```/a/```
+ */
 internal class RawCharNode(
-    val rawChar: Char
+    internal val rawChar: Char,
+    internal val escapedChar: String
 ) : Node {
 
     // region Node

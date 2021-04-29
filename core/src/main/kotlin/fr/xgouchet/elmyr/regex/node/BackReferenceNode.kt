@@ -2,6 +2,10 @@ package fr.xgouchet.elmyr.regex.node
 
 import fr.xgouchet.elmyr.Forge
 
+/**
+ * Describe a back reference to a previously captured group.
+ * e.g.: ```/(a*)bc\1/```
+ */
 internal class BackReferenceNode(
     internal val groupReference: Int,
     private val parentNode: ParentNode

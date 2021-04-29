@@ -63,7 +63,7 @@ internal class BaseState<T>(
                 newState = previousState
             }
 
-            else -> ongoingNode.add(RawCharNode(c))
+            else -> ongoingNode.add(RawCharNode(c, "$c"))
         }
 
         return newState

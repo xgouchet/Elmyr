@@ -1,5 +1,11 @@
 # Changelog
 
+### `1.4.0` (????/??/??)
+
+#### `core`
+
+ - Fix some invalid regex forgeries (e.g.: `"[^a-z]+"` was not handled properly)
+
 ### `1.3.0` (2021/04/14)
 
 #### `inject`

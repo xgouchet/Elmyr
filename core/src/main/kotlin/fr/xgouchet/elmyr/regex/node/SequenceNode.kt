@@ -3,6 +3,9 @@ package fr.xgouchet.elmyr.regex.node
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.regex.quantifier.Quantifier
 
+/**
+ * Describes a sequence of [Node].
+ */
 internal open class SequenceNode(
     private var parentNode: ParentNode
 ) : BaseParentNode(), MovingChildNode, QuantifiableNode {
