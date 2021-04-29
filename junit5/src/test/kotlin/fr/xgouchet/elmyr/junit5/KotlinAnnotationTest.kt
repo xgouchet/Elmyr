@@ -15,10 +15,10 @@ import fr.xgouchet.elmyr.annotation.PairForgery
 import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
-import fr.xgouchet.elmyr.junit5.dummy.Bar
-import fr.xgouchet.elmyr.junit5.dummy.BarFactory
-import fr.xgouchet.elmyr.junit5.dummy.Foo
-import fr.xgouchet.elmyr.junit5.dummy.FooFactory
+import fr.xgouchet.elmyr.junit5.fixture.Bar
+import fr.xgouchet.elmyr.junit5.fixture.BarFactory
+import fr.xgouchet.elmyr.junit5.fixture.Foo
+import fr.xgouchet.elmyr.junit5.fixture.FooFactory
 import java.time.Month
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat

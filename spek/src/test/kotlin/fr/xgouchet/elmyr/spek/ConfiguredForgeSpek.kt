@@ -2,10 +2,10 @@ package fr.xgouchet.elmyr.spek
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeConfigurator
-import fr.xgouchet.elmyr.spek.dummy.Bar
-import fr.xgouchet.elmyr.spek.dummy.BarFactory
-import fr.xgouchet.elmyr.spek.dummy.Foo
-import fr.xgouchet.elmyr.spek.dummy.FooFactory
+import fr.xgouchet.elmyr.spek.fixture.Bar
+import fr.xgouchet.elmyr.spek.fixture.BarFactory
+import fr.xgouchet.elmyr.spek.fixture.Foo
+import fr.xgouchet.elmyr.spek.fixture.FooFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 

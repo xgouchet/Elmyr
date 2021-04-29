@@ -1,6 +1,6 @@
 package fr.xgouchet.elmyr
 
-import fr.xgouchet.elmyr.dummy.Foo
+import fr.xgouchet.elmyr.fixture.Foo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 

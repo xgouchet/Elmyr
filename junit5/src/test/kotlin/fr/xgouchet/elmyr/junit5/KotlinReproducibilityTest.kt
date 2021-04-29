@@ -5,10 +5,10 @@ import fr.xgouchet.elmyr.ForgeConfigurator
 import fr.xgouchet.elmyr.annotation.FloatForgery
 import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.annotation.IntForgery
-import fr.xgouchet.elmyr.junit5.dummy.Bar
-import fr.xgouchet.elmyr.junit5.dummy.BarFactory
-import fr.xgouchet.elmyr.junit5.dummy.Foo
-import fr.xgouchet.elmyr.junit5.dummy.FooFactory
+import fr.xgouchet.elmyr.junit5.fixture.Bar
+import fr.xgouchet.elmyr.junit5.fixture.BarFactory
+import fr.xgouchet.elmyr.junit5.fixture.Foo
+import fr.xgouchet.elmyr.junit5.fixture.FooFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

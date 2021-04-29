@@ -4,8 +4,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import fr.xgouchet.elmyr.dummy.Bar
-import fr.xgouchet.elmyr.dummy.Foo
+import fr.xgouchet.elmyr.fixture.Bar
+import fr.xgouchet.elmyr.fixture.Foo
 import fr.xgouchet.elmyr.kotlin.BooleanProperty.Companion.booleanForgery
 import fr.xgouchet.elmyr.kotlin.DoubleProperty.Companion.doubleForgery
 import fr.xgouchet.elmyr.kotlin.FactoryListProperty.Companion.factoryListForgery

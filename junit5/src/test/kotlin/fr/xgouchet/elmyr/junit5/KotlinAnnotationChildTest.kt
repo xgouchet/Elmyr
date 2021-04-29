@@ -1,7 +1,7 @@
 package fr.xgouchet.elmyr.junit5
 
 import fr.xgouchet.elmyr.annotation.Forgery
-import fr.xgouchet.elmyr.junit5.dummy.Foo
+import fr.xgouchet.elmyr.junit5.fixture.Foo
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 

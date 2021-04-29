@@ -1,10 +1,10 @@
 package fr.xgouchet.elmyr.junit4;
 
 import fr.xgouchet.elmyr.annotation.Forgery;
-import fr.xgouchet.elmyr.junit4.dummy.Bar;
-import fr.xgouchet.elmyr.junit4.dummy.BarFactory;
-import fr.xgouchet.elmyr.junit4.dummy.Foo;
-import fr.xgouchet.elmyr.junit4.dummy.FooFactory;
+import fr.xgouchet.elmyr.junit4.fixture.Bar;
+import fr.xgouchet.elmyr.junit4.fixture.BarFactory;
+import fr.xgouchet.elmyr.junit4.fixture.Foo;
+import fr.xgouchet.elmyr.junit4.fixture.FooFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

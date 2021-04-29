@@ -4,8 +4,8 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import fr.xgouchet.elmyr.annotation.StringForgery
-import fr.xgouchet.elmyr.junit4.dummy.BarFactory
-import fr.xgouchet.elmyr.junit4.dummy.FooFactory
+import fr.xgouchet.elmyr.junit4.fixture.BarFactory
+import fr.xgouchet.elmyr.junit4.fixture.FooFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.AssumptionViolatedException
 import org.junit.Before

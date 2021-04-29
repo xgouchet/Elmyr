@@ -16,9 +16,9 @@ import fr.xgouchet.elmyr.annotation.LongForgery
 import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
-import fr.xgouchet.elmyr.junit5.dummy.BarFactory
-import fr.xgouchet.elmyr.junit5.dummy.Foo
-import fr.xgouchet.elmyr.junit5.dummy.FooFactory
+import fr.xgouchet.elmyr.junit5.fixture.BarFactory
+import fr.xgouchet.elmyr.junit5.fixture.Foo
+import fr.xgouchet.elmyr.junit5.fixture.FooFactory
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.PrintStream
