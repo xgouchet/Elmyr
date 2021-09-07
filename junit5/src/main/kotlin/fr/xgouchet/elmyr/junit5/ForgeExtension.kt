@@ -243,7 +243,13 @@ class ForgeExtension :
 
     private fun getConfigurators(context: ExtensionContext): List<ForgeConfigurator> {
         return getConfigurations(context)
-            .map { it.value.java.newInstance() }
+            .map {
+                if (it.value.java == ForgeConfigurator.NoOp.javaClass) {
+                    ForgeConfigurator.NoOp
+                } else {
+                    it.value.java.newInstance()
+                }
+            }
     }
 
     // endregion
