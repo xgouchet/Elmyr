@@ -1,10 +1,14 @@
 # Changelog
 
-### `1.4.0` (????/??/??)
+### `1.3.1` (2021/09/07)
 
 #### `core`
 
  - Fix some invalid regex forgeries (e.g.: `"[^a-z]+"` was not handled properly)
+
+#### `junit5`
+
+- Fix an error when a `ForgeConfiguration` was missing a `ForgeConfigurator`
 
 ### `1.3.0` (2021/04/14)
 

@@ -134,22 +134,15 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Latest Release: `1.3.0` (2021/04/14)
+### Latest Release: `1.3.1` (2021/09/07)
 
-#### `inject`
+#### `core`
 
-- Add a listener to the `ForgeryInjector` to be notified when an injection happens
-- Allow advanced forgery injections using `@PairForgery`
-
-#### `junit4`
-
-- Make the error message more verbose
+- Fix some invalid regex forgeries (e.g.: `"[^a-z]+"` was not handled properly)
 
 #### `junit5`
 
-- Make the error message more verbose
-- Allow advanced forgery injections using `@PairForgery`
-- Add the forge to the global extension context store (use the `ForgeExtension.getForge(ExtensionContext)` method to retrieve it)
+- Fix an error when a `ForgeConfiguration` was missing a `ForgeConfigurator`
 
 ## Donate
 
