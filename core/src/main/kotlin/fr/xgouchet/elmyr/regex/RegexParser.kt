@@ -11,7 +11,7 @@ import java.lang.IllegalStateException
 
 internal class RegexParser {
 
-    // TODO Add some memoization to not parse the same regex twice
+    // TODO #56 Add some memoization to not parse the same regex twice
 
     // region RegexParser
 

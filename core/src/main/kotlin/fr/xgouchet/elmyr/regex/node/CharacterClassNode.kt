@@ -25,7 +25,6 @@ internal class CharacterClassNode(
         check(children.isNotEmpty()) { "Character class is empty" }
 
         if (isNegation) {
-            // TODO build Negated pattern properly
             val builder = StringBuilder()
             builder.append('[')
             children.forEach {

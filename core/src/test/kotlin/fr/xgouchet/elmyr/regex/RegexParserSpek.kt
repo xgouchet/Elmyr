@@ -149,16 +149,14 @@ class RegexParserSpek : Spek({
                 // Simple char class
                 "[abc]+",
 
-                // Char class with ranges
+                // Character class with ranges
                 "[a-d]+",
                 "[a-dW-Z]+",
                 "[a-d[m-p]]+",
                 "[^abc]+",
                 "[^a-zA-Z0-9:\\-_.@$]+",
                 "[^\\w\\d]+",
-                // TODO "[a-m&&[g-x]]", // intersection
-                // TODO "[a-m&&m-z]", // intersection
-                // TODO "[[a-z]&&[^c-g]]", // Complex intersection
+                // TODO #57 Add support for Character Class Intersection
 
                 // Char class with escaped characters
                 "[a\\-z]+",
@@ -188,14 +186,12 @@ class RegexParserSpek : Spek({
                 "\\-\\=\\!",
                 "\\n\\t\\r\\f\\a\\e",
 
-                // TODO "\\00\\01\\02\\03\\04\\05\\06\\07" // octal values
-                // TODO "\\003\\015\\027\\031\\046\\054\\062\\070" // octal values
-                // TODO "\\0015\\0126\\0237\\0340" // octal values
-                // TODO "\\x0A\\x1d\\x29\\x3B\\x48\\x5c\\x60\\x7f" // hexadecimal values
-                // TODO "\\u010A\\u015d\\u0329\\u043B" // unicode values
-
-                // POSIX Character classes
-                // TODO "\\p{Alpha}" // = [\p{Lower}\p{Upper}]
+                // TODO #58 Add support for octal, hexadecimal and unicode escape
+                // "\\00\\01\\02\\03\\04\\05\\06\\07" // octal values
+                // "\\003\\015\\027\\031\\046\\054\\062\\070" // octal values
+                // "\\0015\\0126\\0237\\0340" // octal values
+                // "\\x0A\\x1d\\x29\\x3B\\x48\\x5c\\x60\\x7f" // hexadecimal values
+                // "\\u010A\\u015d\\u0329\\u043B" // unicode values
 
                 // Predefined character classes
                 "\\d",
