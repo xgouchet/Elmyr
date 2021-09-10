@@ -1,7 +1,5 @@
 package fr.xgouchet.elmyr.inject
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.ForgeryException
 import fr.xgouchet.elmyr.inject.fixture.Bar
@@ -32,8 +30,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
+import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.quality.Strictness
 
 @ExtendWith(MockitoExtension::class)

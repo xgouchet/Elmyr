@@ -1,9 +1,5 @@
 package fr.xgouchet.elmyr
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import fr.xgouchet.elmyr.fixture.Bar
 import fr.xgouchet.elmyr.fixture.Foo
 import fr.xgouchet.elmyr.kotlin.BooleanProperty.Companion.booleanForgery
@@ -16,6 +12,10 @@ import fr.xgouchet.elmyr.kotlin.IntProperty.Companion.intForgery
 import fr.xgouchet.elmyr.kotlin.LongProperty.Companion.longForgery
 import fr.xgouchet.elmyr.kotlin.NullableProperty.Companion.nullableForgery
 import org.assertj.core.api.Assertions.assertThat
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 

@@ -8,7 +8,7 @@ junit4 = "4.13"
 
 spek = "2.0.17"
 assertJ = "0.2.1"
-mockitoKotlin = "2.2.0"
+mockitoKotlin = "4.0.0"
 mockitoJunit5 = "4.2.0"
 
 detekt = "1.19.0"
@@ -30,7 +30,7 @@ spekDsl = { module = "org.spekframework.spek2:spek-dsl-jvm", version.ref = "spek
 spekJunit5 = { module = "org.spekframework.spek2:spek-runner-junit5", version.ref = "spek" }
 
 assertJ = { module = "net.wuerl.kotlin:assertj-core-kotlin", version.ref = "assertJ" }
-mockitoKotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 mockitoJunit5 = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockitoJunit5" }
 
 detektGP = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }

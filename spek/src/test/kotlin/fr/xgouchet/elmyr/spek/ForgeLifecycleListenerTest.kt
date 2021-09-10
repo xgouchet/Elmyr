@@ -1,6 +1,5 @@
 package fr.xgouchet.elmyr.spek
 
-import com.nhaarman.mockitokotlin2.mock
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.annotation.LongForgery
 import fr.xgouchet.elmyr.annotation.RegexForgery
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.Extensions
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.kotlin.mock
 import org.mockito.quality.Strictness
 import org.spekframework.spek2.lifecycle.ExecutionResult
 import org.spekframework.spek2.lifecycle.GroupScope

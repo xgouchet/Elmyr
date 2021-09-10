@@ -1,8 +1,8 @@
 package fr.xgouchet.elmyr.junit4
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.doThrow
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.whenever
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.junit4.fixture.BarFactory
 import fr.xgouchet.elmyr.junit4.fixture.FooFactory

@@ -3,13 +3,18 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="Elmyr.buildSrc" target="11" />
+      <module name="Elmyr.buildSrc.main" target="11" />
+      <module name="Elmyr.buildSrc.test" target="11" />
       <module name="Elmyr.core" target="11" />
       <module name="Elmyr.inject" target="11" />
       <module name="Elmyr.junit4" target="11" />
       <module name="Elmyr.junit5" target="11" />
       <module name="Elmyr.jvm" target="11" />
+      <module name="Elmyr.mockito" target="11" />
       <module name="Elmyr.spek" target="11" />
+      <module name="ksp-Elmyr.ksp" target="11" />
       <module name="library" target="1.8" />
+      <module name="XDrive.Elmyr.ksp" target="11" />
       <module name="XDrive.Elmyr.semantics" target="11" />
     </bytecodeTargetLevel>
   </component>
