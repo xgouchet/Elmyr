@@ -11,11 +11,19 @@ import java.lang.IllegalStateException
 
 internal class RegexParser {
 
-    // TODO #56 Add some memoization to not parse the same regex twice
+    val cache = LRUCache<String, ForgeryFactory<String>>(32) { regex -> generateFactory(regex) }
 
     // region RegexParser
 
     fun getFactory(regex: String): ForgeryFactory<String> {
+        return cache.get(regex)
+    }
+
+    // endregion
+
+    // region Internal
+
+    private fun generateFactory(regex: String): ForgeryFactory<String> {
 
         val root = RootNode()
         val sequence = SequenceNode(root).also { root.add(it) }
