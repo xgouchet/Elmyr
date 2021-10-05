@@ -7,10 +7,12 @@ internal interface Quantifier {
 
     companion object {
 
-        val MAYBE_ONE = QuantifierMaybeOne()
+        internal val MAYBE_ONE = QuantifierMaybeOne
 
-        val ZERO_OR_MORE = QuantifierAtLeastN(0)
+        internal val ZERO_OR_MORE = QuantifierZeroOrMore
 
-        val ONE_OR_MORE = QuantifierAtLeastN(1)
+        internal val ONE_OR_MORE = QuantifierOneOrMore
+
+        internal const val MAX_UNBOUND_QUANTITY = 0x20
     }
 }

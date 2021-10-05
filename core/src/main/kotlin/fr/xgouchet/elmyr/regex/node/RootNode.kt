@@ -13,4 +13,12 @@ internal class RootNode : BaseParentNode() {
     }
 
     // endregion
+
+    // region Object
+
+    override fun toRegex(): String {
+        return children.joinToString("", prefix = "/", postfix = "/") {it.toRegex()}
+    }
+
+    // endregion
 }

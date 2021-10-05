@@ -25,5 +25,17 @@ internal class BackReferenceNode(
         builder.append(referencedGroup.referenceValue)
     }
 
+    override fun toRegex(): String {
+        return "\\$groupReference"
+    }
+
+    // endregion
+
+    // region Object
+
+    override fun toString(): String {
+        return "BackReferenceNode(ref:$groupReference)"
+    }
+
     // endregion
 }

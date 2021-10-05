@@ -8,11 +8,15 @@ import fr.xgouchet.elmyr.Forge
  */
 internal class AlternationNode : BaseParentNode() {
 
-    // region QuantifiedNode
+    // region Node
 
     override fun build(forge: Forge, builder: StringBuilder) {
         val child = forge.anElementFrom(children)
         child.build(forge, builder)
+    }
+
+    override fun toRegex(): String {
+        return children.joinToString("|") { it.toRegex() }
     }
 
     // endregion

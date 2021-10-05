@@ -30,7 +30,7 @@ internal class CharacterClassNode(
             children.forEach {
                 val repr = when (it) {
                     is RawCharNode -> it.escapedChar
-                    is CharacterRangeNode -> "${it.from}-${it.to}"
+                    is CharacterRangeNode -> "${it.from.escapedChar}-${it.to.escapedChar}"
                     is PredefinedCharacterClassNode -> "\\${it.shortcut}"
                     else -> TODO("Can't handle $it")
                 }
@@ -60,5 +60,12 @@ internal class CharacterClassNode(
         }
     }
 
+    override fun toRegex(): String {
+        val prefix = if (isNegation) "[^" else "["
+        return children.joinToString("", prefix = prefix, postfix = "]") { it.toRegex() }
+    }
+
+
     // endregion
+
 }

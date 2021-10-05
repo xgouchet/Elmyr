@@ -5,12 +5,16 @@ import fr.xgouchet.elmyr.ForgeryFactory
 import fr.xgouchet.elmyr.regex.node.Node
 
 internal class RegexStringFactory(
-    private val rootNode: Node
+    internal val rootNode: Node
 ) : ForgeryFactory<String> {
 
     override fun getForgery(forge: Forge): String {
         val stringBuilder = StringBuilder()
         rootNode.build(forge, stringBuilder)
         return stringBuilder.toString()
+    }
+
+    override fun toString(): String {
+        return "$rootNode"
     }
 }

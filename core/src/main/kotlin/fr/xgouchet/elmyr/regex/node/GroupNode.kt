@@ -28,5 +28,9 @@ internal class GroupNode(
         builder.append(localBuilder.toString())
     }
 
+    override fun toRegex(): String {
+        return children.joinToString("", prefix = "(", postfix = ")") { it.toRegex() }
+    }
+
     // endregion
 }

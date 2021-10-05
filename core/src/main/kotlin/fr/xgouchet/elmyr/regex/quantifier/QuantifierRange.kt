@@ -8,4 +8,8 @@ internal class QuantifierRange(
 ) : Quantifier {
 
     override fun getQuantity(forge: Forge): Int = forge.anInt(n, m + 1)
+
+    override fun toString(): String {
+        return "{$n,$m}"
+    }
 }
