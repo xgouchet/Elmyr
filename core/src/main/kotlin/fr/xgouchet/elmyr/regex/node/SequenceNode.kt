@@ -16,8 +16,8 @@ internal open class SequenceNode(
         if (children.isNotEmpty()) {
             val lastElement = children.removeAt(children.lastIndex)
             val newElement = QuantifiedNode(
-                    node = lastElement,
-                    quantifier = quantifier
+                node = lastElement,
+                quantifier = quantifier
             )
             children.add(newElement)
         }
@@ -45,6 +45,10 @@ internal open class SequenceNode(
         for (child in children) {
             child.build(forge, builder)
         }
+    }
+
+    override fun toRegex(): String {
+        return children.joinToString("") { it.toRegex() }
     }
 
     // endregion

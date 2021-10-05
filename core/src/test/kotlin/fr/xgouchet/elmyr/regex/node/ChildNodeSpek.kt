@@ -12,6 +12,8 @@ class ChildNodeSpek : Spek({
 
     val stranger = object : BaseParentNode() {
         override fun build(forge: Forge, builder: StringBuilder) {}
+
+        override fun toRegex(): String = "?"
     }
 
     describe("A child node") {
@@ -20,6 +22,8 @@ class ChildNodeSpek : Spek({
 
             val parent = object : BaseParentNode() {
                 override fun build(forge: Forge, builder: StringBuilder) {}
+
+                override fun toRegex(): String = "?"
             }
 
             val childNode = object : ChildNode {
@@ -27,6 +31,8 @@ class ChildNodeSpek : Spek({
                 override fun getParent(): ParentNode = parent
 
                 override fun build(forge: Forge, builder: StringBuilder) {}
+
+                override fun toRegex(): String = "?"
             }
 
             it("is a descendant of its parent") {
@@ -42,12 +48,16 @@ class ChildNodeSpek : Spek({
 
             val parent = object : BaseParentNode() {
                 override fun build(forge: Forge, builder: StringBuilder) {}
+
+                override fun toRegex(): String = "?"
             }
 
             val childNode = object : ChildNode {
                 override fun getParent(): ParentNode = parent
 
                 override fun build(forge: Forge, builder: StringBuilder) {}
+
+                override fun toRegex(): String = "?"
             }
 
             it("is a descendant of its parent") {
@@ -62,12 +72,16 @@ class ChildNodeSpek : Spek({
 
             val parent = object : BaseParentNode() {
                 override fun build(forge: Forge, builder: StringBuilder) {}
+
+                override fun toRegex(): String = "?"
             }
 
             val childNode = object : BaseParentNode(), ChildNode {
                 override fun getParent(): ParentNode = parent
 
                 override fun build(forge: Forge, builder: StringBuilder) {}
+
+                override fun toRegex(): String = "?"
             }
 
             it("is a descendant of itself") {

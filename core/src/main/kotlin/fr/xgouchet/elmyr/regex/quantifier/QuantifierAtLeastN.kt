@@ -6,10 +6,16 @@ internal class QuantifierAtLeastN(
     private val n: Int
 ) : Quantifier {
 
-    override fun getQuantity(forge: Forge): Int = forge.anInt(n, n + MAX_UNBOUND_QUANTITY)
+    override fun getQuantity(forge: Forge): Int {
+        return forge.anInt(n, n + Quantifier.MAX_UNBOUND_QUANTITY)
+    }
+
+
+    override fun toString(): String {
+        return "{$n,}"
+    }
 
     companion object {
 
-        internal const val MAX_UNBOUND_QUANTITY = 0x20
     }
 }

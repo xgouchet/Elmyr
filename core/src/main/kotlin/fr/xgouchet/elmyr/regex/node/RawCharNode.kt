@@ -17,5 +17,17 @@ internal class RawCharNode(
         builder.append(rawChar)
     }
 
+    override fun toRegex(): String {
+        return escapedChar
+    }
+
+    // endregion
+
+    // region Object
+
+    override fun toString(): String {
+        return "RawCharNode(raw:${rawChar}, esc:$escapedChar)"
+    }
+
     // endregion
 }

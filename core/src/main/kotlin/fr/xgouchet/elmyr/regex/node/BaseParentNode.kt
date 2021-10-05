@@ -32,4 +32,12 @@ internal abstract class BaseParentNode : ParentNode {
     }
 
     // endregion
+
+    // region Object
+
+    override fun toString(): String {
+        return "${javaClass.simpleName}${children.joinToString(";", prefix = "[", postfix = "]")}"
+    }
+
+    // endregion
 }

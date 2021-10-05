@@ -22,5 +22,18 @@ internal class QuantifiedNode(
         }
     }
 
+    override fun toRegex(): String {
+        return "${node.toRegex()}$quantifier"
+    }
+
+
+    // endregion
+
+    // region Object
+
+    override fun toString(): String {
+        return "QuantifiedNode(node:$node, quantifier:$quantifier)"
+    }
+
     // endregion
 }

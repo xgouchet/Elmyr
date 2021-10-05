@@ -7,4 +7,8 @@ internal class QuantifierExactlyN(
 ) : Quantifier {
 
     override fun getQuantity(forge: Forge): Int = n
+
+    override fun toString(): String {
+        return "{$n}"
+    }
 }

@@ -14,6 +14,19 @@ private constructor(
         builder.append(forge.forging())
     }
 
+    override fun toRegex(): String {
+        return shortcut
+    }
+
+    // endregion
+
+    // region Object
+
+    override fun toString(): String {
+        return "PredefinedCharacterClassNode(shortcut:'$shortcut')"
+    }
+
+
     // endregion
 
     companion object {
@@ -48,11 +61,11 @@ private constructor(
             )
         }
 
-        fun whitespace() = PredefinedCharacterClassNode("\\w") {
+        fun whitespace() = PredefinedCharacterClassNode("\\s") {
             aWhitespaceChar()
         }
 
-        fun notWhitespace() = PredefinedCharacterClassNode("\\W") {
+        fun notWhitespace() = PredefinedCharacterClassNode("\\S") {
             aChar(min = '\u0021', max = Forge.MAX_UTF8)
         }
     }

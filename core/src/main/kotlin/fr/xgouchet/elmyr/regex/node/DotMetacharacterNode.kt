@@ -14,5 +14,17 @@ internal class DotMetacharacterNode : Node {
         builder.append(forge.aChar())
     }
 
+    override fun toRegex(): String {
+        return "."
+    }
+
+    // endregion
+
+    // region Object
+
+    override fun toString(): String {
+        return "DotMetacharacterNode"
+    }
+
     // endregion
 }
