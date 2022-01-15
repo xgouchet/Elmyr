@@ -6,7 +6,7 @@
 [![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
 [![Documentation Status](https://img.shields.io/badge/docs-wiki-brightgreen.svg)](https://github.com/xgouchet/Elmyr/wiki)
 
-[![Build Status](https://app.travis-ci.com/xgouchet/Elmyr.svg?branch=main)](https://app.travis-ci.com/github/xgouchet/Elmyr)
+[![CircleCI](https://circleci.com/gh/xgouchet/Elmyr.svg?style=shield)](https://circleci.com/github/xgouchet/Elmyr)
 [![codecov](https://codecov.io/gh/xgouchet/Elmyr/branch/master/graph/badge.svg)](https://codecov.io/gh/xgouchet/Elmyr)
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
