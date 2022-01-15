@@ -26,7 +26,6 @@ private constructor(
         return "PredefinedCharacterClassNode(shortcut:'$shortcut')"
     }
 
-
     // endregion
 
     companion object {

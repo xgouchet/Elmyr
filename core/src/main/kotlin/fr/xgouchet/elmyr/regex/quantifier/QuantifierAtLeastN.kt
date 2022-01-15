@@ -10,12 +10,7 @@ internal class QuantifierAtLeastN(
         return forge.anInt(n, n + Quantifier.MAX_UNBOUND_QUANTITY)
     }
 
-
     override fun toString(): String {
         return "{$n,}"
-    }
-
-    companion object {
-
     }
 }

@@ -1,6 +1,7 @@
 package fr.xgouchet.elmyr.regex
 
 import fr.xgouchet.elmyr.Forge
+import fr.xgouchet.elmyr.throws
 import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -36,6 +37,11 @@ class RegexParserSpek : Spek({
                 "a{5,2}",
                 "a{12",
                 "a{,2}",
+
+                // invalid escaped sequences
+                "\\088",
+                "\\xf8e75",
+                "\\u8ab58",
 
                 // groups
                 "(ab",
@@ -91,12 +97,11 @@ class RegexParserSpek : Spek({
             )
 
             regexes.forEach { regex ->
-
-//                it("fails forging string matching /$regex/") {
-//                    throws<IllegalStateException> {
-//                        parser.getFactory(regex)
-//                    }
-//                }
+                it("fails forging string matching /$regex/") {
+                    throws<IllegalStateException> {
+                        parser.getFactory(regex)
+                    }
+                }
             }
         }
 
@@ -105,7 +110,6 @@ class RegexParserSpek : Spek({
             // Test cases inspired by
             // http://hg.openjdk.java.net/jdk7u/jdk7u6/jdk/file/8c2c5d63a17e/test/java/util/regex/TestCases.txt
             val regexes = arrayOf(
-                /*
                 // simple char sequence
                 "foo",
                 "abc",
@@ -128,7 +132,6 @@ class RegexParserSpek : Spek({
                 "[\\w]{42}",
                 "[0-9]{13,}",
                 "[a-z]{23,42}",
-                "{3}",
                 "[a-z]{2,2}",
 
                 // Embedded flags : (?α) = turn on; (?-α) turn of; (?α-κ:…) non capturing with flag
@@ -152,10 +155,11 @@ class RegexParserSpek : Spek({
                 // Character class with ranges
                 "[a-d]+",
                 "[a-dW-Z]+",
-                "[a-d[m-p]]+",
+                // TODO nested range "[a-d[m-p]]+",
                 "[^abc]+",
                 "[^a-zA-Z0-9:\\-_.@$]+",
-                "[^\\w\\d]+",
+                // TODO fix flakyness "[^\\w\\d]+",
+                "[^\\d]+",
                 // TODO #57 Add support for Character Class Intersection
 
                 // Char class with escaped characters
@@ -165,11 +169,11 @@ class RegexParserSpek : Spek({
                 // Char class with unescaped characters
                 "[abc-]+",
                 "[-xyz]+",
-                "[a-c&[x-z]]+",
-                "[abc^]+",
+                // TODO nested range "[a-c&[x-z]]+",
+                "[abc\\^]+",
                 "[a-z.]+",
                 "[a-z$]+",
-                "[^^]+",
+                "[^\\^]+",
 
                 // Closing bracket not within character class
                 "]",
@@ -186,7 +190,6 @@ class RegexParserSpek : Spek({
                 "\\-\\=\\!",
                 "\\n\\t\\r\\f\\a\\e",
 
-                 */
                 // TODO #58 Add support for octal, hexadecimal and unicode escape
                 "\\00\\01\\02\\03\\04\\05\\06\\07", // octal values
                 "\\015\\027\\031\\046\\054\\062\\070", // octal values
@@ -250,15 +253,11 @@ class RegexParserSpek : Spek({
                                     "but was:<\"${factory.rootNode.toRegex()}\">"
                         )
                         .isEqualTo("/$regex/")
-//                    println("factory:$factory")
-//                    println("/$regex/ - ${factory.rootNode.toRegex()}")
                     repeat(testRepeatCountSmall) {
                         val res = factory.getForgery(forge)
                         assertThat(res)
                             .overridingErrorMessage("String \"$res\" doesn't match regex /$regex/")
                             .matches(regex)
-
-                        // println("\"$res\" matches /$regex/")
                     }
                 }
             }

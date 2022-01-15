@@ -22,8 +22,6 @@ internal fun <T> Array<T>.shiftLeftAndInsert(newData: T) {
     this[size - 1] = newData
 }
 
-
 internal fun Array<Char?>.word(nullChar: Char = '·'): String {
     return joinToString("") { (it ?: nullChar).toString() }
 }
-

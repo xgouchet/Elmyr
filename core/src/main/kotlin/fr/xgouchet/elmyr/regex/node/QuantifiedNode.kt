@@ -26,7 +26,6 @@ internal class QuantifiedNode(
         return "${node.toRegex()}$quantifier"
     }
 
-
     // endregion
 
     // region Object

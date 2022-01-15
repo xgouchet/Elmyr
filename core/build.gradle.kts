@@ -22,7 +22,7 @@ dependencies {
     testCompile(Dependencies.Libraries.TestTools)
 }
 
-commonConfig(0.925)
+commonConfig(0.9)
 
 githubWiki {
     types = listOf(

@@ -6,5 +6,5 @@ internal interface Node {
 
     fun build(forge: Forge, builder: StringBuilder)
 
-    fun toRegex() : String
+    fun toRegex(): String
 }

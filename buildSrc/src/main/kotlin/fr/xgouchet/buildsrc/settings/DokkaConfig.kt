@@ -15,13 +15,13 @@ fun Project.dokkaConfig() {
 
     tasks.withType(DokkaTask::class.java) {
         outputFormat = "gfm"
-        configuration {
-            includeNonPublic = false
-            skipDeprecated = false
-            reportUndocumented = true
-            skipEmptyPackages = true
-            // targets = listOf("JVM")
-        }
+//        configuration {
+//            includeNonPublic = false
+//            skipDeprecated = false
+//            reportUndocumented = true
+//            skipEmptyPackages = true
+//            // targets = listOf("JVM")
+//        }
 //        outputDirectory = "${rootDir.path}/../Elmyr.wiki/"
     }
 }

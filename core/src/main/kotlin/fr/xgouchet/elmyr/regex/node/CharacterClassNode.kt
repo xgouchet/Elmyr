@@ -13,7 +13,6 @@ internal class CharacterClassNode(
     private var isClosed: Boolean = false
 
     private var negatedPattern: String = ""
-    private val negatedRegex: Regex by lazy { Regex("[$negatedPattern]") }
 
     // region CharacterClassNode
 
@@ -52,7 +51,7 @@ internal class CharacterClassNode(
             var char: Char
             do {
                 char = forge.aChar()
-            } while (negatedRegex.matches("$char"))
+            } while (Regex("[$negatedPattern]").matches("$char"))
             builder.append(char)
         } else {
             val child = forge.anElementFrom(children)
@@ -65,7 +64,5 @@ internal class CharacterClassNode(
         return children.joinToString("", prefix = prefix, postfix = "]") { it.toRegex() }
     }
 
-
     // endregion
-
 }

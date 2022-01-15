@@ -32,7 +32,7 @@ internal class CharacterClassState(
 
             // Character range
             '-' -> if (classNode.isEmpty()) {
-                classNode.add(RawCharNode(c, "\\-"))
+                classNode.add(RawCharNode(c, "-"))
             } else {
                 newState = CharacterClassRangeState(classNode, this)
             }

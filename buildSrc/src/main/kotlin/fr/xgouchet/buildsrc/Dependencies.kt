@@ -22,7 +22,6 @@ object Dependencies {
         const val KtLint = "9.1.0"
         const val DependencyVersion = "0.27.0"
 
-        const val SystemRules = "1.19.0"
         const val MockitoExt = "3.2.4"
 
         // Docs
@@ -51,10 +50,6 @@ object Dependencies {
         @JvmField val TestTools = arrayOf(
                 "net.wuerl.kotlin:assertj-core-kotlin:${Versions.AssertJ}",
                 "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.MockitoKotlin}"
-        )
-
-        @JvmField val JUnit4Rules = arrayOf(
-                "com.github.stefanbirkner:system-rules:${Versions.SystemRules}"
         )
 
         @JvmField val JUnit5Extensions = arrayOf(

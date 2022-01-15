@@ -10,12 +10,12 @@ fun Project.detektConfig() {
 
         input = files("$projectDir/src/main/kotlin")
         config = files("${project.rootDir}/script/config/detekt.yml")
-        reports {
-            xml {
-                enabled = true
-                destination = file("build/reports/detekt.xml")
-            }
-        }
+//        reports {
+//            xml {
+//                enabled = true
+//                destination = file("build/reports/detekt.xml")
+//            }
+//        }
     }
 
     tasks.named("check") {

@@ -26,7 +26,7 @@ internal class RawCharNode(
     // region Object
 
     override fun toString(): String {
-        return "RawCharNode(raw:${rawChar}, esc:$escapedChar)"
+        return "RawCharNode(raw:$rawChar, esc:$escapedChar)"
     }
 
     // endregion

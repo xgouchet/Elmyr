@@ -18,6 +18,7 @@ internal class EscapeState(
     private var backReference = 0
     private var hexadecimalValue = 0
     private var octalValue = 0
+    private var escapedStr = ""
 
     // region State
 
@@ -38,20 +39,26 @@ internal class EscapeState(
             ongoingNode.add(BackReferenceNode(backReference, ongoingNode))
             previousState.handleEndOfRegex()
         } else if (readingUnicode) {
-            val escapedChar = "\\u${hexadecimalValue.toString(BASE_16).padStart(4, '0')}"
-            check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid unicode value: $escapedChar" }
-            ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
-            previousState.handleEndOfRegex()
+            runIfNonEmptyEscapedString("unicode character") {
+                val escapedChar = "\\u${hexadecimalValue.toString(BASE_16).padStart(4, '0')}"
+                check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid unicode value: $escapedChar" }
+                ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
+                previousState.handleEndOfRegex()
+            }
         } else if (readingHexadecimal) {
-            val escapedChar = "\\x${hexadecimalValue.toString(BASE_16).padStart(2, '0')}"
-            check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid hexadecimal value: $escapedChar" }
-            ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
-            previousState.handleEndOfRegex()
-        } else if (readingOctal){
-            val escapedChar = "\\0${octalValue.toString(BASE_8)}"
-            check(octalValue in CHAR_MIN..CHAR_MAX) { "Invalid octal value: $escapedChar" }
-            ongoingNode.add(RawCharNode(octalValue.toChar(), escapedChar))
-            previousState.handleEndOfRegex()
+            runIfNonEmptyEscapedString("hexadecimal number") {
+                val escapedChar = "\\x${hexadecimalValue.toString(BASE_16).padStart(2, '0')}"
+                check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid hexadecimal value: $escapedChar" }
+                ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
+                previousState.handleEndOfRegex()
+            }
+        } else if (readingOctal) {
+            runIfNonEmptyEscapedString("octal number") {
+                val escapedChar = "\\0${octalValue.toString(BASE_8)}"
+                check(octalValue in CHAR_MIN..CHAR_MAX) { "Invalid octal value: $escapedChar" }
+                ongoingNode.add(RawCharNode(octalValue.toChar(), escapedChar))
+                previousState.handleEndOfRegex()
+            }
         } else {
             throw IllegalStateException("Unexpected end of expression after escape character")
         }
@@ -117,6 +124,7 @@ internal class EscapeState(
         var newState: State = this
         when (c) {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+                escapedStr += c
                 val digit = (c - '0')
                 backReference = (backReference * BASE_10) + digit
             }
@@ -133,27 +141,34 @@ internal class EscapeState(
         var newState: State = this
         when (c) {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
+                escapedStr += c
                 val digit = (c - '0')
                 hexadecimalValue = (hexadecimalValue * BASE_16) + digit
             }
             'a', 'b', 'c', 'd', 'e', 'f' -> {
+                escapedStr += c
                 val digit = (c - 'a') + 10
                 hexadecimalValue = (hexadecimalValue * BASE_16) + digit
             }
             'A', 'B', 'C', 'D', 'E', 'F' -> {
+                escapedStr += c
                 val digit = (c - 'A') + 10
                 hexadecimalValue = (hexadecimalValue * BASE_16) + digit
             }
             else -> if (readingUnicode) {
-                val escapedChar = "\\u${hexadecimalValue.toString(BASE_16).padStart(4, '0')}"
-                check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid unicode value: $escapedChar" }
-                ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
-                newState = previousState.handleChar(c)
+                newState = runIfNonEmptyEscapedString("unicode character") {
+                    val escapedChar = "\\u${hexadecimalValue.toString(BASE_16).padStart(4, '0')}"
+                    check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid unicode value: $escapedChar" }
+                    ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
+                    previousState.handleChar(c)
+                }
             } else if (readingHexadecimal) {
-                val escapedChar = "\\x${hexadecimalValue.toString(BASE_16).padStart(2, '0')}"
-                check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid hexadecimal value: $escapedChar" }
-                ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
-                newState = previousState.handleChar(c)
+                newState = runIfNonEmptyEscapedString("hexadecimal number") {
+                    val escapedChar = "\\x${hexadecimalValue.toString(BASE_16).padStart(2, '0')}"
+                    check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid hexadecimal value: $escapedChar" }
+                    ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
+                    previousState.handleChar(c)
+                }
             }
         }
 
@@ -164,18 +179,32 @@ internal class EscapeState(
         var newState: State = this
         when (c) {
             '0', '1', '2', '3', '4', '5', '6', '7' -> {
+                escapedStr += c
                 val digit = (c - '0')
                 octalValue = (octalValue * BASE_8) + digit
             }
             else -> {
-                val escapedChar = "\\0${octalValue.toString(BASE_8)}"
-                check(octalValue in CHAR_MIN..CHAR_MAX) { "Invalid octal value: $escapedChar" }
-                ongoingNode.add(RawCharNode(octalValue.toChar(), escapedChar))
-                newState = previousState.handleChar(c)
+                newState = runIfNonEmptyEscapedString("octal number") {
+                    val escapedChar = "\\0${octalValue.toString(BASE_8)}"
+                    check(octalValue in CHAR_MIN..CHAR_MAX) { "Invalid octal value: $escapedChar" }
+                    ongoingNode.add(RawCharNode(octalValue.toChar(), escapedChar))
+                    previousState.handleChar(c)
+                }
             }
         }
 
         return newState
+    }
+
+    private fun <T> runIfNonEmptyEscapedString(
+        type: String,
+        block: () -> T
+    ): T {
+        if (escapedStr.isEmpty()) {
+            throw IllegalStateException("Invalid format: expecting $type")
+        } else {
+            return block()
+        }
     }
 
     // endregion

@@ -2,9 +2,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { setUrl("http://repo1.maven.org/maven2") }
         maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Gradle) }
         maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Dokka) }
-        jcenter()
     }
 
     dependencies {
@@ -16,8 +16,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { setUrl("http://repo1.maven.org/maven2") }
         maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Dokka) }
-        jcenter()
     }
 }
 

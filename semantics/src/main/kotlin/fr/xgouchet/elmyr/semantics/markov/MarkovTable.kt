@@ -3,7 +3,7 @@ package fr.xgouchet.elmyr.semantics.markov
 import fr.xgouchet.elmyr.Forge
 import kotlin.math.max
 
-class MarkovTable(
+internal class MarkovTable(
     internal val tokens: CharArray,
     internal val chainLength: Int
 ) {
@@ -35,7 +35,7 @@ class MarkovTable(
 
     // region Generation
 
-    fun generate(forge: Forge) : String {
+    fun generate(forge: Forge): String {
         return generateSequence(forge).joinToString("")
     }
 
@@ -46,21 +46,26 @@ class MarkovTable(
             dataWindow.shiftLeftAndInsert('?')
 
             val total = getTotalOptions(dataWindow)
-            if (total == 0) return@generateSequence null
-
-            val choice = if (total == 1) 1 else forge.anInt(1, total)
-            dataWindow[chainLength - 1] = null
             var sum = getOptions(dataWindow)
-            if (sum >= choice) return@generateSequence null
 
-            tokens.forEach { token ->
-                dataWindow[chainLength - 1] = token
-                val options = getOptions(dataWindow)
-                sum += options
-                if (sum >= choice) return@generateSequence token
+            val choice = when (total) {
+                0 -> 0
+                1 -> 1
+                else -> forge.anInt(1, total)
             }
-
-            null
+            dataWindow[chainLength - 1] = null
+            var genToken: Char? = null
+            if (sum < choice) {
+                tokens.forEach { token ->
+                    val options = getOptions(dataWindow)
+                    if ((choice > sum) && (choice <= (sum + options))) {
+                        dataWindow[chainLength - 1] = token
+                        genToken = token
+                    }
+                    sum += options
+                }
+            }
+            genToken
         }
     }
 
@@ -83,7 +88,6 @@ class MarkovTable(
         }
         return index
     }
-
 
     private fun getTotalOptions(dataWindow: Array<Char?>): Int {
         // check null
@@ -109,5 +113,4 @@ class MarkovTable(
 
         internal const val NULL_CHAR = '∅'
     }
-
 }

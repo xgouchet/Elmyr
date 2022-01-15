@@ -2,17 +2,15 @@ package fr.xgouchet.elmyr.semantics.markov
 
 import java.io.InputStream
 
-class MarkovReader {
+internal class MarkovReader {
 
     fun parse(resourceName: String): MarkovTable {
-//        val classloader = Thread.currentThread().contextClassLoader
-//        val stream = classloader.getResourceAsStream(resourceName)
-//        val stream = javaClass.classLoader.getResourceAsStream(resourceName)
         val stream = javaClass.getResourceAsStream(resourceName)
         checkNotNull(stream) { "Cannot load resource $resourceName: stream is null" }
         return parse(stream)
     }
 
+    @Suppress("NestedBlockDepth")
     private fun parse(stream: InputStream): MarkovTable {
         var table: MarkovTable? = null
 
@@ -53,5 +51,4 @@ class MarkovReader {
 
         return output
     }
-
 }

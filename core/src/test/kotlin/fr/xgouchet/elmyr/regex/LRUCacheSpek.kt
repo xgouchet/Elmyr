@@ -68,6 +68,7 @@ class LRUCacheSpek : Spek({
                 val otherKey = forge.aNumericalString()
 
                 val value = cache.get(key)
+                @Suppress("UNUSED_VARIABLE")
                 val intermediate = cache.get(otherKey)
                 factoryCalls = 0
                 val value2 = cache.get(key)
@@ -83,6 +84,7 @@ class LRUCacheSpek : Spek({
                 val value = cache.get(key)
 
                 for (i in 0 until capacity) {
+                    @Suppress("UNUSED_VARIABLE")
                     val intermediate = cache.get(forge.aNumericalString(i + 1))
                 }
                 factoryCalls = 0

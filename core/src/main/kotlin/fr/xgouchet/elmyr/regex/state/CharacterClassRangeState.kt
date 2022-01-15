@@ -5,7 +5,6 @@ import fr.xgouchet.elmyr.regex.node.BaseParentNode
 import fr.xgouchet.elmyr.regex.node.CharacterClassNode
 import fr.xgouchet.elmyr.regex.node.CharacterRangeNode
 import fr.xgouchet.elmyr.regex.node.Node
-import fr.xgouchet.elmyr.regex.node.ParentNode
 import fr.xgouchet.elmyr.regex.node.RawCharNode
 
 internal class CharacterClassRangeState(
@@ -18,16 +17,17 @@ internal class CharacterClassRangeState(
     override fun handleChar(c: Char): State {
         return when (c) {
             ']' -> {
-                classNode.add(RawCharNode('-', "\\-"))
+                classNode.add(RawCharNode('-', "-"))
                 previousState.handleChar(c)
             }
             '\\' -> {
                 EscapeState(
                     object : BaseParentNode() {
                         override fun add(node: Node) {
-                            val previous = classNode.removeLast()
-                            check(previous is RawCharNode) { "Unexpected state in character class" }
-                            check(node is RawCharNode) { "Unexpected state in character class" }
+                            val previous = classNode.removeLast() as? RawCharNode
+                            if (previous == null || node !is RawCharNode) {
+                                throw IllegalStateException("Unexpected state in character class")
+                            }
                             check(previous.rawChar < node.rawChar) {
                                 "Illegal character range /${previous.escapedChar}-${node.escapedChar}/"
                             }
@@ -60,8 +60,4 @@ internal class CharacterClassRangeState(
     }
 
     // endregion
-
-    private fun handleEndOfRange() {
-
-    }
 }
