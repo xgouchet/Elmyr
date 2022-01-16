@@ -1,7 +1,4 @@
-import fr.xgouchet.buildsrc.Dependencies
-import fr.xgouchet.buildsrc.compileOnly
 import fr.xgouchet.buildsrc.settings.commonConfig
-import fr.xgouchet.buildsrc.testCompile
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -10,23 +7,25 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
     id("githubWiki")
-    jacoco
-    maven
+//    maven
 }
 
 dependencies {
 
-    compile(project(":core"))
-    compile(project(":inject"))
-    compile(Dependencies.Libraries.Kotlin)
+    implementation(project(":core"))
+    implementation(project(":inject"))
 
-    compileOnly(Dependencies.Libraries.Spek)
+    implementation(libs.kotlin)
 
-    testCompile(project(":junit5"))
-    testCompile(Dependencies.Libraries.JUnit5)
-    testCompile(Dependencies.Libraries.Spek)
-    testCompile(Dependencies.Libraries.TestTools)
-    testCompile(Dependencies.Libraries.JUnit5Extensions)
+    compileOnly(libs.bundles.spek)
+
+    testImplementation(project(":junit5"))
+
+    testImplementation(libs.bundles.junit5)
+    testImplementation(libs.bundles.spek)
+    testImplementation(libs.assertJ)
+    testImplementation(libs.mockitoJunit5)
+    testImplementation(libs.mockitoKotlin)
 }
 
 commonConfig()
