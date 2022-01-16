@@ -20,30 +20,27 @@ internal class CharacterClassRangeState(
                 classNode.add(RawCharNode('-', "-"))
                 previousState.handleChar(c)
             }
-            '\\' -> {
-                EscapeState(
-                    object : BaseParentNode() {
-                        override fun add(node: Node) {
-                            val previous = classNode.removeLast() as? RawCharNode
-                            if (previous == null || node !is RawCharNode) {
-                                throw IllegalStateException("Unexpected state in character class")
-                            }
-                            check(previous.rawChar < node.rawChar) {
-                                "Illegal character range /${previous.escapedChar}-${node.escapedChar}/"
-                            }
-                            classNode.add(CharacterRangeNode(previous, node))
+            '\\' -> EscapeState(
+                object : BaseParentNode() {
+                    override fun add(node: Node) {
+                        val previous = classNode.removeLast() as? RawCharNode
+                        checkNotNull(previous) { "Unexpected state in character class" }
+                        check(node is RawCharNode) { "Unexpected state in character class" }
+                        check(previous.rawChar < node.rawChar) {
+                            "Illegal character range /${previous.escapedChar}-${node.escapedChar}/"
                         }
+                        classNode.add(CharacterRangeNode(previous, node))
+                    }
 
-                        override fun build(forge: Forge, builder: StringBuilder) {
-                            throw IllegalStateException("Anonymous class can't build a regex")
-                        }
+                    override fun build(forge: Forge, builder: StringBuilder) {
+                        throw UnsupportedOperationException("Anonymous class can't build a regex")
+                    }
 
-                        override fun toRegex(): String {
-                            throw IllegalStateException("Anonymous class can't build a regex")
-                        }
-                    }, previousState, false
-                )
-            }
+                    override fun toRegex(): String {
+                        throw UnsupportedOperationException("Anonymous class can't build a regex")
+                    }
+                }, previousState, false
+            )
             else -> {
                 val previous = classNode.removeLast()
                 check(previous is RawCharNode) { "Unexpected state in character class" }

@@ -14,6 +14,7 @@ interface ForgeryInjector {
      * Injects forgeries on all fields or properties of the target, using the given [Forge].
      * @param forge the forge to use. Make sure it has all the necessary factories.
      * @param target the instance whose fields/properties will be injected with newly create forgeries.
+     * @param listener a [Listener] to be called whenever a forgery is injected, or null
      */
     fun inject(forge: Forge, target: Any, listener: Listener?)
 
@@ -25,6 +26,7 @@ interface ForgeryInjector {
         /**
          * Called when a field is injected.
          * @param declaringClass the class declaring that property
+         * @param fieldType the type of the field
          * @param fieldName the name of the field
          * @param value the injected value
          */

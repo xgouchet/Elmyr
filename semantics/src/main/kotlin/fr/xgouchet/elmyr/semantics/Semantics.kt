@@ -4,6 +4,7 @@ import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.semantics.markov.MarkovReader
 import fr.xgouchet.elmyr.semantics.markov.MarkovTable
+import java.util.Locale
 
 internal val firstNameTable: MarkovTable by lazy {
     MarkovReader().parse("/first_name_mkv.csv")
@@ -21,20 +22,27 @@ internal val lipsumTable: MarkovTable by lazy {
  * Creates a random String that will look like a generic first name.
  */
 fun Forge.aFirstName(): String {
-    return firstNameTable.generate(this).capitalize()
+    return firstNameTable.generate(this)
+        .replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
 }
 
 /**
  * Creates a random String that will look like a generic last name.
  */
 fun Forge.aLastName(): String {
-    return lastNameTable.generate(this).capitalize()
+    return lastNameTable.generate(this)
+        .replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
 }
 
 /**
  * Creates a random String that will look like a generic "firstname.lastname@company.ext"
  * email address.
  */
+@Suppress("MagicNumber")
 fun Forge.anEmail(): String {
     val firstName = aFirstName()
     val lastName = aLastName()

@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit
  *               offset around the current timestamp
  * @return a long to be used as a timestamp, picked in the given offset around now
  */
+@Suppress("MagicNumber")
 fun Forge.aTimestamp(offset: Pair<Long, TimeUnit> = 365L to TimeUnit.DAYS): Long {
     val rangeMs = offset.second.toMillis(offset.first)
     val min = -rangeMs

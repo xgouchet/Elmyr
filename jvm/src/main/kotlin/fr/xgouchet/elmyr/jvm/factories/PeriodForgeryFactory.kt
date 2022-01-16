@@ -7,6 +7,7 @@ import java.time.Period
 /**
  * A [ForgeryFactory] that will generate a [Period] instance.
  */
+@Suppress("MagicNumber")
 class PeriodForgeryFactory :
         ForgeryFactory<Period> {
 

@@ -7,11 +7,12 @@ import fr.xgouchet.elmyr.regex.node.RootNode
 import fr.xgouchet.elmyr.regex.node.SequenceNode
 import fr.xgouchet.elmyr.regex.state.BaseState
 import fr.xgouchet.elmyr.regex.state.State
-import java.lang.IllegalStateException
 
 internal class RegexParser {
 
-    val cache = LRUCache<String, ForgeryFactory<String>>(32) { regex -> generateFactory(regex) }
+    val cache = LRUCache<String, ForgeryFactory<String>>(REGEX_CACHE_SIZE) { regex ->
+        generateFactory(regex)
+    }
 
     // region RegexParser
 
@@ -55,4 +56,8 @@ internal class RegexParser {
     }
 
     // endregion
+
+    companion object {
+        const val REGEX_CACHE_SIZE = 64
+    }
 }

@@ -5,9 +5,9 @@ import fr.xgouchet.elmyr.ForgeryFactory
 /**
  * Mark a field, property or method parameter as a pair forgery.
  *
- * @param first a [AdvancedForgery] describing how to forge the first item in the pair.
+ * @property first a [AdvancedForgery] describing how to forge the first item in the pair.
  * Leave default if your Pair uses custom objects with existing [ForgeryFactory] as keys.
- * @param second a [AdvancedForgery] describing how to forge the second item in the pair.
+ * @property second a [AdvancedForgery] describing how to forge the second item in the pair.
  * Leave default if your Pair uses custom objects with existing [ForgeryFactory] as keys.
  */
 @Target(

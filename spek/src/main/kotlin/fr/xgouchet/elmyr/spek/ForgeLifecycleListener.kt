@@ -10,8 +10,8 @@ import org.spekframework.spek2.lifecycle.TestScope
 
 /**
  * A Spek [LifecycleListener] used to synchronize your [Forge] instance with Spek.
- * @param forge the [Forge] instance to keep synced with Spek scopes
- * @param seeds the seeds map (provide a specific seed for each scope in your Spek class)
+ * @property forge the [Forge] instance to keep synced with Spek scopes
+ * @property seeds the seeds map (provide a specific seed for each scope in your Spek class)
  */
 class ForgeLifecycleListener(
     private val forge: Forge,
@@ -62,7 +62,7 @@ class ForgeLifecycleListener(
             val path = scope.path()
             val seed = usedSeeds[path]
             if (seed != null) {
-                mapEntries.add("\t\t\t\"$path\" to 0x${seed.toString(16)}L")
+                mapEntries.add("\t\t\t\"$path\" to 0x${seed.toString(RADIX_HEXA)}L")
             }
             scope = scope.parent
         }
@@ -78,7 +78,7 @@ class ForgeLifecycleListener(
         val scopeId = this.getProperty("id") ?: return ""
         val scopeName = scopeId.getProperty("name") ?: return ""
         val type = scopeId.getProperty("type") ?: ""
-        val typeName = type.toString().toLowerCase()
+        val typeName = type.toString().lowercase()
 
         val simpleName = if (typeName == "class") {
             scopeName.toString().split(".").last()
@@ -100,6 +100,9 @@ class ForgeLifecycleListener(
     }
 
     companion object {
+
+        private const val RADIX_HEXA = 16
+
         private const val TEST_FAIL_MESSAGE = "<%s> failed with Forge seed 0x%xL\n" +
             "Add the following seeds to your Spek class :\n\n" +
             "\tval forge = spekForge(\n" +

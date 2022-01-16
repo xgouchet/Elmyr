@@ -6,7 +6,7 @@ import kotlin.properties.ReadOnlyProperty
 /**
  * This class implements a [ReadOnlyProperty], forging a random boolean with a given probability of being true.
  *
- * @param probability the probability the boolean will be true (default 0.5f)
+ * @property probability the probability the boolean will be true (default 0.5f)
  */
 class BooleanProperty(
     private val probability: Float = Forge.HALF_PROBABILITY

@@ -1,7 +1,7 @@
 package fr.xgouchet.elmyr
 
 /**
- * Raised by a [Forge] when asked to generate an instance with no compatible [ForgeryFactory].
+ * Raised by a [Forge] when asked to forge an instance with no compatible [ForgeryFactory].
  *
  * @param clazz the class that was being forged
  */

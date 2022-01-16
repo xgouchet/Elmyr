@@ -11,7 +11,7 @@ internal object ForgeParamResolver : ForgeryResolver {
         parameterContext: ParameterContext,
         extensionContext: ExtensionContext
     ): Boolean {
-        return parameterContext.parameter.type == Forge::class.java
+        return parameterContext.parameter?.type == Forge::class.java
     }
 
     /** @inheritdoc */

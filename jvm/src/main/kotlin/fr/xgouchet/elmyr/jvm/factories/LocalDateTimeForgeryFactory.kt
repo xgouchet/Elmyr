@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
  * A [ForgeryFactory] that will generate a [LocalDateTime] instance with a date and time set within
  * one year of the current time.
  */
+@Suppress("MagicNumber")
 class LocalDateTimeForgeryFactory :
         ForgeryFactory<LocalDateTime> {
 
@@ -38,6 +39,6 @@ class LocalDateTimeForgeryFactory :
     }
 
     companion object {
-        private const val MAX_NANOS = 1000_000_000
+        private const val MAX_NANOS = 1_000_000_000
     }
 }

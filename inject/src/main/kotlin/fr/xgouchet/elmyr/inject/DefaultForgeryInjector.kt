@@ -32,7 +32,7 @@ import kotlin.reflect.jvm.javaType
  *
  * It can inject forgeries both in Java fields and Kotlin properties.
  */
-@Suppress("LiftReturnOrAssignment")
+@Suppress("LiftReturnOrAssignment", "TooManyFunctions")
 class DefaultForgeryInjector : ForgeryInjector {
 
     // region ForgeryInjector
@@ -320,9 +320,7 @@ class DefaultForgeryInjector : ForgeryInjector {
                 val usingAnnotation = forge.anElementFrom(*annotation.pair)
                 getPairForgery(forge, usingAnnotation, property)
             }
-            else -> {
-                getForgery(forge, property)
-            }
+            else -> getForgery(forge, property)
         }
     }
 

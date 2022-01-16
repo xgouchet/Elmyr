@@ -22,7 +22,6 @@ import java.lang.reflect.Type
 import java.util.Locale
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
@@ -40,7 +39,6 @@ import org.junit.platform.commons.support.AnnotationSupport
 class ForgeExtension :
     BeforeAllCallback,
     BeforeEachCallback,
-    BeforeTestExecutionCallback,
     TestExecutionExceptionHandler,
     ParameterResolver,
     ForgeryInjector.Listener {
@@ -89,14 +87,6 @@ class ForgeExtension :
         injectedData.clear()
         val target = context.requiredTestInstance
         injector.inject(instanceForge, target, this)
-    }
-
-    // endregion
-
-    // region BeforeTestExecutionCallback
-
-    /** @inheritdoc */
-    override fun beforeTestExecution(context: ExtensionContext) {
     }
 
     // endregion

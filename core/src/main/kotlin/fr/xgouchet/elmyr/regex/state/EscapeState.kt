@@ -40,14 +40,14 @@ internal class EscapeState(
             previousState.handleEndOfRegex()
         } else if (readingUnicode) {
             runIfNonEmptyEscapedString("unicode character") {
-                val escapedChar = "\\u${hexadecimalValue.toString(BASE_16).padStart(4, '0')}"
+                val escapedChar = "\\u${hexadecimalValue.toString(BASE_16).padStart(UNICODE_PADDING, '0')}"
                 check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid unicode value: $escapedChar" }
                 ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
                 previousState.handleEndOfRegex()
             }
         } else if (readingHexadecimal) {
             runIfNonEmptyEscapedString("hexadecimal number") {
-                val escapedChar = "\\x${hexadecimalValue.toString(BASE_16).padStart(2, '0')}"
+                val escapedChar = "\\x${hexadecimalValue.toString(BASE_16).padStart(HEXADECIMAL_PADDING, '0')}"
                 check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid hexadecimal value: $escapedChar" }
                 ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
                 previousState.handleEndOfRegex()
@@ -147,24 +147,24 @@ internal class EscapeState(
             }
             'a', 'b', 'c', 'd', 'e', 'f' -> {
                 escapedStr += c
-                val digit = (c - 'a') + 10
+                val digit = (c - 'a') + BASE_10
                 hexadecimalValue = (hexadecimalValue * BASE_16) + digit
             }
             'A', 'B', 'C', 'D', 'E', 'F' -> {
                 escapedStr += c
-                val digit = (c - 'A') + 10
+                val digit = (c - 'A') + BASE_10
                 hexadecimalValue = (hexadecimalValue * BASE_16) + digit
             }
             else -> if (readingUnicode) {
                 newState = runIfNonEmptyEscapedString("unicode character") {
-                    val escapedChar = "\\u${hexadecimalValue.toString(BASE_16).padStart(4, '0')}"
+                    val escapedChar = "\\u${hexadecimalValue.toString(BASE_16).padStart(UNICODE_PADDING, '0')}"
                     check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid unicode value: $escapedChar" }
                     ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
                     previousState.handleChar(c)
                 }
             } else if (readingHexadecimal) {
                 newState = runIfNonEmptyEscapedString("hexadecimal number") {
-                    val escapedChar = "\\x${hexadecimalValue.toString(BASE_16).padStart(2, '0')}"
+                    val escapedChar = "\\x${hexadecimalValue.toString(BASE_16).padStart(HEXADECIMAL_PADDING, '0')}"
                     check(hexadecimalValue in CHAR_MIN..CHAR_MAX) { "Invalid hexadecimal value: $escapedChar" }
                     ongoingNode.add(RawCharNode(hexadecimalValue.toChar(), escapedChar))
                     previousState.handleChar(c)
@@ -183,13 +183,11 @@ internal class EscapeState(
                 val digit = (c - '0')
                 octalValue = (octalValue * BASE_8) + digit
             }
-            else -> {
-                newState = runIfNonEmptyEscapedString("octal number") {
-                    val escapedChar = "\\0${octalValue.toString(BASE_8)}"
-                    check(octalValue in CHAR_MIN..CHAR_MAX) { "Invalid octal value: $escapedChar" }
-                    ongoingNode.add(RawCharNode(octalValue.toChar(), escapedChar))
-                    previousState.handleChar(c)
-                }
+            else -> newState = runIfNonEmptyEscapedString("octal number") {
+                val escapedChar = "\\0${octalValue.toString(BASE_8)}"
+                check(octalValue in CHAR_MIN..CHAR_MAX) { "Invalid octal value: $escapedChar" }
+                ongoingNode.add(RawCharNode(octalValue.toChar(), escapedChar))
+                previousState.handleChar(c)
             }
         }
 
@@ -214,7 +212,10 @@ internal class EscapeState(
         private const val BASE_10 = 10
         private const val BASE_16 = 16
 
-        private const val CHAR_MIN = Char.MIN_VALUE.toInt()
-        private const val CHAR_MAX = Char.MAX_VALUE.toInt()
+        private const val UNICODE_PADDING = 4
+        private const val HEXADECIMAL_PADDING = 2
+
+        private const val CHAR_MIN = Char.MIN_VALUE.code
+        private const val CHAR_MAX = Char.MAX_VALUE.code
     }
 }

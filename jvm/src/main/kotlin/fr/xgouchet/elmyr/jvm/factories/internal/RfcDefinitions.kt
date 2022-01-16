@@ -3,6 +3,7 @@ package fr.xgouchet.elmyr.jvm.factories.internal
 import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.Forge
 
+@Suppress("TooManyFunctions", "MagicNumber")
 internal object RfcDefinitions {
 
     // region Internal/RFC 3986
@@ -53,7 +54,7 @@ internal object RfcDefinitions {
         // Even though we could use upper case too, let's just, not
         builder.append(forge.anAlphabeticalChar(Case.LOWER))
 
-        for (i in 1 until size) {
+        repeat(size) {
             builder.append(forge.anElementFrom(RFC3986_SCHEME_CHARS))
         }
     }
@@ -93,7 +94,7 @@ internal object RfcDefinitions {
     // path-abempty  = *( "/" segment )
     private fun buildPathAbsoluteEmpty(forge: Forge, builder: StringBuilder) {
         val segmentCount = forge.aTinyInt()
-        for (i in 0..segmentCount) {
+        repeat(segmentCount) {
             builder.append('/')
             buildSegment(forge, builder)
         }
@@ -154,7 +155,7 @@ internal object RfcDefinitions {
     // query       = *( pchar / "/" / "?" )
     private fun buildQuery(forge: Forge, builder: StringBuilder) {
         val querySize = forge.anInt(0, 255)
-        for (i in 0 until querySize) {
+        repeat(querySize) {
             builder.append(forge.anElementFrom(RFC3986_QUERY_FRAGMENT_CHARS))
         }
     }
@@ -162,7 +163,7 @@ internal object RfcDefinitions {
     // fragment    = *( pchar / "/" / "?" )
     private fun buildFragment(forge: Forge, builder: StringBuilder) {
         val querySize = forge.anInt(0, 64)
-        for (i in 0 until querySize) {
+        repeat(querySize) {
             builder.append(forge.anElementFrom(RFC3986_QUERY_FRAGMENT_CHARS))
         }
     }
@@ -170,7 +171,7 @@ internal object RfcDefinitions {
     // segment-nz    = 1*pchar
     private fun buildSegmentNZ(forge: Forge, builder: StringBuilder) {
         val segmentSize = forge.anInt(1, 64)
-        for (i in 0 until segmentSize) {
+        repeat(segmentSize) {
             builder.append(forge.anElementFrom(RFC3986_PATH_CHARS))
         }
     }
@@ -178,7 +179,7 @@ internal object RfcDefinitions {
     // segment       = *pchar
     private fun buildSegment(forge: Forge, builder: StringBuilder) {
         val segmentSize = forge.anInt(0, 64)
-        for (i in 0 until segmentSize) {
+        repeat(segmentSize) {
             builder.append(forge.anElementFrom(RFC3986_PATH_CHARS))
         }
     }
@@ -186,7 +187,7 @@ internal object RfcDefinitions {
     // reg-name    = *( unreserved / pct-encoded / sub-delims )
     private fun buildRegName(forge: Forge, builder: StringBuilder) {
         val nameSize = forge.anInt(0, 32)
-        for (i in 0 until nameSize) {
+        repeat(nameSize) {
             if (forge.aBool(0.15f)) {
                 buildPctEncoded(forge, builder)
             } else if (forge.aBool(0.1f)) {
@@ -240,7 +241,7 @@ internal object RfcDefinitions {
 
     private fun buildIPv6FullAddress(forge: Forge, builder: StringBuilder) {
         buildIPv6Hex(forge, builder)
-        for (i in 1 until 8) {
+        repeat(7) {
             builder.append(':')
             buildIPv6Hex(forge, builder)
         }
@@ -253,7 +254,7 @@ internal object RfcDefinitions {
 
         if (leadingCount > 0) {
             buildIPv6Hex(forge, builder)
-            for (i in 1 until leadingCount) {
+            repeat(leadingCount - 1) {
                 builder.append(':')
                 buildIPv6Hex(forge, builder)
             }
@@ -261,7 +262,7 @@ internal object RfcDefinitions {
         builder.append("::")
         if (trailingCount > 0) {
             buildIPv6Hex(forge, builder)
-            for (i in 1 until trailingCount) {
+            repeat(trailingCount - 1) {
                 builder.append(':')
                 buildIPv6Hex(forge, builder)
             }
@@ -270,7 +271,7 @@ internal object RfcDefinitions {
 
     private fun buildIPv6v4FullAddress(forge: Forge, builder: StringBuilder) {
         buildIPv6Hex(forge, builder)
-        for (i in 1 until 6) {
+        repeat(5) {
             builder.append(':')
             buildIPv6Hex(forge, builder)
         }
@@ -286,7 +287,7 @@ internal object RfcDefinitions {
 
         if (leadingCount > 0) {
             buildIPv6Hex(forge, builder)
-            for (i in 1 until leadingCount) {
+            repeat(leadingCount - 1) {
                 builder.append(':')
                 buildIPv6Hex(forge, builder)
             }
@@ -294,7 +295,7 @@ internal object RfcDefinitions {
         builder.append("::")
         if (trailingCount > 0) {
             buildIPv6Hex(forge, builder)
-            for (i in 1 until trailingCount) {
+            repeat(trailingCount - 1) {
                 builder.append(':')
                 buildIPv6Hex(forge, builder)
             }
@@ -318,17 +319,12 @@ internal object RfcDefinitions {
     // unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
     private val RFC3986_UNRESERVED_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789+-.".toCharArray()
 
-    // gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-    private val RFC3986_GEN_DELIM_CHARS = ":/?#[]@".toCharArray()
-
     // sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
     private val RFC3986_SUB_DELIM_CHARS = "!$&'()*+,;=".toCharArray()
 
-    // reserved      = gen-delims / sub-delims
-    private val RFC3986_RESERVED_CHARS = RFC3986_GEN_DELIM_CHARS.union(RFC3986_SUB_DELIM_CHARS.toList())
-
     // pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
-    private val RFC3986_PATH_CHARS = RFC3986_UNRESERVED_CHARS.union(RFC3986_SUB_DELIM_CHARS.toList()).union(listOf(':', '@'))
+    private val RFC3986_PATH_CHARS =
+        RFC3986_UNRESERVED_CHARS.union(RFC3986_SUB_DELIM_CHARS.toList()).union(listOf(':', '@'))
 
     // query/fragment       = *( pchar / "/" / "?" )
     private val RFC3986_QUERY_FRAGMENT_CHARS = RFC3986_PATH_CHARS.union(listOf('/', '?'))

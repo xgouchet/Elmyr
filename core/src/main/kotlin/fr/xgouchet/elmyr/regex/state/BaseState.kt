@@ -43,9 +43,7 @@ internal class BaseState<T>(
             '[' -> newState = CharacterClassState(ongoingNode, this)
 
             // Repetition class
-            '{' -> {
-                newState = RepetitionState(ongoingNode, this)
-            }
+            '{' -> newState = RepetitionState(ongoingNode, this)
 
             // Alternation
             '|' -> newState = handleAlternation()
