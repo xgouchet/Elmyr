@@ -6,8 +6,8 @@ import kotlin.properties.ReadOnlyProperty
 /**
  * This class implements a [ReadOnlyProperty], forging a random int within a given range.
  *
- * @param min the minimum value (inclusive), default = Int#MIN_VALUE
- * @param max the maximum value (exclusive), default = Int#MAX_VALUE
+ * @property min the minimum value (inclusive), default = Int#MIN_VALUE
+ * @property max the maximum value (exclusive), default = Int#MAX_VALUE
  */
 class IntProperty(
     private val min: Int = Int.MIN_VALUE,

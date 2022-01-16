@@ -433,7 +433,7 @@ open class Forge {
     fun aChar(min: Char = MIN_PRINTABLE, max: Char = MAX_UTF8): Char {
         var c: Char
         do {
-            c = anInt(min.toInt(), max.toInt()).toChar()
+            c = anInt(min.code, max.code).toChar()
         } while (c in ILLEGAL_UTF8_CHARS)
         return c
     }
@@ -623,7 +623,7 @@ open class Forge {
     fun randomizeCase(string: String): String {
         return string.toCharArray().joinToString("") {
             val s = it.toString()
-            if (aBool()) s.toLowerCase() else s.toUpperCase()
+            if (aBool()) s.lowercase() else s.uppercase()
         }
     }
 
@@ -638,6 +638,7 @@ open class Forge {
 
     /**
      * @param string the string from which a substring will be taken
+     * @param outputSize the desired size for the generated String
      * @return a random sub string
      */
     fun aSubStringOf(string: String, outputSize: Int = -1): String {
@@ -668,6 +669,7 @@ open class Forge {
     // region Element from …
 
     /**
+     * @param T the type of elements in the Set
      * @param set a non empty Set
      * @return an element “randomly” picked in the set
      */
@@ -677,6 +679,7 @@ open class Forge {
     }
 
     /**
+     * @param T the type of elements in the List
      * @param list a non empty List
      * @return an element “randomly” picked in the list
      */
@@ -686,6 +689,7 @@ open class Forge {
     }
 
     /**
+     * @param T the type of elements in the Array
      * @param array a non empty Array
      * @return an element “randomly” picked in the array
      */
@@ -749,6 +753,8 @@ open class Forge {
     }
 
     /**
+     * @param K the type of keys in the map
+     * @param V the type of values in the map
      * @param map a non empty Map
      * @return an element “randomly” picked in the set
      */
@@ -758,6 +764,8 @@ open class Forge {
     }
 
     /**
+     * @param K the type of keys in the map
+     * @param V the type of values in the map
      * @param map a non empty map
      * @return a key randomly picked in the map
      */
@@ -766,6 +774,8 @@ open class Forge {
     }
 
     /**
+     * @param K the type of keys in the map
+     * @param V the type of values in the map
      * @param map a non empty map
      * @return a key randomly picked in the map
      */
@@ -781,10 +791,10 @@ open class Forge {
      * Creates a sub list of the given list, with random elements selected from the input. The order
      * of items in the result is not changed.
      *
+     * @param T The type of elements in the list
      * @param list the list to choose from
      * @param size the size of the result sublist. If the input set is smaller than the given size,
      * the result will have the size of the input set. If set to -1 (default) a random size is picked.
-     * @param T The type of elements in the list
      * @return a non null list, with elements picked at random in the input, without duplicates.
      * Note that if the input list contains duplicates, some might appear in the output.
      * The order in the output matches the input order
@@ -825,10 +835,10 @@ open class Forge {
     /**
      * Creates a sub set of the given set, with random elements selected from the input.
      *
+     * @param T The type of elements in the set
      * @param set the set to choose from
      * @param size the size of the result subset. If the input set is smaller than the given size,
      * the result will have the size of the input set. If set to -1 (default) a random size is picked.
-     * @param T The type of elements in the set
      * @return a non null set, with elements picked at random in the input, without duplicates.
      */
     fun <T> aSubSetOf(set: Set<T>, size: Int = -1): Set<T> {
@@ -867,6 +877,7 @@ open class Forge {
 
     /**
      * Shuffles the order if the elements in a list (like shuffling a deck of card).
+     * @param T the type of elements in the List
      * @param list the list to shuffle
      * @return a new list with the same elements as the input, but in a random order
      */
@@ -893,9 +904,9 @@ open class Forge {
 
     /**
      * Creates a random list.
+     * @param T The type of elements in the list
      * @param size the size of the list, or -1 for a random size
      * @param forging a lambda generating values that will fill the list
-     * @param T The type of elements in the list
      */
     fun <T> aList(size: Int = -1, forging: Forge.() -> T): List<T> {
         val listSize = if (size < 0) aTinyInt() else size
@@ -910,9 +921,9 @@ open class Forge {
 
     /**
      * Creates a random sequence.
+     * @param T The type of elements in the list
      * @param size the size of the sequence, or -1 for a random size
      * @param forging a lambda generating values that will fill the list
-     * @param T The type of elements in the list
      */
     fun <T> aSequence(size: Int = -1, forging: Forge.() -> T): Sequence<T> {
         val sequenceSize = if (size < 0) aTinyInt() else size
@@ -924,10 +935,10 @@ open class Forge {
      *
      * Note that the resulting map size might be smaller than the requested one if the forging
      * lambda generates conflicting keys
-     * @param size the size of the map, or -1 for a random size
-     * @param forging a lambda generating a pair of key-value that will fill the map
      * @param K The type of keys in the map
      * @param V The type of values in the map
+     * @param size the size of the map, or -1 for a random size
+     * @param forging a lambda generating a pair of key-value that will fill the map
      */
     fun <K, V> aMap(size: Int = -1, forging: Forge.() -> Pair<K, V>): Map<K, V> {
         val mapSize = if (size < 0) aTinyInt() else size
@@ -947,6 +958,7 @@ open class Forge {
     // region Enum
 
     /**
+     * @param E the type of Enum to forge
      * @param enumClass an Enum class
      * @param exclude a list of enum constants to exclude from the values
      * @return an element “randomly” picked in the enum values
@@ -971,6 +983,7 @@ open class Forge {
 
     /**
      * @return either a value forged by an existing factory, or null (with 50% probability)
+     * @param T the type of element to forge
      * @see [Forge.addFactory]
      */
     inline fun <reified T : Any> aNullable(): T? {
@@ -978,6 +991,7 @@ open class Forge {
     }
 
     /**
+     * @param T the type of element to forge
      * @param probability the probability the result will be null (default 0.5f)
      * @return either a value forged by an existing factory, or null (with the given probability)
      * @see [Forge.addFactory]
@@ -987,8 +1001,9 @@ open class Forge {
     }
 
     /**
-     * @param probability the probability the result will be null (default 0.5f)
+     * @param T the type of element to forge
      * @param clazz the class of the data to forge
+     * @param probability the probability the result will be null (default 0.5f)
      * @return either a value forged  by an existing factory, or null (with the given probability)
      * @see [Forge.addFactory]
      */
@@ -998,6 +1013,7 @@ open class Forge {
     }
 
     /**
+     * @param T the type of element to forge
      * @param probability the probability the result will be null (default 0.5f)
      * @param forging the lambda to forge a non null value
      * @return either a value forged by the lambda, or null (with the given probability)
@@ -1015,7 +1031,7 @@ open class Forge {
     // region Object
 
     override fun toString(): String {
-        return "Forge(seed=0x${seed.toString(16)})"
+        return "Forge(seed=0x${seed.toString(RADIX_HEXA)})"
     }
 
     override fun hashCode(): Int {
@@ -1065,6 +1081,7 @@ open class Forge {
 
         //
         private const val SEED_MASK = 0x7FFFFFFFFFFFFFFFL
+        private const val RADIX_HEXA = 16
 
         /**
          * Creates a "random" seed based on the system clock.

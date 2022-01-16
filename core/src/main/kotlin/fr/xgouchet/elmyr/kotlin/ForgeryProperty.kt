@@ -8,8 +8,6 @@ import kotlin.reflect.KProperty
 /**
  * This is the base for all forgery based property. It must be applied on a [ForgeryAware] instance,
  * and will keep returning the same instance until the forge's seed changes.
- *
- * @param T the type of the property
  */
 abstract class ForgeryProperty<T> :
         ReadOnlyProperty<ForgeryAware, T> {

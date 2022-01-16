@@ -6,8 +6,8 @@ import kotlin.properties.ReadOnlyProperty
 /**
  * This class implements a [ReadOnlyProperty], forging a random float within a given range.
  *
- * @param min the minimum value (inclusive), default = -Float#MAX_VALUE
- * @param max the maximum value (exclusive), default = Float#MAX_VALUE
+ * @property min the minimum value (inclusive), default = -Float#MAX_VALUE
+ * @property max the maximum value (exclusive), default = Float#MAX_VALUE
  */
 class FloatProperty(
     private val min: Float = -Float.MAX_VALUE,

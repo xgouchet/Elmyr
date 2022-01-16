@@ -17,7 +17,7 @@ internal class QuantifiedNode(
     override fun build(forge: Forge, builder: StringBuilder) {
         val repeats = quantifier.getQuantity(forge)
 
-        for (i in 0 until repeats) {
+        repeat(repeats) {
             node.build(forge, builder)
         }
     }

@@ -2,7 +2,7 @@ package fr.xgouchet.elmyr.annotation
 
 /**
  * Mark a field, property or method parameter as a Regex based String forgery.
- * @param value the regex pattern to match.
+ * @property value the regex pattern to match.
  *
  * @deprecated Regex based string forgery can now be created using the StringForgery annotation
  * @see [StringForgery]

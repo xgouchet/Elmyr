@@ -2,12 +2,13 @@ package fr.xgouchet.elmyr.annotation
 
 /**
  * Mark a field, property or method parameter as a primitive long forgery.
- * You can only specify the `min` and `max` parameters, or the `mean` and `standardDeviation` parameters.
+ * You can only specify the `min` and `max` parameters, or the `mean` and
+ * `standardDeviation` parameters.
  *
- * @param min the minimum value (inclusive), default = [Long.MIN_VALUE]
- * @param max the maximum value (exclusive), default = [Long.MAX_VALUE]
- * @param mean the mean value of the distribution
- * @param standardDeviation the standard deviation value of the distribution
+ * @property min the minimum value (inclusive), default = [Long.MIN_VALUE]
+ * @property max the maximum value (exclusive), default = [Long.MAX_VALUE]
+ * @property mean the mean value of the distribution
+ * @property standardDeviation the standard deviation value of the distribution
  */
 @Target(
         AnnotationTarget.VALUE_PARAMETER,

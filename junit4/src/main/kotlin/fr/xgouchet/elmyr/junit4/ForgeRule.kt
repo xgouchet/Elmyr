@@ -16,7 +16,7 @@ import org.junit.runners.model.Statement
  * In case of failure, the seed of the [Forge] is printed to the [System.err] output stream, allowing
  * you to reproduce consistently failing tests.
  *
- * @param ruleSeed the seed to reset the [Forge] for each test
+ * @property ruleSeed the seed to reset the [Forge] for each test
  *
  */
 class ForgeRule(
@@ -71,8 +71,4 @@ class ForgeRule(
     }
 
     // endregion
-
-    companion object {
-        private const val SEED_MASK = 0x7FFFFFFFL
-    }
 }

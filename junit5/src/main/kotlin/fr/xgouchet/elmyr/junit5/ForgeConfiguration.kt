@@ -9,8 +9,8 @@ import org.junit.platform.commons.annotation.Testable
 /**
  * Annotate a test class to configure the Forgery extension.
  *
- * @param value the [ForgeConfigurator] instance to use (leave empty if not necessary).
- * @param seed the seed to reset the [Forge] for each test.
+ * @property value the [ForgeConfigurator] instance to use (leave empty if not necessary).
+ * @property seed the seed to reset the [Forge] for each test.
  */
 @Testable
 @Target(AnnotationTarget.CLASS)

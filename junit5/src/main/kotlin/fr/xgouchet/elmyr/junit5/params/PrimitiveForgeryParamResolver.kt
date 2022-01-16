@@ -27,11 +27,11 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
             check(supportsParameter(parameterContext.parameter.parameterizedType)) {
                 if (primitiveClass == null) {
                     "@${annotationClass.simpleName} can only be used on a Java or a Kotlin " +
-                        "${primitiveBoxingClass.simpleName}, or a List, Set or Collection of on of those classes."
+                            "${primitiveBoxingClass.simpleName}, or a List, Set or Collection of on of those classes."
                 } else {
                     "@${annotationClass.simpleName} can only be used on a Java ${primitiveClass.simpleName} or " +
-                        "${primitiveBoxingClass.simpleName}, a Kotlin ${primitiveBoxingClass.simpleName}, " +
-                        "or a List, Set or Collection of on of those classes."
+                            "${primitiveBoxingClass.simpleName}, a Kotlin ${primitiveBoxingClass.simpleName}, " +
+                            "or a List, Set or Collection of on of those classes."
                 }
             }
             true
@@ -61,19 +61,24 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
     // region Internal
 
     private fun supportsParameter(type: Type): Boolean {
-        if (type == primitiveClass || type == primitiveBoxingClass) return true
-
-        if (type is WildcardType) return type.upperBounds.any { supportsParameter(it) }
-
-        if (type is ParameterizedType && type.rawType in collectionTypes) {
-            val typeParam = type.actualTypeArguments
-            return supportsParameter(typeParam.first())
+        return when {
+            type == primitiveClass || type == primitiveBoxingClass -> true
+            type is WildcardType -> type.upperBounds.any { supportsParameter(it) }
+            type is ParameterizedType && type.rawType in collectionTypes -> {
+                val typeParam = type.actualTypeArguments
+                return supportsParameter(typeParam.first())
+            }
+            else -> false
         }
-        return false
     }
 
     internal fun resolveParameter(annotation: A, type: Type, forge: Forge): Any? {
-        if (type == primitiveClass || type == primitiveBoxingClass) return forgePrimitive(annotation, forge)
+        if (type == primitiveClass || type == primitiveBoxingClass) {
+            return forgePrimitive(
+                annotation,
+                forge
+            )
+        }
 
         if (type is WildcardType) {
             val actualType = type.upperBounds.first { supportsParameter(it) }
@@ -84,8 +89,20 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
         val typeParam = type.actualTypeArguments
         return when (type.rawType) {
             List::class.java,
-            Collection::class.java -> forge.aList { resolveParameter(annotation, typeParam.first(), forge) }
-            Set::class.java -> forge.aList { resolveParameter(annotation, typeParam.first(), forge) }.toSet()
+            Collection::class.java -> forge.aList {
+                resolveParameter(
+                    annotation,
+                    typeParam.first(),
+                    forge
+                )
+            }
+            Set::class.java -> forge.aList {
+                resolveParameter(
+                    annotation,
+                    typeParam.first(),
+                    forge
+                )
+            }.toSet()
             else -> throw IllegalStateException("Unable to forge a value with type $type")
         }
     }
@@ -93,6 +110,7 @@ internal abstract class PrimitiveForgeryParamResolver<A : Annotation>(
     // endregion
 
     companion object {
-        private val collectionTypes = arrayOf(List::class.java, Collection::class.java, Set::class.java)
+        private val collectionTypes =
+            arrayOf(List::class.java, Collection::class.java, Set::class.java)
     }
 }

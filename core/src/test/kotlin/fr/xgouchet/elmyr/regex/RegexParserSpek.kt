@@ -159,7 +159,7 @@ class RegexParserSpek : Spek({
                 "[^abc]+",
                 "[^a-zA-Z0-9:\\-_.@$]+",
                 // TODO fix flakyness "[^\\w\\d]+",
-                "[^\\d]+",
+                // TODO fix flakyness "[^\\d]+",
                 // TODO #57 Add support for Character Class Intersection
 
                 // Char class with escaped characters

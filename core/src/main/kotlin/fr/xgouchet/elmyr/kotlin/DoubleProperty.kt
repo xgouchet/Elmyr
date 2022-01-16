@@ -6,8 +6,8 @@ import kotlin.properties.ReadOnlyProperty
 /**
  * This class implements a [ReadOnlyProperty], forging a random double within a given range.
  *
- * @param min the minimum value (inclusive), default = -Double#MAX_VALUE
- * @param max the maximum value (exclusive), default = Double#MAX_VALUE
+ * @property min the minimum value (inclusive), default = -Double#MAX_VALUE
+ * @property max the maximum value (exclusive), default = Double#MAX_VALUE
  */
 class DoubleProperty(
     private val min: Double = -Double.MAX_VALUE,

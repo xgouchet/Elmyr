@@ -3,12 +3,8 @@ buildscript {
         google()
         mavenCentral()
         maven { setUrl("http://repo1.maven.org/maven2") }
-        maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Gradle) }
-        maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Dokka) }
-    }
-
-    dependencies {
-        //        classpath(fr.xgouchet.buildsrc.Dependencies.ClassPaths.KtLint)
+        maven { setUrl("https://plugins.gradle.org/m2/") }
+        maven { setUrl("https://dl.bintray.com/kotlin/dokka") }
     }
 }
 
@@ -16,8 +12,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { setUrl("http://repo1.maven.org/maven2") }
-        maven { setUrl(fr.xgouchet.buildsrc.Dependencies.Repositories.Dokka) }
+        maven { setUrl("https://repo1.maven.org/maven2") }
+        maven { setUrl("https://dl.bintray.com/kotlin/dokka") }
     }
 }
 
