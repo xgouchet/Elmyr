@@ -17,18 +17,17 @@ open class GithubWikiTask : DefaultTask() {
         outputs.upToDateWhen { false }
     }
 
-    internal var projectDokkaDir: File = File("./dokka")
-    internal var projectGithubDir: File = File("./github")
-    internal var projectName: String = ""
-
-    internal var extension: GithubWikiExtension = GithubWikiExtension()
+    private var projectDokkaDir: File = File("./dokka")
+    private var projectGithubDir: File = File("./github")
+    private var projectName: String = ""
+    private var combinedTypes: List<String> = emptyList()
 
     // region Task
 
     @TaskAction
     fun applyTask() {
         getOutputDir().mkdirs()
-        extension.types.forEach {
+        combinedTypes.forEach {
             combineForType(it)
         }
     }
@@ -41,6 +40,26 @@ open class GithubWikiTask : DefaultTask() {
     @OutputDirectory
     fun getOutputDir(): File {
         return projectGithubDir
+    }
+
+    // endregion
+
+    // region Setters
+
+    fun setDokkaDir(dir: File) {
+        projectDokkaDir = dir
+    }
+
+    fun setGithubDir(dir: File) {
+        projectGithubDir = dir
+    }
+
+    fun setTargetName(name: String) {
+        projectName = name
+    }
+
+    fun setCombinedTypes(types: List<String>) {
+        combinedTypes = types
     }
 
     // endregion

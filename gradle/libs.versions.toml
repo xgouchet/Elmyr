@@ -1,0 +1,58 @@
+[versions]
+kotlin = "1.5.31"
+
+junitJupiter = "5.8.2"
+junitPlatform = "1.8.2"
+junitVintage = "5.8.2"
+junit4 = "4.13"
+
+spek = "2.0.17"
+assertJ = "0.2.1"
+mockitoKotlin = "2.2.0"
+mockitoJunit5 = "4.2.0"
+
+detekt = "1.19.0"
+depsVersion = "0.41.0"
+dokka = "0.10.1"
+ktlint = "9.1.0"
+
+[libraries]
+kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlinGP = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+junitPlatform = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitPlatform" }
+junitVintage = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junitVintage" }
+junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+
+spekDsl = { module = "org.spekframework.spek2:spek-dsl-jvm", version.ref = "spek" }
+spekJunit5 = { module = "org.spekframework.spek2:spek-runner-junit5", version.ref = "spek" }
+
+assertJ = { module = "net.wuerl.kotlin:assertj-core-kotlin", version.ref = "assertJ" }
+mockitoKotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockitoJunit5 = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockitoJunit5" }
+
+detektGP = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+depsVersionGP = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "depsVersion" }
+dokkaGP = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+ktlintGP = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
+
+[bundles]
+
+junit5 = [
+    "junitPlatform",
+    "junitJupiter",
+    "junitVintage"
+]
+
+spek = [
+    "spekDsl",
+    "spekJunit5",
+    "kotlinReflect"
+]
+
+testTools = [
+    "assertJ",
+    "mockitoKotlin"
+]

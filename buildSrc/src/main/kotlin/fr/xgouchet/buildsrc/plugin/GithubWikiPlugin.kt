@@ -9,14 +9,17 @@ class GithubWikiPlugin : Plugin<Project> {
     override fun apply(target: Project) {
 
         val extension = target.extensions
-                .create(EXT_NAME, GithubWikiExtension::class.java)
+            .create(EXT_NAME, GithubWikiExtension::class.java)
 
         val buildTask = target.tasks
-                .create(TASK_NAME, GithubWikiTask::class.java)
-        buildTask.projectDokkaDir = File(target.buildDir, "dokka")
-        buildTask.projectGithubDir = File("${target.rootDir.path}/../${target.rootProject.name}.wiki")
-        buildTask.projectName = target.name
-        buildTask.extension = extension
+            .create(TASK_NAME, GithubWikiTask::class.java)
+        buildTask.setDokkaDir(File(target.buildDir, "dokka"))
+        buildTask.setGithubDir(File("${target.rootDir.path}/../${target.rootProject.name}.wiki"))
+        buildTask.setTargetName(target.name)
+
+        target.afterEvaluate {
+            buildTask.setCombinedTypes(extension.types)
+        }
 
         target.tasks.named("dokka") {
             buildTask.dependsOn(this)
