@@ -1,5 +1,15 @@
 # Changelog
 
+### `1.future?` (2022/??/??)
+
+#### `core`
+
+- Add the `Forge.shuffle(String): String` and `Forge.shuffle(Array<T>): Array<T>` methods
+
+### `semantics`
+
+- Add the `semantics` library providing some human readable fake Strings generation (names, lipsum, …)
+
 ### `1.3.1` (2021/09/07)
 
 #### `core`

@@ -306,6 +306,55 @@ class ForgeStringSpek : Spek({
                 }
                 assertThat(isSameLength).isLessThan(testRepeatCountSmall / 4)
             }
+
+            it("shuffles an empty string") {
+                val inputString = emptyList<String>()
+
+                val data = forge.shuffle(inputString)
+
+                assertThat(data)
+                    .isNotNull()
+                    .isEmpty()
+            }
+
+            it("shuffles a single char string") {
+                val inputString = forge.aChar().toString()
+
+                val data = forge.shuffle(inputString)
+
+                assertThat(data)
+                    .isNotNull()
+                    .isEqualTo(inputString)
+            }
+
+            it("shuffles a multi char string") {
+                val length = forge.aSmallInt() + 128
+                val inputString = forge.aString(length)
+                var previousString: String? = null
+                val charList = inputString.toCharArray().toList()
+
+                repeat(testRepeatCountSmall) { _ ->
+                    val shuffled = forge.shuffle(inputString)
+
+                    assertThat(shuffled)
+                        .isNotNull()
+                    assertThat(shuffled.toCharArray().toList())
+                        .containsAll(charList)
+
+                    previousString?.let {
+                        var sameOrder = true
+                        for (i in 0 until length) {
+                            if (shuffled[i] != it[i]) {
+                                sameOrder = false
+                                break
+                            }
+                        }
+                        assertThat(sameOrder).isFalse()
+                    }
+
+                    previousString = shuffled
+                }
+            }
         }
 
         // endregion

@@ -528,6 +528,58 @@ class ForgeCollectionSpek : Spek({
             }
         }
 
+        context("shuffling an array") {
+
+            it("shuffles an empty array") {
+                val inputArray = emptyArray<String>()
+
+                val data = forge.shuffle(inputArray)
+
+                assertThat(data)
+                    .isNotNull()
+                    .isEmpty()
+            }
+
+            it("shuffles a singleton array") {
+                val inputArray = arrayOf(forge.aString())
+
+                val data = forge.shuffle(inputArray)
+
+                assertThat(data.toList())
+                    .isNotNull()
+                    .containsAll(inputArray.toList())
+            }
+
+            it("shuffles a non empty array") {
+                val size = forge.aSmallInt() + 128
+                val inputArray = Array(size) { forge.aString() }
+                var previousArray: Array<String>? = null
+
+                repeat(testRepeatCountSmall) { _ ->
+                    val shuffled = forge.shuffle(inputArray)
+
+                    assertThatK(shuffled)
+                        .isNotSameAs(inputArray)
+                        .isNotNull()
+                    assertThatK(shuffled.toList())
+                        .containsAll(inputArray.toList())
+
+                    previousArray?.let {
+                        var sameOrder = true
+                        for (i in 0 until size) {
+                            if (shuffled[i] != it[i]) {
+                                sameOrder = false
+                                break
+                            }
+                        }
+                        assertThat(sameOrder).isFalse()
+                    }
+
+                    previousArray = shuffled
+                }
+            }
+        }
+
         // endregion
 
         // region Generate a collection

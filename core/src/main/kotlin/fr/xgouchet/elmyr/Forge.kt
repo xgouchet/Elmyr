@@ -664,6 +664,27 @@ open class Forge {
         return aSubStringOf(this.forging())
     }
 
+    /**
+     * Shuffles the order of the characters in an String (like shuffling a deck of card).
+     * @param string the String to shuffle
+     * @return a new String with the same characters as the input, but in a random order
+     */
+    fun shuffle(string: String): String {
+        // fast exit : input is empty
+        if (string.isEmpty()) return ""
+
+        val result = CharArray(string.length) { string[it] }
+
+        for (i in 0..(string.length - 2)) {
+            val j = anInt(i, string.length)
+            val temp = result[i]
+            result[i] = result[j]
+            result[j] = temp
+        }
+
+        return result.concatToString()
+    }
+
     // endregion
 
     // region Element from …
@@ -876,16 +897,16 @@ open class Forge {
     }
 
     /**
-     * Shuffles the order if the elements in a list (like shuffling a deck of card).
+     * Shuffles the order of the elements in a list (like shuffling a deck of card).
      * @param T the type of elements in the List
      * @param list the list to shuffle
      * @return a new list with the same elements as the input, but in a random order
      */
-    fun <T> shuffle(list: List<T>): List<T> {
+    inline fun <reified T> shuffle(list: List<T>): List<T> {
         // fast exit : input is empty
         if (list.isEmpty()) return emptyList()
 
-        val result = Array<Any?>(list.size) { list[it] }
+        val result = list.toMutableList()
 
         for (i in 0..(list.size - 2)) {
             val j = anInt(i, list.size)
@@ -894,8 +915,29 @@ open class Forge {
             result[j] = temp
         }
 
-        @Suppress("UNCHECKED_CAST")
-        return result.asList() as List<T>
+        return result
+    }
+
+    /**
+     * Shuffles the order of the elements in an array (like shuffling a deck of card).
+     * @param T the type of elements in the Array
+     * @param array the array to shuffle
+     * @return a new array with the same elements as the input, but in a random order
+     */
+    inline fun <reified T> shuffle(array: Array<T>): Array<T> {
+        // fast exit : input is empty
+        if (array.isEmpty()) return array
+
+        val result = Array<T>(array.size) { array[it] }
+
+        for (i in 0..(array.size - 2)) {
+            val j = anInt(i, array.size)
+            val temp = result[i]
+            result[i] = result[j]
+            result[j] = temp
+        }
+
+        return result
     }
 
     // endregion
