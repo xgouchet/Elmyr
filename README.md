@@ -134,15 +134,15 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Latest Release: `1.3.1` (2021/09/07)
+### Latest Release: `1.3.2` (2022/05/05)
 
 #### `core`
 
-- Fix some invalid regex forgeries (e.g.: `"[^a-z]+"` was not handled properly)
+- Add the `Forge.shuffle(String): String` and `Forge.shuffle(Array<T>): Array<T>` methods
 
-#### `junit5`
+#### `semantics`
 
-- Fix an error when a `ForgeConfiguration` was missing a `ForgeConfigurator`
+- Add the `semantics` library providing some human readable fake Strings generation (names, lipsum, …)
 
 ## Donate
 
