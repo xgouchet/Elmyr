@@ -34,7 +34,8 @@ open class GithubWikiTask : DefaultTask() {
 
     @InputDirectory
     internal fun getInputDir(): File {
-        return File(projectDokkaDir, projectName)
+        val gfmDir = File(projectDokkaDir, "gfm")
+        return File(gfmDir, projectName)
     }
 
     @OutputDirectory

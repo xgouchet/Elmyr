@@ -7,7 +7,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
     id("githubWiki")
-//    maven
+    `maven-publish`
 }
 
 dependencies {

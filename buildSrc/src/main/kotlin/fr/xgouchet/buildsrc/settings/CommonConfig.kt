@@ -8,4 +8,5 @@ fun Project.commonConfig() {
     junitConfig()
     ktLintConfig()
     dokkaConfig()
+    mavenConfig()
 }

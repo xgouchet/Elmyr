@@ -13,7 +13,7 @@ mockitoJunit5 = "4.2.0"
 
 detekt = "1.19.0"
 depsVersion = "0.41.0"
-dokka = "0.10.1"
+dokka = "1.6.21"
 ktlint = "9.1.0"
 
 [libraries]

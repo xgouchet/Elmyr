@@ -21,7 +21,7 @@ class GithubWikiPlugin : Plugin<Project> {
             buildTask.setCombinedTypes(extension.types)
         }
 
-        target.tasks.named("dokka") {
+        target.tasks.named("dokkaGfm") {
             buildTask.dependsOn(this)
         }
     }

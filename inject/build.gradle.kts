@@ -5,7 +5,8 @@ plugins {
     id("com.github.ben-manes.versions")
     id("io.gitlab.arturbosch.detekt")
     id("org.jlleitschuh.gradle.ktlint")
-//    maven
+    id("org.jetbrains.dokka")
+    `maven-publish`
 }
 
 dependencies {
