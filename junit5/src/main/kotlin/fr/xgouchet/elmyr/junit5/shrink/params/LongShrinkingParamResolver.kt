@@ -1,9 +1,7 @@
 package fr.xgouchet.elmyr.junit5.shrink.params
 
 import fr.xgouchet.elmyr.Forge
-import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.annotation.LongForgery
-import fr.xgouchet.elmyr.junit5.params.IntForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.params.LongForgeryParamResolver
 import fr.xgouchet.elmyr.junit5.shrink.InvocationReport
 import fr.xgouchet.elmyr.junit5.shrink.boundaries

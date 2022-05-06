@@ -26,6 +26,10 @@ dependencies {
     testImplementation(libs.mockitoKotlin)
 }
 
+tasks.withType<Test> {
+    systemProperty("elmyr.shrinking", "true")
+}
+
 commonConfig()
 
 githubWiki {

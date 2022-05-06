@@ -46,7 +46,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider
 import org.junit.platform.commons.support.AnnotationSupport.isAnnotated
 import org.junit.platform.commons.util.AnnotationUtils.findAnnotation
-import java.lang.AssertionError
+import java.io.IOException
 
 /**
  * A JUnit Jupiter extension that can inject forgeries in the test class's fields/properties/method
@@ -56,6 +56,7 @@ import java.lang.AssertionError
  * @see Forgery
  * @see Forge
  */
+@Suppress("TooManyFunctions")
 class ForgeExtension :
     BeforeAllCallback,
     BeforeEachCallback,
@@ -152,7 +153,7 @@ class ForgeExtension :
             "@Shrink annotation must have a maximumRunCount greater than 0"
         }
 
-        val isShrinkingEnabled = System.getProperty("shrinking").orEmpty().toBoolean()
+        val isShrinkingEnabled = System.getProperty("elmyr.shrinking").orEmpty().toBoolean()
         if (isShrinkingEnabled) {
             val uniqueId = context.uniqueId
             context.getStore(STORE_NAMESPACE).put(STORE_SHRINK_KEY, shrink.maximumRunCount)
@@ -168,7 +169,6 @@ class ForgeExtension :
         } else {
             return Stream.of(ShrinkInvocationContext(context.displayName))
         }
-
     }
 
     // endregion
@@ -266,7 +266,6 @@ class ForgeExtension :
         val shrinkingResolver = shrinkingResolvers.firstOrNull {
             it.supportsParameter(parameterContext, extensionContext, previousReports)
         }
-
         if (shrinkingResolver == null) {
             return resolveRandomParameter(parameterContext, extensionContext)
         }
@@ -364,10 +363,8 @@ class ForgeExtension :
 
         val parentUniqueId = parent.uniqueId
         val report = invocationReports[parentUniqueId] ?: return
-        if (report.size == shrinkingCount) {
-            if (report.any { it.exception != null }) {
-                reportFailures(parent.displayName, report)
-            }
+        if (report.size == shrinkingCount && report.any { it.exception != null }) {
+            reportFailures(parent.displayName, report)
         }
     }
 
@@ -389,19 +386,19 @@ class ForgeExtension :
             failingRangesReports<Double>(paramTargets, invocationReports) { a, b -> a..b }
         )
         failingMessages.addAll(
-            failingValuesReports<String>(paramTargets, invocationReports, Comparator { s1, s2 ->
+            failingStringValuesReports(paramTargets, invocationReports) { s1, s2 ->
                 if (s1.length == s2.length) {
                     s1.compareTo(s2)
                 } else {
                     s1.length - s2.length
                 }
-            })
+            }
         )
 
-        throw AssertionError(
-            "Test $displayName failed with shrunk param\n" + failingMessages.joinToString("\n"),
-            invocationReports.mapNotNull { it.exception }.first()
-        )
+        val shrinkingReport = "Test $displayName failed with shrunk param\n" +
+                failingMessages.joinToString("\n")
+        System.err.println(shrinkingReport)
+        throw invocationReports.firstNotNullOf { it.exception }
     }
 
     private inline fun <reified T : Comparable<T>> failingRangesReports(
@@ -417,24 +414,37 @@ class ForgeExtension :
                 val failingRanges = failingRanges(sortedReports, rangeFactory)
                 "- parameter ${it.name}: " +
                         failingRanges.joinToString { range ->
-                            if (range.start == range.endInclusive) range.start.toString()
-                            else "[${range.start}…${range.endInclusive}]"
+                            if (range.start == range.endInclusive) {
+                                range.start.toString()
+                            } else {
+                                "[${range.start}…${range.endInclusive}]"
+                            }
                         }
             }
     }
 
-    private inline fun <reified T> failingValuesReports(
+    private fun failingStringValuesReports(
         targets: List<ForgeTarget<*>>,
         invocationReports: List<InvocationReport>,
-        comparator: Comparator<T>
+        comparator: Comparator<String>
     ): List<String> {
-        return targets.filter { it.value is T }
+        return targets.filter { it.value is String }
             .map { target ->
-                val failingValues = invocationReports.reportForParam<T>(target.name)
+                val failingValues = invocationReports.reportForParam<String>(target.name)
                     .filter { it.exception != null }
                     .map { it.target.value }
                     .sortedWith(comparator)
-                "- parameter ${target.name}: " + failingValues.joinToString()
+                val shortestLength = failingValues.firstOrNull()?.length ?: 0
+                val shortestFailingValues = failingValues
+                    .filter { it.length == shortestLength }
+                val xMore = failingValues.size - shortestFailingValues.size
+                val concat = shortestFailingValues
+                    .joinToString { "“$it”" }
+                if (xMore == 0) {
+                    "- parameter ${target.name}: $concat"
+                } else {
+                    "- parameter ${target.name}: $concat and $xMore more"
+                }
             }
     }
 

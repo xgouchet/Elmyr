@@ -7,11 +7,17 @@ internal fun <T> List<InvocationReport>.reportForParam(
     paramName: String
 ): List<InjectionReport<T>> {
     return mapNotNull {
-        val target = it.injectedData.firstOrNull { it.name == paramName && it.type == "param" }
-        if (target != null) InjectionReport(
-            target as ForgeTarget<T>,
-            it.exception
-        ) else null
+        val target = it.injectedData.firstOrNull {
+            it.name == paramName && it.type == "param"
+        }
+        if (target != null) {
+            InjectionReport(
+                target as ForgeTarget<T>,
+                it.exception
+            )
+        } else {
+            null
+        }
     }
 }
 

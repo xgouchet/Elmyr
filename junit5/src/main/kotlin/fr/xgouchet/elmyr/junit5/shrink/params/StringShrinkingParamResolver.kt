@@ -47,7 +47,6 @@ internal class StringShrinkingParamResolver :
 
     // region Internal
 
-
     private fun shrink(value: String, annotation: StringForgery, forge: Forge): String? {
         return if (annotation.regex.isNotEmpty()) {
             null

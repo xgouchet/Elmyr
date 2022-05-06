@@ -74,6 +74,16 @@ internal class KotlinShrinkingTest {
             .doesNotContain("x")
     }
 
+    @Disabled
+    @Shrink(maximumRunCount = RUN_COUNT_FAILING)
+    @TestTemplate
+    fun testFailingMultiParam(@StringForgery s: String, @IntForgery(0, 65536) i: Int) {
+        runCountFailing++
+
+        assertThat(s.length)
+            .isGreaterThan(i)
+    }
+
     companion object {
 
         const val RUN_COUNT_NO_PARAMS = 11
