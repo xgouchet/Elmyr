@@ -46,7 +46,6 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider
 import org.junit.platform.commons.support.AnnotationSupport.isAnnotated
 import org.junit.platform.commons.util.AnnotationUtils.findAnnotation
-import java.io.IOException
 
 /**
  * A JUnit Jupiter extension that can inject forgeries in the test class's fields/properties/method
