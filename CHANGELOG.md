@@ -1,5 +1,25 @@
 # Changelog
 
+### `1.4.0` (2022/??/??)
+
+#### `junit5`
+
+- Implement a basic Shrinking feature. The same test  will be ran with many different values and try to find ranges for which the test fails. By default there's a limit of 1024 test runs, but this can be increased per your use cases.
+    To enable it in your gradle script, add the following line:
+    ```
+    tasks.withType<Test> {
+        systemProperty("elmyr.shrinking", "true")
+    }
+    ```
+    Then in your test class, use the following annotations:
+    ```
+        @Shrink
+        @TestTemplate
+        fun testWithShrunkParams(@IntForgery i: Int) {
+            // …
+        }
+    ```
+
 ### `1.3.2` (2022/05/05)
 
 #### `core`
