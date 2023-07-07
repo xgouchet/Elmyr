@@ -183,7 +183,7 @@ open class GithubWikiTask : DefaultTask() {
             when (it) {
                 in 'A'..'Z' -> {
                     builder.append('-')
-                    builder.append(it.toLowerCase())
+                    builder.append(it.lowercaseChar())
                 }
                 else -> builder.append(it)
             }
@@ -198,7 +198,7 @@ open class GithubWikiTask : DefaultTask() {
             when (it) {
                 '-' -> upperCaseNext = true
                 in 'a'..'z' -> {
-                    builder.append(if (upperCaseNext) it.toUpperCase() else it)
+                    builder.append(if (upperCaseNext) it.lowercaseChar() else it)
                     upperCaseNext = false
                 }
                 else -> builder.append(it)

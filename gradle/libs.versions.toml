@@ -1,19 +1,19 @@
 [versions]
-kotlin = "1.5.31"
+kotlin = "1.8.10"
 
-junitJupiter = "5.8.2"
-junitPlatform = "1.8.2"
-junitVintage = "5.8.2"
+junitJupiter = "5.9.3"
+junitPlatform = "1.9.3"
+junitVintage = "5.9.3"
 junit4 = "4.13"
 
-spek = "2.0.17"
+spek = "2.0.19"
 assertJ = "0.2.1"
 mockitoKotlin = "2.2.0"
-mockitoJunit5 = "4.2.0"
+mockitoJunit5 = "5.4.0"
 
 detekt = "1.19.0"
 depsVersion = "0.41.0"
-dokka = "1.6.21"
+dokka = "1.8.20"
 ktlint = "9.1.0"
 
 [libraries]

@@ -8,7 +8,7 @@ fun Project.detektConfig() {
     extensionConfig<DetektExtension> {
         version = "1.0.1"
 
-        input = files("$projectDir/src/main/kotlin")
+        source = files("$projectDir/src/main/kotlin")
         config = files("${project.rootDir}/script/config/detekt.yml")
 //        reports {
 //            xml {

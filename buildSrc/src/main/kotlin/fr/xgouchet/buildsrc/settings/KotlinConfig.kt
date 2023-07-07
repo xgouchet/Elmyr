@@ -8,7 +8,7 @@ fun Project.kotlinConfig() {
 
     tasks.withType(KotlinCompile::class.java) {
         kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_11.toString()
+            jvmTarget = JavaVersion.VERSION_17.toString()
         }
     }
 }
