@@ -1119,7 +1119,13 @@ open class Forge {
         internal const val MAX_ASCII = 0x7F.toChar()
         internal const val MAX_ASCII_EXTENDED = 0xFF.toChar()
         internal const val MAX_UTF8 = 0xD000.toChar()
-        internal val ILLEGAL_UTF8_CHARS = arrayOf('\u0085', '\u2028', '\u2029')
+
+        // those characters introduce weird behavior in the JVM and should be avoided
+        internal val ILLEGAL_UTF8_CHARS = arrayOf(
+            '\u0085', // Next line
+            '\u2028', // Line separator
+            '\u2029' // Paragraph separator
+        )
 
         //
         private const val SEED_MASK = 0x7FFFFFFFFFFFFFFFL
