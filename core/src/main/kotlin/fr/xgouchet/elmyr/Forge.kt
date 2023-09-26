@@ -8,6 +8,7 @@ import kotlin.math.round
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.math.sqrt
+import kotlin.reflect.KClass
 
 /**
  * The base class to generate forgeries.
@@ -18,6 +19,7 @@ open class Forge {
     private val rng = Random()
 
     private val factories: MutableMap<Class<*>, ForgeryFactory<*>> = mutableMapOf()
+    private val reflexiveFactory by lazy { ReflexiveFactory(this) }
 
     // region Reproducibility
 
@@ -61,39 +63,48 @@ open class Forge {
      * @throws [IllegalArgumentException] if no compatible factory exists
      */
     inline fun <reified T : Any> getForgery(): T {
-        return getForgery(T::class.java)
+        return getForgery(T::class)
     }
 
     /**
      * @param T the type of the instance to be forged
-     * @param clazz the class of type T
+     * @param clazz the [Class] of type T
      * @return a new instance of type T, randomly forged with available factories
      * @throws [IllegalArgumentException] if no compatible factory exists
      */
+    @Suppress("UNCHECKED_CAST")
     fun <T : Any> getForgery(clazz: Class<T>): T {
-
-        @Suppress("UNCHECKED_CAST")
         val strictMatch = factories[clazz] as? ForgeryFactory<T>
-
+        val fuzzyMatch = factories.filterKeys {
+            clazz.isAssignableFrom(it)
+        }.values
         return when {
             clazz.isEnum -> anElementFrom(*clazz.enumConstants)
-            strictMatch == null -> getSubclassForgery(clazz)
-            else -> strictMatch.getForgery(this)
+            strictMatch != null -> strictMatch.getForgery(this)
+            fuzzyMatch.isNotEmpty() -> (anElementFrom(fuzzyMatch.toList()) as ForgeryFactory<T>).getForgery(this)
+            else -> throw ForgeryFactoryMissingException(clazz = clazz)
         }
     }
 
-    private fun <T : Any> getSubclassForgery(clazz: Class<T>): T {
-
-        val matches = factories.filterKeys {
-            clazz.isAssignableFrom(it)
+    /**
+     * @param T the type of the instance to be forged
+     * @param kClass the [KClass] of type T
+     * @return a new instance of type T, randomly forged with available factories
+     * @throws [IllegalArgumentException] if no compatible factory exists
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> getForgery(kClass: KClass<T>): T {
+        val jClass = kClass.java
+        val strictMatch = factories[jClass] as? ForgeryFactory<T>
+        val fuzzyMatch = factories.filterKeys {
+            jClass.isAssignableFrom(it)
         }.values
-
-        if (matches.isEmpty()) {
-            throw ForgeryFactoryMissingException(clazz = clazz)
+        return when {
+            jClass.isEnum -> anElementFrom(*jClass.enumConstants)
+            strictMatch != null -> strictMatch.getForgery(this)
+            fuzzyMatch.isNotEmpty() -> (anElementFrom(fuzzyMatch.toList()) as ForgeryFactory<T>).getForgery(this)
+            else -> reflexiveFactory.getForgery(kClass)
         }
-        val factory = anElementFrom(matches.toList())
-        @Suppress("UNCHECKED_CAST")
-        return (factory as ForgeryFactory<T>).getForgery(this)
     }
 
     // endregion

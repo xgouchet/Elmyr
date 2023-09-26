@@ -12,6 +12,7 @@ plugins {
 
 dependencies {
     implementation(libs.kotlin)
+    implementation(libs.kotlinReflect)
 
     testImplementation(libs.bundles.junit5)
     testImplementation(libs.bundles.spek)
