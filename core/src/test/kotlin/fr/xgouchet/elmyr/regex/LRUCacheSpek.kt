@@ -2,6 +2,7 @@ package fr.xgouchet.elmyr.regex
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.throws
+import java.util.Locale
 import org.assertj.core.api.Assertions.assertThat
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -38,7 +39,7 @@ class LRUCacheSpek : Spek({
                 factoryCalls = 0
                 cache = LRUCache(capacity) { key ->
                     factoryCalls++
-                    key.reversed().toLowerCase()
+                    key.reversed().lowercase(Locale.getDefault())
                 }
             }
 
@@ -48,7 +49,7 @@ class LRUCacheSpek : Spek({
                 val value = cache.get(key)
 
                 assertThat(factoryCalls).isEqualTo(1)
-                assertThat(value).isEqualTo(key.reversed().toLowerCase())
+                assertThat(value).isEqualTo(key.reversed().lowercase(Locale.getDefault()))
             }
 
             it("it returns cached value on second call") {
@@ -59,7 +60,7 @@ class LRUCacheSpek : Spek({
                 val value2 = cache.get(key)
 
                 assertThat(factoryCalls).isEqualTo(0)
-                assertThat(value).isEqualTo(key.reversed().toLowerCase())
+                assertThat(value).isEqualTo(key.reversed().lowercase(Locale.getDefault()))
                 assertThat(value2).isEqualTo(value)
             }
 
@@ -74,7 +75,7 @@ class LRUCacheSpek : Spek({
                 val value2 = cache.get(key)
 
                 assertThat(factoryCalls).isEqualTo(0)
-                assertThat(value).isEqualTo(key.reversed().toLowerCase())
+                assertThat(value).isEqualTo(key.reversed().lowercase(Locale.getDefault()))
                 assertThat(value2).isEqualTo(value)
             }
 
@@ -91,7 +92,7 @@ class LRUCacheSpek : Spek({
                 val value2 = cache.get(key)
 
                 assertThat(factoryCalls).isEqualTo(1)
-                assertThat(value).isEqualTo(key.reversed().toLowerCase())
+                assertThat(value).isEqualTo(key.reversed().lowercase(Locale.getDefault()))
                 assertThat(value2).isEqualTo(value)
             }
         }

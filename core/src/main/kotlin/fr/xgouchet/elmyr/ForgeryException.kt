@@ -10,3 +10,29 @@ open class ForgeryException(
     message: String? = null,
     cause: Throwable? = null
 ) : RuntimeException(message, cause)
+
+/**
+ * Raised by a [Forge] when asked to forge an instance with no compatible [ForgeryFactory].
+ *
+ * @param clazz the class that was being forged
+ */
+class ForgeryFactoryMissingException(
+    clazz: Class<*>
+) : ForgeryException(
+    "Cannot create forgery for type ${clazz.canonicalName}.\n" +
+        "Make sure you provide a factory for this type."
+)
+
+/**
+ * Raised by a [Forge] when asked to forge an instance with no compatible [ForgeryFactory].
+ *
+ * @param clazz the class that was being forged
+ * @param message the message about the reflexive issue preventing the forgery
+ */
+class ReflexiveForgeryFactoryException(
+    clazz: Class<*>,
+    message: String?
+) : ForgeryException(
+    "Cannot create an automatic forgery for type ${clazz.canonicalName}: $message.\n" +
+        "You can try providing a factory for this type."
+)
