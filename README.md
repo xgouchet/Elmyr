@@ -134,15 +134,12 @@ Contribution is fully welcome. Before submitting a Pull Request, please verify y
 
 ## Release History
 
-### Latest Release: `1.3.2` (2022/05/05)
+### Latest Release: `1.4.0` (2023/09/26)
 
 #### `core`
 
-- Add the `Forge.shuffle(String): String` and `Forge.shuffle(Array<T>): Array<T>` methods
+- Add a reflexive factory to automatically forge data classes
 
-#### `semantics`
-
-- Add the `semantics` library providing some human readable fake Strings generation (names, lipsum, …)
 
 ## Donate
 

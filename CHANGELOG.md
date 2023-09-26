@@ -1,5 +1,11 @@
 # Changelog
 
+### `1.4.0` (2023/09/26)
+
+#### `core`
+
+- Add a reflexive factory to automatically forge data classes 
+
 ### `1.3.2` (2022/05/05)
 
 #### `core`

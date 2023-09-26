@@ -10,7 +10,8 @@ fun Project.mavenConfig() {
         publications.create("maven", MavenPublication::class.java) {
             groupId = "com.github.xgouchet"
             artifactId = project.name
-            version = "1.3.4"
+            version = "1.4.0"
+
             from(components["kotlin"])
             artifact(tasks.findByName("kotlinSourcesJar"))
             artifact(tasks.findByName("generateJavadoc"))
