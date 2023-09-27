@@ -7,6 +7,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
     `maven-publish`
+    signing
 }
 
 dependencies {
@@ -22,4 +23,4 @@ dependencies {
     testImplementation(libs.mockitoKotlin)
 }
 
-commonConfig()
+commonConfig("JVM standard classes factories for Elmyr, providing fuzzy testing and property based testing features.")

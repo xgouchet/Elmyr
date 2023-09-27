@@ -7,6 +7,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
     `maven-publish`
+    signing
 }
 
 dependencies {
@@ -22,4 +23,4 @@ dependencies {
     testImplementation(libs.mockitoKotlin)
 }
 
-commonConfig()
+commonConfig("Semantic generation for Elmyr.")

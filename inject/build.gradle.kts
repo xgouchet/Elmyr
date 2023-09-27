@@ -7,6 +7,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
     `maven-publish`
+    signing
 }
 
 dependencies {
@@ -24,4 +25,4 @@ dependencies {
     testImplementation(libs.mockitoJunit5)
 }
 
-commonConfig()
+commonConfig("Injection tool for Elmyr.")

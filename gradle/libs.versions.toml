@@ -15,6 +15,7 @@ detekt = "1.19.0"
 depsVersion = "0.41.0"
 dokka = "1.8.20"
 ktlint = "9.1.0"
+nexusPublish = "1.1.0"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -37,6 +38,7 @@ detektGP = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", versio
 depsVersionGP = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "depsVersion" }
 dokkaGP = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 ktlintGP = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
+nexusPublishGP = { module = "io.github.gradle-nexus:publish-plugin", version.ref = "nexusPublish" }
 
 [bundles]
 

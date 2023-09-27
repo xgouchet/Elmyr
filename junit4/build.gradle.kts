@@ -8,6 +8,7 @@ plugins {
     id("org.jetbrains.dokka")
     id("githubWiki")
     `maven-publish`
+    signing
 }
 
 dependencies {
@@ -24,10 +25,10 @@ dependencies {
     testImplementation(libs.mockitoKotlin)
 }
 
-commonConfig()
+commonConfig("JUnit 4 integration for Elmyr, providing fuzzy testing and property based testing features.")
 
 githubWiki {
     types = listOf(
-            "fr.xgouchet.elmyr.junit4.ForgeRule"
+        "fr.xgouchet.elmyr.junit4.ForgeRule"
     )
 }

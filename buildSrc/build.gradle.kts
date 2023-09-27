@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.depsVersionGP)
     implementation(libs.dokkaGP)
     implementation(libs.ktlintGP)
+    implementation(libs.nexusPublishGP)
 }
 
 tasks.withType<KotlinCompile> {
