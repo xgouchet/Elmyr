@@ -1,9 +1,16 @@
 # Changelog
 
+### Ongoing development 
+
+#### `core`
+
+- Add enum forgery through reflexive factory 
+
 ### `1.4.0` (2023/09/26)
 
 #### `core`
 
+- Targets Java 17 
 - Add a reflexive factory to automatically forge data classes 
 
 ### `1.3.2` (2022/05/05)

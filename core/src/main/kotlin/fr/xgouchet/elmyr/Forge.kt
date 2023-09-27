@@ -721,8 +721,8 @@ open class Forge {
     }
 
     /**
-     * @param T the type of elements in the Array
-     * @param array a non empty Array
+     * @param T the type of elements in the vararg params
+     * @param array a vararg entries
      * @return an element “randomly” picked in the array
      */
     fun <T> anElementFrom(vararg array: T): T {
@@ -1023,9 +1023,9 @@ open class Forge {
         exclude: Collection<E> = emptyList()
     ): E {
         val chooseFrom = if (exclude.isNotEmpty()) {
-            enumClass.enumConstants.subtract(exclude).toList()
+            enumClass.enumConstants.subtract(exclude)
         } else {
-            enumClass.enumConstants.toList()
+            enumClass.enumConstants.toSet()
         }
         return anElementFrom(chooseFrom)
     }
