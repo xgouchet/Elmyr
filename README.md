@@ -2,8 +2,7 @@
 
 > Elmyr is a Kotlin library providing tools to generate “random” values, specifically useful for tests
 
-
-[![Release](https://jitpack.io/v/xgouchet/Elmyr.svg)](https://jitpack.io/#xgouchet/Elmyr)
+[![](https://maven-badges.herokuapp.com/maven-central/fr.xgouchet.elmyr/core/badge.svg?style=flat)](https://central.sonatype.com/namespace/fr.xgouchet.elmyr)
 [![Documentation Status](https://img.shields.io/badge/docs-wiki-brightgreen.svg)](https://github.com/xgouchet/Elmyr/wiki)
 
 [![CircleCI](https://circleci.com/gh/xgouchet/Elmyr.svg?style=shield)](https://circleci.com/github/xgouchet/Elmyr)
@@ -23,13 +22,16 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
 ### Gradle
 
 ```groovy
-    repositories {
-        maven { url "https://jitpack.io" }
-    }
     dependencies {
-        testCompile("com.github.xgouchet.Elmyr:core:x.x.x")
-        testCompile("com.github.xgouchet.Elmyr:junit4:x.x.x")
-        testCompile("com.github.xgouchet.Elmyr:junit5:x.x.x")
+        // Core library
+        testCompile("com.github.xgouchet.Elmyr:core:1.4.0")
+    
+        // Testing Framework Integrations
+        testCompile("com.github.xgouchet.Elmyr:junit4:1.4.0")
+        testCompile("com.github.xgouchet.Elmyr:junit5:1.4.0")
+        testCompile("com.github.xgouchet.Elmyr:spek:1.4.0")
+    
+        // 
         testCompile("com.github.xgouchet.Elmyr:jvm:x.x.x")
     }
 ```
@@ -40,6 +42,7 @@ You can create an instance of the `Forge` class, and from that generate:
 
  - primitives, with basic constraints
  - Strings matching simple predicates or even Regexes
+ - Any Kotlin `data class`
  - Your own custom data, by implementing the `ForgeryFactory` interface, then
     calling the `Forge::addFactory` method.
 
