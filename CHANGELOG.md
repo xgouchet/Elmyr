@@ -7,6 +7,7 @@
 - Add enum forgery through reflexive factory 
 - Make reflexive factory available through injection (with `@Forgery`) 
 - Make reflexive factory available via JUnit4 (with `@ForgeRule`) 
+- Make reflexive factory available via JUnit5 (with `@ForgeExtension`) 
 
 ### `1.4.0` (2023/09/26)
 

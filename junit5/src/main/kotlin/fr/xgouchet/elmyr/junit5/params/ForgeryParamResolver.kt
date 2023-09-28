@@ -44,7 +44,7 @@ internal object ForgeryParamResolver :
         forge: Forge
     ): Any? {
         return when (type) {
-            is Class<*> -> forge.getForgery(type)
+            is Class<*> -> forge.getForgery(type.kotlin)
             is WildcardType -> resolveParameter(type.upperBounds.first(), forge)
             is ParameterizedType -> resolveParameterizedForgery(forge, type.rawType, type.actualTypeArguments)
             else -> null

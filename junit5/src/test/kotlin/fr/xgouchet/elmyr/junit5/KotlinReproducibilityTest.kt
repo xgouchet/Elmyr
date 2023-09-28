@@ -7,6 +7,7 @@ import fr.xgouchet.elmyr.annotation.Forgery
 import fr.xgouchet.elmyr.annotation.IntForgery
 import fr.xgouchet.elmyr.junit5.fixture.Bar
 import fr.xgouchet.elmyr.junit5.fixture.BarFactory
+import fr.xgouchet.elmyr.junit5.fixture.Baz
 import fr.xgouchet.elmyr.junit5.fixture.Foo
 import fr.xgouchet.elmyr.junit5.fixture.FooFactory
 import org.assertj.core.api.Assertions.assertThat
@@ -24,12 +25,19 @@ internal class KotlinReproducibilityTest {
     @Forgery
     private lateinit var fakeBar: Bar
 
+    @Forgery
+    private lateinit var fakeBaz: Baz
+
     fun getFoo(): Foo {
         return fakeFoo
     }
 
     fun getBar(): Bar {
         return fakeBar
+    }
+
+    fun getBaz(): Baz {
+        return fakeBaz
     }
 
     @BeforeEach
@@ -47,15 +55,18 @@ internal class KotlinReproducibilityTest {
     }
 
     @Test
-    fun testRun3(@Forgery foo: Foo, @Forgery bar: Bar) {
-        assertThat(foo.i).isEqualTo(1834174735)
-        assertThat(bar.s).isEqualTo("wfpwhlvm")
+    fun testRun3(@Forgery foo: Foo, @Forgery bar: Bar, @Forgery baz: Baz) {
+        assertThat(foo.i).isEqualTo(1959122550)
+        assertThat(bar.s).isEqualTo("qrpmpa")
+        assertThat(baz.i).isEqualTo(1622758883)
+        assertThat(baz.s).isEqualTo("ሑ젇豯锥쏹藾搡\u0A7B蛭孑炷ൺ诘嫶綊뒴꫰癠⻫랕뵆무砑睋鴼䫊᭧萁뉖⧾⭺")
+        assertThat(baz.type).isEqualTo(Baz.Type.Y)
     }
 
     @Test
     fun testRun4(@FloatForgery f: Float, @IntForgery i: Int) {
-        assertThat(f).isEqualTo(2.5332062E38f)
-        assertThat(i).isEqualTo(-1217237951)
+        assertThat(f).isEqualTo(-3.01852E38f)
+        assertThat(i).isEqualTo(1465580921)
     }
 
     private fun checkSeedNotChanged(forge: Forge) {
@@ -63,8 +74,11 @@ internal class KotlinReproducibilityTest {
     }
 
     private fun checkForgeryInjected() {
-        assertThat(fakeFoo.i).isEqualTo(1596512190)
+        assertThat(fakeFoo.i).isEqualTo(1955817233)
         assertThat(fakeBar.s).isEqualTo("grquxsqwqccdwk")
+        assertThat(fakeBaz.i).isEqualTo(1596512190)
+        assertThat(fakeBaz.s).isEqualTo("鞕瑂踜㎅⽓崔ꉨ摣ꯧ踿鼢괒ш駎柨琓懼눫")
+        assertThat(fakeBaz.type).isEqualTo(Baz.Type.P)
     }
 
     class Configurator : ForgeConfigurator {
