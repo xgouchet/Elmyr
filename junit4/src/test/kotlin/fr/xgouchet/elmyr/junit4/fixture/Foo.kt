@@ -1,5 +1,5 @@
 package fr.xgouchet.elmyr.junit4.fixture
 
-internal data class Foo(
+internal class Foo(
     val i: Int
 )
