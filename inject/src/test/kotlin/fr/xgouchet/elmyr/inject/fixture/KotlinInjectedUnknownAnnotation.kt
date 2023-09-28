@@ -2,7 +2,7 @@ package fr.xgouchet.elmyr.inject.fixture
 
 import org.mockito.Mock
 
-class KotlinInjectedUnknownAnnotation {
+internal class KotlinInjectedUnknownAnnotation {
 
     @Mock
     lateinit var unknownFoo: Foo

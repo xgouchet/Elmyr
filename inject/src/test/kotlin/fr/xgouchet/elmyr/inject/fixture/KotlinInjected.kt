@@ -2,7 +2,7 @@ package fr.xgouchet.elmyr.inject.fixture
 
 import fr.xgouchet.elmyr.annotation.Forgery
 
-open class KotlinInjected {
+internal open class KotlinInjected {
 
     @Forgery lateinit var publicFoo: Foo
     @Forgery internal lateinit var internalFoo: Foo

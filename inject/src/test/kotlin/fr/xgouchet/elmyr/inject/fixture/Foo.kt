@@ -1,5 +1,5 @@
 package fr.xgouchet.elmyr.inject.fixture
 
-data class Foo(
+internal class Foo(
     val i: Int
 )

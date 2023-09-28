@@ -11,6 +11,7 @@ import fr.xgouchet.elmyr.inject.fixture.FooFactory
 import fr.xgouchet.elmyr.inject.fixture.KotlinInjected
 import fr.xgouchet.elmyr.inject.fixture.KotlinInjectedAdvanced
 import fr.xgouchet.elmyr.inject.fixture.KotlinInjectedChild
+import fr.xgouchet.elmyr.inject.fixture.KotlinInjectedDataClass
 import fr.xgouchet.elmyr.inject.fixture.KotlinInjectedGenerics
 import fr.xgouchet.elmyr.inject.fixture.KotlinInjectedImmutableVal
 import fr.xgouchet.elmyr.inject.fixture.KotlinInjectedInvalidPrimitives
@@ -166,6 +167,17 @@ class KotlinForgeryInjectorTest {
         assertThat(injected.publicFooSet).isNotNull.isNotEmpty
         assertThat(injected.publicFooMap).isNotNull.isNotEmpty
         assertThat(injected.publicFooColletion).isNotNull.isNotEmpty
+    }
+
+    @Test
+    fun injectsDataClasses() {
+        val injected = KotlinInjectedDataClass()
+
+        injector.inject(forge, injected, null)
+
+        assertThat(injected.publicBaz).isNotNull()
+        assertThat(injected.publicBaz.i).isNotZero()
+        assertThat(injected.publicBaz.s).isNotEmpty()
     }
 
     @Test

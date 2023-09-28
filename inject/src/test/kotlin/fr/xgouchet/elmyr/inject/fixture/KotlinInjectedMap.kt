@@ -7,7 +7,7 @@ import fr.xgouchet.elmyr.annotation.MapForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 
-class KotlinInjectedMap {
+internal class KotlinInjectedMap {
 
     @MapForgery(
         key = AdvancedForgery(string = [StringForgery(StringForgeryType.HEXADECIMAL)]),

@@ -8,7 +8,7 @@ import fr.xgouchet.elmyr.annotation.LongForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 
-class KotlinInjectedAdvanced {
+internal class KotlinInjectedAdvanced {
 
     @AdvancedForgery(
         string = [

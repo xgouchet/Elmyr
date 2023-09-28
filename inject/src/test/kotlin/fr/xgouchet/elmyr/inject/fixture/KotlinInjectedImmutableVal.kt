@@ -10,7 +10,7 @@ import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 
-class KotlinInjectedImmutableVal {
+internal class KotlinInjectedImmutableVal {
 
     @Forgery
     val finalFoo42: Foo = Foo(42)

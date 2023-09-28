@@ -1,5 +1,5 @@
 package fr.xgouchet.elmyr.inject.fixture
 
-data class Bar(
+internal class Bar(
     val s: String
 )
