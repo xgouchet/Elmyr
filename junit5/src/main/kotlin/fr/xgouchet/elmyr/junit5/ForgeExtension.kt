@@ -237,7 +237,10 @@ class ForgeExtension :
                 if (it.value.java == ForgeConfigurator.NoOp.javaClass) {
                     ForgeConfigurator.NoOp
                 } else {
-                    it.value.java.newInstance()
+                    val constructor = it.value.java.constructors.firstOrNull {
+                        it.parameterCount == 0
+                    }
+                    constructor?.newInstance() as? ForgeConfigurator ?: ForgeConfigurator.NoOp
                 }
             }
     }
