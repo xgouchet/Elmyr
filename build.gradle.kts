@@ -11,7 +11,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { setUrl("http://repo1.maven.org/maven2") }
+        maven { setUrl("https://repo1.maven.org/maven2") }
         maven { setUrl("https://plugins.gradle.org/m2/") }
         maven { setUrl("https://dl.bintray.com/kotlin/dokka") }
     }
@@ -45,7 +45,6 @@ if (localPropertiesFile.exists()) {
 nexusPublishing {
     this.repositories {
         sonatype {
-//            nexusUrl.set(URI("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"))
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             val sonatypeUsername = project.properties["ossrhUsername"]?.toString()
             val sonatypePassword = project.properties["ossrhPassword"]?.toString()
