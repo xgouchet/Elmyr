@@ -28,6 +28,7 @@
             <option value="$PROJECT_DIR$/junit4" />
             <option value="$PROJECT_DIR$/junit5" />
             <option value="$PROJECT_DIR$/jvm" />
+            <option value="$PROJECT_DIR$/ksp" />
             <option value="$PROJECT_DIR$/semantics" />
             <option value="$PROJECT_DIR$/spek" />
           </set>
