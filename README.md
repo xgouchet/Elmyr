@@ -32,7 +32,7 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
         testCompile("com.github.xgouchet.Elmyr:spek:1.4.0")
     
         // 
-        testCompile("com.github.xgouchet.Elmyr:jvm:x.x.x")
+        testCompile("com.github.xgouchet.Elmyr:jvm:1.4.0")
     }
 ```
 
@@ -125,15 +125,12 @@ class CalculatorSpek : Spek({
 
 ## Documentation
 
-The full documentation will be coming shortly
+The full documentation will be coming shortly. 
+The [Wiki](https://github.com/xgouchet/Elmyr/wiki) contains a full reference of all the packages and classes distributed.
 
 ## Contributing 
 
-Contribution is fully welcome. Before submitting a Pull Request, please verify you comply with the following checklist :
-
- - [x] All public classes, methods and fields must be documented
- - [x] All code must be unit tested (duh…)
- - [x] All code should be usable with and without the Android SDK, from Java and Kotlin
+Contribution is always welcome, to know more, read our [Contributing guide](.github/CONTRIBUTING.md). 
 
 ## Release History
 
