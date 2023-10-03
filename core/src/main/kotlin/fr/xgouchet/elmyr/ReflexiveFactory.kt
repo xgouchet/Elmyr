@@ -3,6 +3,7 @@ package fr.xgouchet.elmyr
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.valueParameters
 
 internal class ReflexiveFactory(
@@ -12,6 +13,8 @@ internal class ReflexiveFactory(
     fun <T : Any> getForgery(kClass: KClass<T>): T {
         if (kClass.isData) {
             return getDataClassForgery(kClass)
+        } else if (kClass.isSubclassOf(Enum::class)) {
+            return forge.anElementFrom(*kClass.java.enumConstants)
         } else {
             throw ReflexiveForgeryFactoryException(kClass.java, "only data classes are supported")
         }

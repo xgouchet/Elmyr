@@ -54,6 +54,14 @@ class ReflexiveFactorySpek : Spek({
                 assertThat(withCollectionFields.stringToLongMap).isNotEmpty()
                 assertThat(withCollectionFields.dataClassSet).isNotEmpty()
             }
+
+            it("forges data class instance with enum fields") {
+                val withEnumFields = forge.getForgery<WithEnumFields>()
+
+                assertThat(withEnumFields.type).isIn(*WithEnumFields.Type.values())
+                assertThat(withEnumFields.options).isNotEmpty()
+                    .isSubsetOf(WithEnumFields.Option.values().toList())
+            }
         }
     }
 })
@@ -76,3 +84,16 @@ data class WithCollectionFields(
     val stringToLongMap: Map<String, Long>,
     val dataClassSet: Set<WithPrimitiveFields>
 )
+
+data class WithEnumFields(
+    val type: Type,
+    val options: Set<Option>
+) {
+    enum class Option {
+        A, B, C, D, E
+    }
+
+    enum class Type {
+        X, Y, Z
+    }
+}
