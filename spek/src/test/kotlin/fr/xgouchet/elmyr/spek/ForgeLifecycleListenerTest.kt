@@ -109,9 +109,7 @@ internal class ForgeLifecycleListenerTest {
     }
 
     @Test
-    fun `ignore group without id`(
-        forge: Forge
-    ) {
+    fun `ignore group without id`() {
         // Given
         val group = mock<GroupScope>()
 
@@ -123,9 +121,7 @@ internal class ForgeLifecycleListenerTest {
     }
 
     @Test
-    fun `ignore group with invalid id`(
-        forge: Forge
-    ) {
+    fun `ignore group with invalid id`() {
         // Given
         val group = MockGroupScope(Date(), null)
 
@@ -203,9 +199,7 @@ internal class ForgeLifecycleListenerTest {
     }
 
     @Test
-    fun `use provided seed on group start with untyped id`(
-        forge: Forge
-    ) {
+    fun `use provided seed on group start with untyped id`() {
         // Given
         val group = MockGroupScope(MockId(fakeGroupName), null)
 
