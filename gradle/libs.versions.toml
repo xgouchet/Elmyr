@@ -1,5 +1,6 @@
 [versions]
 kotlin = "1.8.10"
+kotlinSP = "1.8.10-1.0.9"
 
 junitJupiter = "5.9.3"
 junitPlatform = "1.9.3"
@@ -21,6 +22,7 @@ nexusPublish = "1.1.0"
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlinGP = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinSP = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "kotlinSP" }
 
 junitPlatform = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitPlatform" }
 junitVintage = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junitVintage" }
