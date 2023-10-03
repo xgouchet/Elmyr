@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import fr.xgouchet.elmyr.Case
 import fr.xgouchet.elmyr.Forge
-import fr.xgouchet.elmyr.ForgeryFactoryMissingException
+import fr.xgouchet.elmyr.ReflexiveForgeryFactoryException
 import fr.xgouchet.elmyr.annotation.BoolForgery
 import fr.xgouchet.elmyr.annotation.DoubleForgery
 import fr.xgouchet.elmyr.annotation.FloatForgery
@@ -17,6 +17,7 @@ import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 import fr.xgouchet.elmyr.junit5.fixture.BarFactory
+import fr.xgouchet.elmyr.junit5.fixture.Baz
 import fr.xgouchet.elmyr.junit5.fixture.Foo
 import fr.xgouchet.elmyr.junit5.fixture.FooFactory
 import java.io.ByteArrayOutputStream
@@ -873,6 +874,56 @@ internal class ForgeExtensionTest {
         }
     }
 
+    @Test
+    fun `resolveParameter {Data class}`() {
+        prepareParamContext("withDataClass")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result).matches { it is Baz }
+    }
+
+    @Test
+    fun `resolveParameter {Data class list}`() {
+        prepareParamContext("withDataClassList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).isNotEmpty()
+            .allMatch { it is Baz }
+    }
+
+    @Test
+    fun `resolveParameter {Data class set}`() {
+        prepareParamContext("withDataClassSet")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Set<*>).isNotEmpty()
+            .allMatch { it is Baz }
+    }
+
+    @Test
+    fun `resolveParameter {Data class collection}`() {
+        prepareParamContext("withDataClassCollection")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as Collection<*>).isNotEmpty()
+            .allMatch { it is Baz }
+    }
+
+    @Test
+    fun `resolveParameter {Data class nested list}`() {
+        prepareParamContext("withDataClassNestedList")
+
+        val result = testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
+
+        assertThat(result as List<*>).allMatch {
+            it is Set<*> && it.all { b -> b is Baz }
+        }
+    }
+
     // endregion
 
     // region ParameterResolver.resolveParameter (failing)
@@ -881,7 +932,7 @@ internal class ForgeExtensionTest {
     fun `resolveParameter Fails on unknown parameterized type`() {
         prepareParamContext("withParameterized")
 
-        assertThrows<ForgeryFactoryMissingException> {
+        assertThrows<ReflexiveForgeryFactoryException> {
             testedExtension.resolveParameter(mockParameterContext, mockExtensionContext)
         }
     }
@@ -1056,11 +1107,11 @@ internal class ForgeExtensionTest {
         assertThat(errStreamContent.toString())
             .isEqualTo(
                 "<${mockTarget.javaClass.simpleName}.${fakeMethod.name}()> failed " +
-                        "with Forge seed 0x${forge.seed.toString(16)}L\n" +
-                        "Add the following @ForgeConfiguration annotation to your test class :\n" +
-                        "\n" +
-                        "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
-                        "\n"
+                    "with Forge seed 0x${forge.seed.toString(16)}L\n" +
+                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                    "\n" +
+                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                    "\n"
             )
     }
 
@@ -1087,12 +1138,12 @@ internal class ForgeExtensionTest {
         assertThat(errStreamContent.toString())
             .isEqualTo(
                 "<${mockTarget.javaClass.simpleName}.withInt()> failed " +
-                        "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
-                        "\t- param withInt::arg0 = $result\n\n" +
-                        "Add the following @ForgeConfiguration annotation to your test class :\n" +
-                        "\n" +
-                        "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
-                        "\n"
+                    "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
+                    "\t- param withInt::arg0 = $result\n\n" +
+                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                    "\n" +
+                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                    "\n"
             )
     }
 
@@ -1127,13 +1178,14 @@ internal class ForgeExtensionTest {
         assertThat(errStreamContent.toString())
             .isEqualTo(
                 "<KotlinReproducibilityTest.testRun1()> failed " +
-                        "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
-                        "\t- field KotlinReproducibilityTest::fakeBar = ${target.getBar()}\n" +
-                        "\t- field KotlinReproducibilityTest::fakeFoo = ${target.getFoo()}\n\n" +
-                        "Add the following @ForgeConfiguration annotation to your test class :\n" +
-                        "\n" +
-                        "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
-                        "\n"
+                    "with Forge seed 0x${forge.seed.toString(16)}L and:\n" +
+                    "\t- field KotlinReproducibilityTest::fakeBar = ${target.getBar()}\n" +
+                    "\t- field KotlinReproducibilityTest::fakeBaz = ${target.getBaz()}\n" +
+                    "\t- field KotlinReproducibilityTest::fakeFoo = ${target.getFoo()}\n\n" +
+                    "Add the following @ForgeConfiguration annotation to your test class :\n" +
+                    "\n" +
+                    "\t@ForgeConfiguration(seed = 0x${forge.seed.toString(16)}L)\n" +
+                    "\n"
             )
     }
 
@@ -1424,6 +1476,25 @@ internal class Reflekta(@Forgery s: String) {
     }
 
     fun withRegexNestedList(@RegexForgery("[a-c]+") b: List<Set<String>>) {
+    }
+
+    // endregion
+
+    // region Data class
+
+    fun withDataClass(@Forgery baz: Baz) {
+    }
+
+    fun withDataClassList(@Forgery l: List<Baz>) {
+    }
+
+    fun withDataClassSet(@Forgery s: Set<Baz>) {
+    }
+
+    fun withDataClassCollection(@Forgery c: Collection<Baz>) {
+    }
+
+    fun withDataClassNestedList(@Forgery ls: List<Set<Baz>>) {
     }
 
     // endregion
