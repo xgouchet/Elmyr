@@ -7,7 +7,7 @@ import fr.xgouchet.elmyr.annotation.PairForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 
-class KotlinInjectedPair {
+internal class KotlinInjectedPair {
 
     @PairForgery(
         first = AdvancedForgery(string = [StringForgery(StringForgeryType.HEXADECIMAL)]),

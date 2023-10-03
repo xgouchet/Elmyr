@@ -2,7 +2,7 @@ package fr.xgouchet.elmyr.inject.fixture
 
 import fr.xgouchet.elmyr.annotation.Forgery
 
-class KotlinInjectedChild :
+internal class KotlinInjectedChild :
     KotlinInjected() {
 
     @Deprecated("") lateinit var deprecatedField: String

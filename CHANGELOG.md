@@ -5,6 +5,7 @@
 #### `core`
 
 - Add enum forgery through reflexive factory 
+- Add reflexive factory available through injection (with `@Forgery`) 
 
 ### `1.4.0` (2023/09/26)
 

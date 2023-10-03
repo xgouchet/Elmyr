@@ -372,7 +372,7 @@ class DefaultForgeryInjector : ForgeryInjector {
         if (classifier !is KClass<*>) uninjectable(classifier)
 
         return if (arguments.isEmpty()) {
-            forge.getForgery(classifier.java)
+            forge.getForgery(classifier)
         } else {
             getParameterizedForgery(forge, arguments, classifier)
         }
