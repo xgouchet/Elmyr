@@ -973,6 +973,25 @@ open class Forge {
     }
 
     /**
+     * Creates a random set.
+     * @param T The type of elements in the set
+     * @param size the size of the set, or -1 for a random size
+     * @param forging a lambda generating values that will fill the set
+     */
+    fun <T> aSet(size: Int = -1, forging: Forge.() -> T): Set<T> {
+        val setSize = if (size < 0) aTinyInt() else size
+        val set = mutableSetOf<T>()
+        val maxLoopIteration = setSize * 2
+        var index = 0
+        while (set.size < setSize && index < maxLoopIteration) {
+            set.add(this.forging())
+            index ++
+        }
+
+        return set
+    }
+
+    /**
      * Creates a random sequence.
      * @param T The type of elements in the list
      * @param size the size of the sequence, or -1 for a random size

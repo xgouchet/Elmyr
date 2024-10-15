@@ -603,6 +603,23 @@ class ForgeCollectionSpek : Spek({
                 assertThat(data).containsExactly(*expectedData)
             }
 
+            it("forges a set of whatever") {
+                var i = 0
+                val data = forge.aSet { anElementFrom((i++ / 2)) }
+                val expectedData = IntArray(data.size) { it }.toTypedArray()
+
+                assertThat(data).containsExactly(*expectedData)
+            }
+
+            it("forges a set of whatever with fixed size") {
+                val size = forge.aTinyInt() + 3
+                var i = 0
+                val data = forge.aSet(size) { anElementFrom((i++ / 2)) }
+                val expectedData = IntArray(size) { it }.toTypedArray()
+
+                assertThat(data).containsExactly(*expectedData)
+            }
+
             it("forges a map of whatever") {
                 var i = 0
                 val data = forge.aMap() { i to "<${i++}>" }
