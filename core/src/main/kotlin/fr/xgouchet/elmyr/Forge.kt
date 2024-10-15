@@ -962,11 +962,24 @@ open class Forge {
      * @param forging a lambda generating values that will fill the list
      */
     fun <T> aList(size: Int = -1, forging: Forge.() -> T): List<T> {
+        return aListIndexed(size) { _ ->
+            this.forging()
+        }
+    }
+
+    /**
+     * Creates a random list, providing sequential index with the element.
+     * @param T The type of elements in the list
+     * @param size the size of the list, or -1 for a random size
+     * @param forging a lambda generating values that will fill the list, providing sequential
+     * index with the element.
+     */
+    fun <T> aListIndexed(size: Int = -1, forging: Forge.(Int) -> T): List<T> {
         val listSize = if (size < 0) aTinyInt() else size
         val list = ArrayList<T>(listSize)
 
         for (i in 0 until listSize) {
-            list.add(forging(this))
+            list.add(this.forging(i))
         }
 
         return list
