@@ -11,12 +11,15 @@ class MockParameterContext(
     private val targetParameter: Parameter
 ) : ParameterContext {
 
-    override fun <A : Annotation?> findRepeatableAnnotations(annotationType: Class<A>?): MutableList<A> {
+    override fun <A : Annotation> findRepeatableAnnotations(annotationType: Class<A>?): MutableList<A> {
         return mutableListOf()
     }
 
-    override fun <A : Annotation?> findAnnotation(annotationType: Class<A>?): Optional<A> {
-        return Optional.ofNullable(parameter.getAnnotationsByType(annotationType).firstOrNull())
+    override fun <A : Annotation> findAnnotation(annotationType: Class<A>?): Optional<A> {
+        return Optional.ofNullable(
+            parameter.getAnnotationsByType(annotationType)
+                .firstOrNull()
+        )
     }
 
     override fun getParameter(): Parameter {
@@ -31,7 +34,7 @@ class MockParameterContext(
         return Optional.empty()
     }
 
-    override fun isAnnotated(annotationType: Class<out Annotation>?): Boolean {
+    override fun isAnnotated(annotationType: Class<out Annotation>): Boolean {
         return targetParameter.isAnnotationPresent(annotationType)
     }
 }

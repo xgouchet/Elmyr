@@ -74,6 +74,7 @@ internal class ForgeLifecycleListenerTest {
 
     lateinit var testedListener: ForgeLifecycleListener
 
+    @Suppress("DEPRECATION")
     @RegexForgery("([a-z]{2,5}\\.){4}")
     lateinit var fakeRootPackage: String
 
