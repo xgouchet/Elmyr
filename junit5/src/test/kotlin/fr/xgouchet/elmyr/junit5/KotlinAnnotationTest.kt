@@ -25,6 +25,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
+@Suppress("UNUSED_PARAMETER")
 @ExtendWith(ForgeExtension::class)
 @ForgeConfiguration(KotlinAnnotationTest.Configurator::class)
 internal open class KotlinAnnotationTest {

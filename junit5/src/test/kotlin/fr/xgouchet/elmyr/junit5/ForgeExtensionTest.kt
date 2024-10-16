@@ -1236,7 +1236,7 @@ internal class ForgeExtensionTest {
     // endregion
 }
 
-@Suppress("unused", "UNUSED_PARAMETER")
+@Suppress("unused", "UNUSED_PARAMETER", "DEPRECATION")
 internal class Reflekta(@Forgery s: String) {
 
     fun withStringForgery(@Forgery s: String) {

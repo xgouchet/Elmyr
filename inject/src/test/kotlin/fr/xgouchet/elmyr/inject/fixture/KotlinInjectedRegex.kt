@@ -3,6 +3,7 @@ package fr.xgouchet.elmyr.inject.fixture
 import fr.xgouchet.elmyr.annotation.RegexForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 
+@Suppress("DEPRECATION")
 open class KotlinInjectedRegex {
 
     @RegexForgery("[a-z]+")

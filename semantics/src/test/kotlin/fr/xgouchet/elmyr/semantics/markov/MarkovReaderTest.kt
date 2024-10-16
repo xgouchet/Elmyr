@@ -2,6 +2,7 @@ package fr.xgouchet.elmyr.semantics.markov
 
 import fr.xgouchet.elmyr.Forge
 import fr.xgouchet.elmyr.junit5.ForgeExtension
+import fr.xgouchet.elmyr.semantics.capitalized
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,7 +21,7 @@ class MarkovReaderTest {
         assertThat(table.chainLength)
             .isEqualTo(4)
 
-        println("Gen first name: ${table.generate(forge).capitalize()}")
+        println("Gen first name: ${table.generate(forge).capitalized()}")
     }
 
     @Test
@@ -34,7 +35,7 @@ class MarkovReaderTest {
         assertThat(table.chainLength)
             .isEqualTo(4)
 
-        println("Gen last name: ${table.generate(forge).capitalize()}")
+        println("Gen last name: ${table.generate(forge).capitalized()}")
     }
 
     @Test
@@ -48,6 +49,6 @@ class MarkovReaderTest {
         assertThat(table.chainLength)
             .isEqualTo(4)
 
-        println("Gen lipsum: ${table.generate(forge).capitalize()}")
+        println("Gen lipsum: ${table.generate(forge).capitalized()}")
     }
 }
