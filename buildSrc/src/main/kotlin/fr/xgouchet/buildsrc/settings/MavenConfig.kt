@@ -7,7 +7,7 @@ import org.gradle.kotlin.dsl.get
 import org.gradle.plugins.signing.SigningExtension
 
 const val GROUP_NAME = "fr.xgouchet.elmyr"
-const val VERSION = "1.4.0"
+const val VERSION = "1.4.1"
 
 fun Project.mavenConfig(projectDescription: String) {
 
