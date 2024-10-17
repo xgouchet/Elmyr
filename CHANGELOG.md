@@ -2,12 +2,16 @@
 
 ### Ongoing development 
 
+### `1.4.1` (2024/10/19)
+
 #### `core`
 
 - Add enum forgery through reflexive factory 
 - Make reflexive factory available through injection (with `@Forgery`) 
 - Make reflexive factory available via JUnit4 (with `@ForgeRule`) 
 - Make reflexive factory available via JUnit5 (with `@ForgeExtension`) 
+- Add set forgery (thanks [@ambushwork](https://github.com/ambushwork))
+- Add list forgery with indexed lambda (thanks [@ambushwork](https://github.com/ambushwork))
 
 ### `1.4.0` (2023/09/26)
 

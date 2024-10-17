@@ -24,15 +24,15 @@ This is where Elmyr kicks in, allowing you to create fake/fuzzy data based on a 
 ```groovy
     dependencies {
         // Core library
-        testCompile("com.github.xgouchet.Elmyr:core:1.4.0")
+        testCompile("com.github.xgouchet.Elmyr:core:1.4.1")
     
         // Testing Framework Integrations
-        testCompile("com.github.xgouchet.Elmyr:junit4:1.4.0")
-        testCompile("com.github.xgouchet.Elmyr:junit5:1.4.0")
-        testCompile("com.github.xgouchet.Elmyr:spek:1.4.0")
+        testCompile("com.github.xgouchet.Elmyr:junit4:1.4.1")
+        testCompile("com.github.xgouchet.Elmyr:junit5:1.4.1")
+        testCompile("com.github.xgouchet.Elmyr:spek:1.4.1")
     
         // 
-        testCompile("com.github.xgouchet.Elmyr:jvm:1.4.0")
+        testCompile("com.github.xgouchet.Elmyr:jvm:1.4.1")
     }
 ```
 
@@ -134,12 +134,16 @@ Contribution is always welcome, to know more, read our [Contributing guide](.git
 
 ## Release History
 
-### Latest Release: `1.4.0` (2023/09/26)
+### Latest Release: `1.4.1` (2024/10/19)
 
 #### `core`
 
-- Add a reflexive factory to automatically forge data classes
-
+- Add enum forgery through reflexive factory
+- Make reflexive factory available through injection (with `@Forgery`)
+- Make reflexive factory available via JUnit4 (with `@ForgeRule`)
+- Make reflexive factory available via JUnit5 (with `@ForgeExtension`)
+- Add set forgery (thanks [@ambushwork](https://github.com/ambushwork))
+- Add list forgery with indexed lambda (thanks [@ambushwork](https://github.com/ambushwork))
 
 ## Donate
 
